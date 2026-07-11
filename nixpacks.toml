@@ -1,0 +1,8 @@
+[phases.install]
+cmds = ["npm install ws"]
+
+[phases.build]
+cmds = []
+
+[start]
+cmd = "node script/lan-server.mjs"
