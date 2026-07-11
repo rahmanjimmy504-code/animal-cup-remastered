@@ -15,8 +15,13 @@ export const LAN_PORT = 13001;
 
 export function lanWsUrl() {
   if (typeof window === "undefined") return null;
+  // Cloud relay (set via NEXT_PUBLIC_RELAY_URL env var for production)
+  const cloudRelay = process.env.NEXT_PUBLIC_RELAY_URL;
+  if (cloudRelay) return cloudRelay;
+  // Local dev: connect to relay on same host
+  const proto = window.location.protocol === "https:" ? "wss" : "ws";
   const host = window.location.hostname || "127.0.0.1";
-  return `ws://${host}:${LAN_PORT}`;
+  return `${proto}://${host}:${LAN_PORT}`;
 }
 
 export function createLanClient({ onMessage, onOpen, onClose } = {}) {

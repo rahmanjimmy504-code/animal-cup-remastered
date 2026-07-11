@@ -13,7 +13,7 @@
 import { WebSocketServer } from "ws";
 import os from "node:os";
 
-const PORT = Number(process.env.LAN_PORT || 13001);
+const PORT = Number(process.env.PORT || process.env.LAN_PORT || 13001);
 const SLOTS = 2; // slot 0 = red (P1), slot 1 = blue (P2)
 const HOST_GRACE_MS = 25000; // keep room alive across lobby -> match navigation
 
