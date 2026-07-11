@@ -1,3 +1,6 @@
+packages:
+  - '.'
+
 # pnpm 11+ reads the build-script allowlist here (no longer from package.json).
 # sharp/esbuild/workerd ship native/postinstall build steps the project needs;
 # allow them explicitly so `pnpm install` runs their scripts and exits 0
