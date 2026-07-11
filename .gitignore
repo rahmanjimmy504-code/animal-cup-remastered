@@ -3,6 +3,9 @@
 .env.*
 !.env.example
 
+# Bar license key — each bar gets their own file, never commit to git
+license.key
+
 # Logs
 logs
 *.log

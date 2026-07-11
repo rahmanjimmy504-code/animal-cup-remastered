@@ -12,6 +12,38 @@
 // it is a same-LAN convenience server, not a public service.
 import { WebSocketServer } from "ws";
 import os from "node:os";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const LICENSE_API = "https://animal-cup.jerry20050714.workers.dev/api/license/check";
+
+async function checkLicense() {
+  const keyFile = path.join(__dirname, "../license.key");
+  let key;
+  try {
+    key = fs.readFileSync(keyFile, "utf8").trim();
+  } catch {
+    console.error("❌ 找不到授權檔 license.key");
+    console.error("   請聯繫管理員取得授權碼");
+    process.exit(1);
+  }
+  try {
+    const res = await fetch(`${LICENSE_API}?key=${encodeURIComponent(key)}`);
+    const data = await res.json();
+    if (!data.valid) {
+      const reason = data.reason === "expired" ? "授權已過期，請聯繫管理員續約" : "授權碼無效，請聯繫管理員";
+      console.error(`❌ ${reason}`);
+      process.exit(1);
+    }
+    console.log(`✅ 授權驗證成功 - ${data.bar}（到期：${data.expires}）`);
+  } catch {
+    console.warn("⚠️  無法連線驗證授權（網路問題），暫時允許啟動");
+  }
+}
+
+await checkLicense();
 
 const PORT = Number(process.env.PORT || process.env.LAN_PORT || 13001);
 const SLOTS = 2; // slot 0 = red (P1), slot 1 = blue (P2)
