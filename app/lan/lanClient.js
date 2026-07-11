@@ -13,15 +13,15 @@
 
 export const LAN_PORT = 13001;
 
+const CLOUD_RELAY_URL = "wss://animal-cup-production.up.railway.app";
+
 export function lanWsUrl() {
   if (typeof window === "undefined") return null;
-  // Cloud relay (set via NEXT_PUBLIC_RELAY_URL env var for production)
-  const cloudRelay = process.env.NEXT_PUBLIC_RELAY_URL;
-  if (cloudRelay) return cloudRelay;
+  // Use cloud relay when served over HTTPS (production on Cloudflare)
+  if (window.location.protocol === "https:") return CLOUD_RELAY_URL;
   // Local dev: connect to relay on same host
-  const proto = window.location.protocol === "https:" ? "wss" : "ws";
   const host = window.location.hostname || "127.0.0.1";
-  return `${proto}://${host}:${LAN_PORT}`;
+  return `ws://${host}:${LAN_PORT}`;
 }
 
 export function createLanClient({ onMessage, onOpen, onClose } = {}) {
