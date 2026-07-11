@@ -2,15 +2,17 @@
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import zh from "./dict/zh.json";
+import zhTW from "./dict/zh-TW.json";
 import en from "./dict/en.json";
 import ja from "./dict/ja.json";
 import es from "./dict/es.json";
 import pt from "./dict/pt.json";
 import fr from "./dict/fr.json";
 
-const DICTS = { zh, en, ja, es, pt, fr };
+const DICTS = { zh, "zh-TW": zhTW, en, ja, es, pt, fr };
 export const LOCALES = [
-  { id: "zh", label: "中文" },
+  { id: "zh", label: "简中" },
+  { id: "zh-TW", label: "繁中" },
   { id: "en", label: "EN" },
   { id: "ja", label: "日本語" },
   { id: "es", label: "ES" },

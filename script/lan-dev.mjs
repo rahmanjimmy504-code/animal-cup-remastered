@@ -20,7 +20,7 @@ function lanIP() {
 
 const procs = [];
 function run(cmd, args, name, color) {
-  const p = spawn(cmd, args, { stdio: ["ignore", "pipe", "pipe"], env: process.env });
+  const p = spawn(cmd, args, { stdio: ["ignore", "pipe", "pipe"], env: process.env, shell: process.platform === "win32" });
   const tag = `\x1b[${color}m[${name}]\x1b[0m `;
   const pipe = (stream, out) => stream.on("data", (b) => {
     for (const line of String(b).split("\n")) if (line) out.write(tag + line + "\n");
