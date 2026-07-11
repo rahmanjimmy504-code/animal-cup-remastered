@@ -1,5 +1,5 @@
 [phases.install]
-cmds = ["npm install ws"]
+cmds = ["npm install ws --legacy-peer-deps"]
 
 [phases.build]
 cmds = []
