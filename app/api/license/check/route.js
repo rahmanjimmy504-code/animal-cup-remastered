@@ -3,6 +3,7 @@
 const LICENSES = {
   // 範例試用（14天）— 你去安裝前先用這個測試
   "ANIMCUP-TRIAL-001": { bar: "試用酒吧", expires: "2026-07-26", active: true },
+  "ANIMCUP-EF183A238D0E": { bar: "測試酒吧", expires: "2026-07-25", active: true },
 };
 
 export async function GET(request) {
