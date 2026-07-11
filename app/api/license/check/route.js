@@ -1,5 +1,3 @@
-export const runtime = "edge";
-
 // 付費授權清單 — 新增/移除後 push 到 GitHub 即自動生效（約3分鐘）
 // 格式: "授權碼": { bar: "店名", expires: "YYYY-MM-DD", active: true }
 const LICENSES = {
