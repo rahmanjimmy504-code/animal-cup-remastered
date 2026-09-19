@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { rollFormations } from "./data/formations";
+import { readGameplay, getGameplayConfig } from "./game/gameplay";
 
 const runtimeBase = "/match-runtime-min";
 
@@ -132,6 +133,13 @@ function emitStage(msg) {
   try { window.dispatchEvent(new CustomEvent("ab-load-stage", { detail: msg })); } catch (e) {}
 }
 
+function installGameplayLayer(){
+  const settings=readGameplay();
+  const config=getGameplayConfig();
+  window.__acGameplay={settings,config};
+  window.__acRules={states:["kickoff","inPlay","cornerStage1","cornerStage2","freeKickAim","penaltyAim","goalKick","throwIn","halfTime","fullTime"],shotTypes:["normal","finesse","chip","power"],passTypes:["ground","through","lofted","cross"]};
+}
+
 async function bootRuntime() {
   if (window.__gameRuntimeBooted) return;
   window.__gameRuntimeBooted = true;
@@ -150,6 +158,7 @@ async function bootRuntime() {
   }, 500);
 
   installStylesheets();
+  installGameplayLayer();
   installForceRefresh();
   log("stylesheets + forceRefresh installed");
 
@@ -227,6 +236,7 @@ async function bootRuntime() {
     ai: params.get("ai") || (params.get("play") === "1" ? 0 : 3),
     // which kit YOUR team (red slot) wears: home / away (opponent gets contrast)
     side: params.get("side") || "home",
+    gameplay: readGameplay(),
   });
   log("__startStandaloneMatch returned — waiting for ab-match-started event");
   markBoot("startStandaloneMatch returned");
