@@ -17,6 +17,10 @@ Choose from animal national teams, set your formation, and watch simulated 7v7 f
 - 🌐 Make the project easy to run and deploy on the web
 - ☁️ Support free-friendly deployment with Cloudflare Workers
 - 🛠️ Keep the project open to further community development
+- 🏆 Add a persistent Championship/Career mode
+- 📊 Track lifetime match statistics, coins, streaks and achievements
+- 💾 Save progression locally with no account or paid backend
+- 🎮 Support human play, AI-vs-AI watching, touch controls and LAN play
 
 ## 🏆 Original Animal Cup
 
@@ -26,6 +30,21 @@ The original Animal Cup was published through the **HappySeeds** platform:
 - HappySeeds: https://happyseeds.ai/
 
 This remastered project builds on that concept while maintaining a clear distinction between the original project and this community-developed version.
+
+## 🏆 Full game systems
+
+Animal Cup Remastered is more than a match viewer. The current game layer includes:
+
+- **Quick Match** — choose teams, formations, difficulty, match length and kit.
+- **Human Play** — control your team on desktop or touch devices.
+- **AI Watch** — let both teams play while you follow the broadcast-style HUD.
+- **Championship Cup** — a persistent three-round knockout career run with a trophy outcome.
+- **Career profile** — local matches, wins, draws, losses, goals, coins, streaks and achievements.
+- **Match presentation** — scoreboard, possession/stat overlays, goal effects, crowd/audio events, screenshots, zoom and full-time results.
+- **LAN multiplayer** — phones can act as controllers for a shared-screen match.
+- **Mobile/PWA support** — responsive landing UI, touch controls and installable web-app metadata.
+
+Progress is stored in browser `localStorage`; no login, database or paid service is required for the core progression systems.
 
 ## 🚀 Technology
 - **Framework:** Next.js 15 (App Router) + React 19
