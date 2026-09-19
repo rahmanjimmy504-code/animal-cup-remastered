@@ -15,6 +15,7 @@ import { FORMATIONS } from "./data/formations";
 import FormationDiagram from "./ui/FormationDiagram";
 import css from "./Landing.module.css";
 import ProfileBar from "./game/ProfileBar";
+import ThemeToggle from "./game/ThemeToggle";
 import "./game/profile.css";
 
 // Runs before paint on the client (so fit + randomize land before the page is
@@ -266,6 +267,13 @@ export default function Landing() {
           <button type="button" className={css.cup} onClick={() => router.push("/cup")}>
             🏆 Championship Cup
           </button>
+          <button type="button" className={css.cup} onClick={() => router.push("/season")}>
+            🌟 Season Mode
+          </button>
+          <button type="button" className={css.cup} onClick={() => router.push("/profile")}>
+            👤 Save & Profile
+          </button>
+          <ThemeToggle />
           <button type="button" className={css.lan} onClick={goLan}>
             <LanIcon /> {t("home.lan")}
           </button>
