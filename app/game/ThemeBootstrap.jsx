@@ -1,1 +1,4 @@
-"use client";import{useLayoutEffect}from"react";import{readTheme,setTheme}from"./game/cup";export default function ThemeBootstrap(){useLayoutEffect(()=>setTheme(readTheme()),[]);return null}
+"use client";
+import{useLayoutEffect}from"react";
+import{readTheme,setTheme}from"./cup";
+export default function ThemeBootstrap(){useLayoutEffect(()=>setTheme(readTheme()),[]);return null}
