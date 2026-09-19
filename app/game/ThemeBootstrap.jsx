@@ -1,0 +1,1 @@
+"use client";import{useEffect}from"react";import{readTheme,setTheme}from"./game/cup";export default function ThemeBootstrap(){useEffect(()=>setTheme(readTheme()),[]);return null}
