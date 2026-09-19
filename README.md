@@ -1,98 +1,90 @@
 <div align="center">
 
-# 🐾 Animal Cup — AI 动物足球模拟器
+# 🐾 Animal Cup — AI Animal Football Simulator
 
 **AI Animal Football Simulator**
 
-从 8 支动物国家队中挑选你的队伍，排布阵型，观看全程模拟的 7v7 足球赛事，实时统计数据 — 移动端随处可玩。
-
 Pick from 8 animal national teams, set your formation, and watch fully simulated 7v7 matches with live stats — playable anywhere on mobile.
 
-[English](#english) · [中文](#中文)
+[English](#english) · [Chinese](#chinese)
 
 </div>
 
 ---
 
-<a name="中文"></a>
+<a name="chinese"></a>
 
-## 中文
+## Chinese
 
-> **项目来源**
-> 本项目基于 [HappySeeds](https://happyseeds.ai/) 平台上的原创作品
-> [Animal Cup](https://app-ce3abc4512.happyseeds.space/) Remix 后，
-> 使用 **Claude Code** 进行二次开发并开源。
+> **Project Origin**
+> This project is based on the original work [Animal Cup](https://app-ce3abc4512.happyseeds.space/)
+> from the [HappySeeds](https://happyseeds.ai/) platform.
+> It was further developed using **Claude Code** and released as open source.
 
-### 🎮 简介
+### 🎮 Introduction
 
-Animal Cup 灵感来自经典街机足球游戏。你从 8 支动物国家队中选择队伍、设置阵型，然后观看一场完全模拟的 7v7 比赛，并实时查看比赛数据。整个游戏为移动端优化，随时随地都能玩，同时支持局域网多人对战。
+Animal Cup is inspired by classic arcade football games. You choose a team from 8 animal national squads, set your formation, and watch a fully simulated 7v7 match while viewing real-time statistics. The game is optimized for mobile devices, allowing you to play anytime, anywhere, and supports local multiplayer matches. ### 🚀 Tech Stack
 
-### 🚀 技术栈
+- **Framework**: Next.js 15 (App Router) + React 19
+- **Match Engine**: Pre-built Pixi.js runtime (`public/match-runtime-min/`)
+- **Deployment**: Cloudflare Workers (via OpenNext)
+- **Multiplayer**: LAN WebSocket relay (mobile phones act as wireless controllers)
+- **Internationalization**: Built-in multi-language support (`app/i18n/`)
 
-- **框架**：Next.js 15（App Router）+ React 19
-- **比赛引擎**：预构建的 Pixi.js 运行时（`public/match-runtime-min/`）
-- **部署**：Cloudflare Workers（通过 OpenNext）
-- **多人对战**：局域网 WebSocket 中继（手机作为无线手柄）
-- **国际化**：内置多语言支持（`app/i18n/`）
-
-### 📂 项目结构
+### 📂 Project Structure
 
 ```text
 app/
-├── api/          # 后端 API 路由
-├── data/         # 队伍、球员等游戏数据
-├── i18n/         # 多语言文案
-├── lan/          # 局域网对战页面
-├── lobby/        # 大厅（选队、排阵型）
-├── match/        # 比赛页面
-├── pad/          # 手机手柄页面
-├── ui/           # UI 组件
-├── GameClient.jsx  # 游戏客户端入口
-├── Landing.jsx     # 落地页
-└── layout.jsx      # 全局布局
+├── api/          # Backend API routes
+├── data/         # Game data (teams, players, etc.)
+├── i18n/         # Multi-language content
+├── lan/          # LAN match pages
+├── lobby/        # Lobby (team selection, formation setup)
+├── match/        # Match view
+├── pad/          # Mobile controller page
+├── ui/           # UI components
+├── GameClient.jsx  # Game client entry point
+├── Landing.jsx     # Landing page
+└── layout.jsx      # Global layout
 public/
-└── match-runtime-min/   # 预构建的比赛引擎（Pixi 运行时）
-script/           # 构建 / 校验 / 局域网服务脚本
+└── match-runtime-min/   # Pre-built match engine (Pixi runtime)
+script/           # Build / validation / LAN service scripts
 ```
 
-### 🕹 快速开始
+### 🕹 Quick Start
 
-推荐使用 pnpm（仓库已附带 `pnpm-lock.yaml`）：
+Using pnpm is recommended (`pnpm-lock.yaml` is included in the repo):
 
 ```bash
-# 安装依赖
+# Install dependencies
 pnpm install
 
-# 启动开发服务器（端口 13000）
+# Start development server (port 13000)
 pnpm dev
 ```
 
-打开 `http://localhost:13000` 即可。
+Open `http://localhost:13000` to get started.
 
-**局域网多人对战：**
+**LAN Multiplayer:**
 
 ```bash
 pnpm dev:lan
 ```
 
-比赛在共享大屏上运行，手机扫码后作为无线手柄接入。
+The match runs on a shared large screen; mobile phones connect as wireless controllers after scanning a QR code. ### 🛠 Common Scripts
 
-### 🛠 常用脚本
-
-| 命令 | 说明 |
+| Command | Description |
 | --- | --- |
-| `pnpm dev` | 启动开发服务器（端口 13000） |
-| `pnpm dev:lan` | 启动带局域网对战的开发服务器 |
-| `pnpm lan` | 单独启动局域网中继服务 |
-| `pnpm build` | 生产构建 |
-| `pnpm build:worker` | 构建 Cloudflare Workers 版本 |
-| `pnpm start` | 运行生产构建 |
+| `pnpm dev` | Start the development server (port 13000) |
+| `pnpm dev:lan` | Start the development server with LAN multiplayer support |
+| `pnpm lan` | Start the LAN relay service independently |
+| `pnpm build` | Production build |
+| `pnpm build:worker` | Build the Cloudflare Workers version |
+| `pnpm start` | Run the production build |
 
-### 📄 许可证
+### 📄 License
 
-本项目基于 [Apache License 2.0](./LICENSE) 开源。
-
----
+This project is open-sourced under the [Apache License 2.0](./LICENSE). ---
 
 <a name="english"></a>
 
@@ -122,32 +114,32 @@ and it supports local-network multiplayer.
 
 ```text
 app/
-├── api/          # Backend API routes
-├── data/         # Game data (teams, players, etc.)
-├── i18n/         # Localized strings
-├── lan/          # LAN multiplayer pages
-├── lobby/        # Lobby (team select, formation setup)
-├── match/        # Match page
-├── pad/          # Phone gamepad page
-├── ui/           # UI components
-├── GameClient.jsx  # Game client entry
-├── Landing.jsx     # Landing page
-└── layout.jsx      # Global layout
+├── api/ # Backend API routes
+├── data/ # Game data (teams, players, etc.)
+├── i18n/ # Localized strings
+├── lan/ # LAN multiplayer pages
+├── lobby/ # Lobby (team select, formation setup)
+├── match/ # Match page
+├── pad/ # Phone gamepad page
+├── ui/ # UI components
+├── GameClient.jsx # Game client entry
+├── Landing.jsx # Landing page
+└── layout.jsx # Global layout
 public/
-└── match-runtime-min/   # Pre-built match engine (Pixi runtime)
-script/           # Build / verification / LAN server scripts
+└── match-runtime-min/ # Pre-built match engine (Pixi runtime)
+script/ # Build / verification / LAN server scripts
 ```
 
-### 🕹 Quick Start
+### 🕹Quick Start
 
 pnpm is recommended (a `pnpm-lock.yaml` is shipped):
 
 ```bash
-# Install dependencies
+#Install dependencies
 pnpm install
 
 # Start the dev server (port 13000)
-pnpm dev
+pnpmdev
 ```
 
 Open `http://localhost:13000`.
@@ -155,7 +147,7 @@ Open `http://localhost:13000`.
 **LAN multiplayer:**
 
 ```bash
-pnpm dev:lan
+pnpmdev:lan
 ```
 
 The match runs on a shared big screen; phones scan a QR code to join as
