@@ -6,15 +6,15 @@
 
 Pick from 8 animal national teams, set your formation, and watch fully simulated 7v7 matches with live stats — playable anywhere on mobile.
 
-[English](#english) · [Chinese](#chinese)
+
 
 </div>
 
 ---
 
-<a name="chinese"></a>
 
-## Chinese
+
+
 
 > **Project Origin**
 > This project is based on the original work [Animal Cup](https://app-ce3abc4512.happyseeds.space/)
