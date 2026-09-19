@@ -1,6 +1,7 @@
 import './globals.css';
 import { LocaleProvider } from './i18n/LocaleProvider';
 import { HappySeedsWatermark } from './HappySeedsWatermark';
+import ThemeBootstrap from './game/ThemeBootstrap';
 
 // HappySeeds watermark: read the platform env SERVER-side (a client bundle can't
 // see non-NEXT_PUBLIC_ vars) and pass to the client component as props.
@@ -66,7 +67,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className="loading" suppressHydrationWarning>
-        <LocaleProvider>{children}</LocaleProvider>
+        <LocaleProvider><ThemeBootstrap />{children}</LocaleProvider>
         <HappySeedsWatermark projectId={HS_PROJECT_ID} apiBase={HS_API_BASE} />
       </body>
     </html>
