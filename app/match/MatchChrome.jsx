@@ -10,7 +10,7 @@ import LoadingScreen from "./LoadingScreen";
 import GoalFx from "./GoalFx";
 import { StatsBars, readStats } from "./StatsPanel";
 import { captureMatch } from "./captureMatch";
-import { recordMatch, recordCupResult } from "../game/cup";
+import { recordMatch, recordCupResult, claimDaily } from "../game/cup";
 import { sfx } from "../audio/SoundBank";
 import { IconCamera, IconCheck, IconSoundOn, IconSoundOff, IconZoomIn, IconZoomOut, IconReplay, IconHome } from "../ui/Icons";
 
@@ -281,8 +281,12 @@ export default function MatchChrome() {
           blue: detail.blue,
           mode: new URLSearchParams(window.location.search).get("mode") || "quick",
         });
-        if (new URLSearchParams(window.location.search).get("mode") === "cup") {
+        const mode = new URLSearchParams(window.location.search).get("mode") || "quick";
+        if (mode === "cup") {
           recordCupResult(score);
+        }
+        if (mode === "daily" && score[0] > score[1]) {
+          claimDaily();
         }
       }
     }
