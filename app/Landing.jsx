@@ -202,6 +202,7 @@ export default function Landing() {
   return (
     <main className={css.stage}>
       <div className={css.pattern} aria-hidden />
+      <ProfileBar />
       <span className={css.lang}><LangSwitcher /></span>
       <div className={`${css.wrap} ${ready ? css.ready : ""}`} ref={wrapRef}>
         <h1 className={css.title}>{t("home.title")}</h1>
@@ -262,6 +263,9 @@ export default function Landing() {
           </button>
         </div>
         <div className={css.actionsLan}>
+          <button type="button" className={css.cup} onClick={() => router.push("/cup")}>
+            🏆 Championship Cup
+          </button>
           <button type="button" className={css.lan} onClick={goLan}>
             <LanIcon /> {t("home.lan")}
           </button>
