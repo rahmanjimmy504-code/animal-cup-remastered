@@ -1,169 +1,91 @@
-<div align="center">
+# 🐾 Animal Cup Remastered
 
-# 🐾 Animal Cup — AI Animal Football Simulator
+**A community-developed remastered version of the original Animal Cup game.**
 
-**AI Animal Football Simulator**
+Animal Cup Remastered is a rebuilt and expanded version of the original **Animal Cup** experience. It keeps the core animal-football concept while providing a modern codebase, mobile-friendly gameplay, and web deployment support.
 
-Pick from 8 animal national teams, set your formation, and watch fully simulated 7v7 matches with live stats — playable anywhere on mobile.
+> **Important:** This repository is the **remastered/community version**. It is not the original Animal Cup repository.
 
+## 🎮 What is Animal Cup Remastered?
 
+Choose from animal national teams, set your formation, and watch simulated 7v7 football matches with live statistics. The game is designed for desktop and mobile devices.
 
-</div>
+### ✨ Remastered goals
+- 🐾 Preserve the fun concept of the original Animal Cup
+- ⚽ Improve and expand the gameplay experience
+- 📱 Keep the game mobile-friendly
+- 🌐 Make the project easy to run and deploy on the web
+- ☁️ Support free-friendly deployment with Cloudflare Workers
+- 🛠️ Keep the project open to further community development
 
----
+## 🏆 Original Animal Cup
 
+The original Animal Cup was published through the **HappySeeds** platform:
 
+- Original game: https://app-ce3abc4512.happyseeds.space/
+- HappySeeds: https://happyseeds.ai/
 
+This remastered project builds on that concept while maintaining a clear distinction between the original project and this community-developed version.
 
+## 🚀 Technology
+- **Framework:** Next.js 15 (App Router) + React 19
+- **Match engine:** Pixi.js runtime (`public/match-runtime-min/`)
+- **Deployment:** Cloudflare Workers via OpenNext
+- **Multiplayer:** LAN WebSocket relay
+- **Internationalization:** Built-in multi-language support
+- **Package manager:** pnpm
 
-> **Project Origin**
-> This project is based on the original work [Animal Cup](https://app-ce3abc4512.happyseeds.space/)
-> from the [HappySeeds](https://happyseeds.ai/) platform.
-> It was further developed using **Claude Code** and released as open source.
+## 🕹️ Run locally
 
-### 🎮 Introduction
+Install dependencies with `pnpm install`, then start the development server with `pnpm dev`.
 
-Animal Cup is inspired by classic arcade football games. You choose a team from 8 animal national squads, set your formation, and watch a fully simulated 7v7 match while viewing real-time statistics. The game is optimized for mobile devices, allowing you to play anytime, anywhere, and supports local multiplayer matches. ### 🚀 Tech Stack
+The development server uses port `13000`.
 
-- **Framework**: Next.js 15 (App Router) + React 19
-- **Match Engine**: Pre-built Pixi.js runtime (`public/match-runtime-min/`)
-- **Deployment**: Cloudflare Workers (via OpenNext)
-- **Multiplayer**: LAN WebSocket relay (mobile phones act as wireless controllers)
-- **Internationalization**: Built-in multi-language support (`app/i18n/`)
+### LAN multiplayer
 
-### 📂 Project Structure
+Use `pnpm dev:lan` to start development with LAN multiplayer support. The match can run on a shared screen while phones connect as wireless controllers.
 
-```text
-app/
-├── api/          # Backend API routes
-├── data/         # Game data (teams, players, etc.)
-├── i18n/         # Multi-language content
-├── lan/          # LAN match pages
-├── lobby/        # Lobby (team selection, formation setup)
-├── match/        # Match view
-├── pad/          # Mobile controller page
-├── ui/           # UI components
-├── GameClient.jsx  # Game client entry point
-├── Landing.jsx     # Landing page
-└── layout.jsx      # Global layout
-public/
-└── match-runtime-min/   # Pre-built match engine (Pixi runtime)
-script/           # Build / validation / LAN service scripts
-```
+## ☁️ Cloudflare Workers
 
-### 🕹 Quick Start
+The project includes an OpenNext Cloudflare build. Use `pnpm build:worker` to build the Cloudflare Workers version.
 
-Using pnpm is recommended (`pnpm-lock.yaml` is included in the repo):
+Intended deployment flow:
 
-```bash
-# Install dependencies
-pnpm install
+**GitHub → Build → OpenNext → Cloudflare Workers → Animal Cup Remastered**
 
-# Start development server (port 13000)
-pnpm dev
-```
+## 📂 Project structure
 
-Open `http://localhost:13000` to get started.
+- `app/` — application pages, APIs, game data, lobby, match, LAN and UI
+- `public/match-runtime-min/` — pre-built match engine
+- `script/` — build, validation and LAN service scripts
 
-**LAN Multiplayer:**
+## 🛠️ Common scripts
 
-```bash
-pnpm dev:lan
-```
-
-The match runs on a shared large screen; mobile phones connect as wireless controllers after scanning a QR code. ### 🛠 Common Scripts
-
-| Command | Description |
+| Command | Purpose |
 | --- | --- |
-| `pnpm dev` | Start the development server (port 13000) |
-| `pnpm dev:lan` | Start the development server with LAN multiplayer support |
-| `pnpm lan` | Start the LAN relay service independently |
-| `pnpm build` | Production build |
-| `pnpm build:worker` | Build the Cloudflare Workers version |
-| `pnpm start` | Run the production build |
-
-### 📄 License
-
-This project is open-sourced under the [Apache License 2.0](./LICENSE). ---
-
-<a name="english"></a>
-
-## English
-
-> **Origin**
-> This project is derived from the original
-> [Animal Cup](https://app-ce3abc4512.happyseeds.space/) on
-> [HappySeeds](https://happyseeds.ai/), remixed and rebuilt with **Claude Code**.
-
-### 🎮 Overview
-
-Animal Cup is inspired by classic arcade football games. Pick from 8 animal
-national teams, set your formation, then watch a fully simulated 7v7 match
-with live stats. The whole game is mobile-optimized so you can play anywhere,
-and it supports local-network multiplayer.
-
-### 🚀 Tech Stack
-
-- **Framework**: Next.js 15 (App Router) + React 19
-- **Match Engine**: Pre-built Pixi.js runtime (`public/match-runtime-min/`)
-- **Deployment**: Cloudflare Workers (via OpenNext)
-- **Multiplayer**: LAN WebSocket relay (phones act as wireless gamepads)
-- **i18n**: Built-in multi-language support (`app/i18n/`)
-
-### 📂 Project Structure
-
-```text
-app/
-├── api/ # Backend API routes
-├── data/ # Game data (teams, players, etc.)
-├── i18n/ # Localized strings
-├── lan/ # LAN multiplayer pages
-├── lobby/ # Lobby (team select, formation setup)
-├── match/ # Match page
-├── pad/ # Phone gamepad page
-├── ui/ # UI components
-├── GameClient.jsx # Game client entry
-├── Landing.jsx # Landing page
-└── layout.jsx # Global layout
-public/
-└── match-runtime-min/ # Pre-built match engine (Pixi runtime)
-script/ # Build / verification / LAN server scripts
-```
-
-### 🕹Quick Start
-
-pnpm is recommended (a `pnpm-lock.yaml` is shipped):
-
-```bash
-#Install dependencies
-pnpm install
-
-# Start the dev server (port 13000)
-pnpmdev
-```
-
-Open `http://localhost:13000`.
-
-**LAN multiplayer:**
-
-```bash
-pnpmdev:lan
-```
-
-The match runs on a shared big screen; phones scan a QR code to join as
-wireless gamepads.
-
-### 🛠 Scripts
-
-| Command | Description |
-| --- | --- |
-| `pnpm dev` | Start the dev server (port 13000) |
-| `pnpm dev:lan` | Dev server with LAN multiplayer |
-| `pnpm lan` | Start the LAN relay server standalone |
-| `pnpm build` | Production build |
+| `pnpm dev` | Start the development server |
+| `pnpm dev:lan` | Start development with LAN multiplayer |
+| `pnpm lan` | Start the LAN relay service |
+| `pnpm build` | Create a production build |
 | `pnpm build:worker` | Build for Cloudflare Workers |
 | `pnpm start` | Run the production build |
 
-### 📄 License
+## 📜 Project history
 
-Released under the [Apache License 2.0](./LICENSE).
+**Original Animal Cup** → **Community remix/rebuild** → **Animal Cup Remastered** → **Ongoing improvements**
+
+## 👥 Attribution
+
+This project acknowledges the original Animal Cup experience and its creators/platform. The remastered repository is maintained as a separate community-developed project.
+
+The repository also contains development work produced with AI-assisted coding tools, including Claude Code.
+
+## 📄 License
+
+This repository is released under the **Apache License 2.0**. See [LICENSE](./LICENSE) for the full license text.
+
+---
+
+### 🐾 Animal Cup Remastered
+
+**Original concept preserved. New codebase. New improvements. Community-driven development.**
