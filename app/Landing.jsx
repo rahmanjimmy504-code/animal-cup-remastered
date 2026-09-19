@@ -273,7 +273,7 @@ export default function Landing() {
           <button type="button" className={css.cup} onClick={() => router.push("/profile")}>
             👤 Save & Profile
           </button>
-          <ThemeToggle />
+          <ThemeToggle />\n          <a className="settings-link" href="/settings">⚙️ Gameplay Settings</a>
           <button type="button" className={css.lan} onClick={goLan}>
             <LanIcon /> {t("home.lan")}
           </button>
