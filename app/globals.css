@@ -91,3 +91,34 @@ canvas {
   color: #fff;
 }
 
+
+
+/* ===== global theme system ===== */
+html[data-theme="dark"], body.ac-dark {
+  color-scheme: dark;
+  background: #0b100d;
+  color: #eef4e9;
+}
+body.ac-dark {
+  background: radial-gradient(circle at 50% 0%, #243622 0%, #0b100d 72%);
+}
+body.ac-dark .theme-toggle {
+  background: #1b241c;
+  color: #dff2ce;
+  border-color: #465446;
+  box-shadow: 0 5px 14px rgba(0,0,0,.35);
+}
+body.ac-dark .theme-toggle:hover { background:#263327; transform:translateY(-1px); }
+body.ac-dark .lang-switcher__toggle {
+  background:#1a211b;
+  color:#dff2ce;
+  border-color:#39463a;
+}
+body.ac-dark .lang-switcher__menu {
+  background:#151c17;
+  border-color:#39463a;
+  box-shadow:0 10px 24px rgba(0,0,0,.45);
+}
+body.ac-dark .lang-switcher__menu button { color:#dfe9dc; }
+body.ac-dark .lang-switcher__menu button:hover { background:#253127; }
+body.ac-dark .lang-switcher__menu button.is-active { background:#5d9038; color:#fff; }
