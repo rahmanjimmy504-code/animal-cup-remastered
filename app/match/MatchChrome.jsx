@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocale } from "../i18n/LocaleProvider";
 import { portraitSrc, runtimeHeadSrc } from "../data/teams";
 import MatchEvents from "./MatchEvents";
@@ -208,6 +208,7 @@ export default function MatchChrome() {
   // keyboard legend; touch devices get on-screen joystick + buttons instead.
   const [play, setPlay] = useState(false);
   const [touch, setTouch] = useState(false);
+  const recordedRef = useRef(false);
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const modes = ["morning", "noon", "night"];
@@ -265,8 +266,25 @@ export default function MatchChrome() {
       if (e && e.detail) setTeams({ red: e.detail.red, blue: e.detail.blue });
     }
     function onEnded(e) {
-      setResult(e.detail);
+      const detail = e && e.detail ? e.detail : null;
+      if (!detail) return;
+      setResult(detail);
       setFinalStats(readStats()); // freeze the stats at the whistle
+      // The runtime owns the match simulation; this seam owns career persistence.
+      // Guard against duplicate end events so one match can never award stats twice.
+      if (!recordedRef.current) {
+        recordedRef.current = true;
+        const score = Array.isArray(detail.score) ? detail.score.map(Number) : [0, 0];
+        recordMatch({
+          score,
+          red: detail.red,
+          blue: detail.blue,
+          mode: new URLSearchParams(window.location.search).get("mode") || "quick",
+        });
+        if (new URLSearchParams(window.location.search).get("mode") === "cup") {
+          recordCupResult(score);
+        }
+      }
     }
     function onForms(e) {
       if (e && e.detail) setForms(e.detail);
