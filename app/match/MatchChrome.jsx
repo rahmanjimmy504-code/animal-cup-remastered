@@ -10,6 +10,7 @@ import LoadingScreen from "./LoadingScreen";
 import GoalFx from "./GoalFx";
 import { StatsBars, readStats } from "./StatsPanel";
 import { captureMatch } from "./captureMatch";
+import { recordMatch, recordCupResult } from "../game/cup";
 import { sfx } from "../audio/SoundBank";
 import { IconCamera, IconCheck, IconSoundOn, IconSoundOff, IconZoomIn, IconZoomOut, IconReplay, IconHome } from "../ui/Icons";
 
