@@ -973,3 +973,46 @@ body.ac-touch-play .match-controls .lang-switcher__menu {
   .lang-switcher__toggle[data-tip]::after { display: none !important; content: none !important; }
 }
 
+
+
+/* ===== in-match dark theme ===== */
+.ac-dark .match-score,
+.ac-dark .glass-btn,
+.ac-dark .match-controls .lang-switcher__toggle,
+.ac-dark .ctrl-legend,
+.ac-dark .ctrl-legend__pill,
+.ac-dark .event-card__frame,
+.ac-dark .match-result__card,
+.ac-dark .cc-card {
+  background:#171d18;
+  color:#edf4e9;
+  border-color:#354035;
+  box-shadow:0 8px 22px rgba(0,0,0,.4);
+}
+.ac-dark .match-score .ms-num,
+.ac-dark .match-score .ms-pct,
+.ac-dark .ctrl-legend__head b,
+.ac-dark .ctrl-legend__act,
+.ac-dark .event-card__frame strong,
+.ac-dark .event-card__frame p,
+.ac-dark .match-result__rib,
+.ac-dark .match-result__nums,
+.ac-dark .match-result__verdict,
+.ac-dark .cc-card b { color:#a8d77f; }
+.ac-dark .match-score .ms-clock { background:#5d9038; color:#fff; }
+.ac-dark .match-score .ms-head { background:#222b23; box-shadow:inset 0 0 0 2px #4b624c; }
+.ac-dark .match-score .ms-flag { border-color:#39463a; }
+.ac-dark .match-score .ms-detail { border-top-color:#354035; }
+.ac-dark .glass-btn,.ac-dark .match-controls .lang-switcher__toggle { color:#cfe8bc; }
+.ac-dark .glass-btn:hover,.ac-dark .match-controls .lang-switcher__toggle:hover { background:#263127; }
+.ac-dark .ctrl-legend { color:#dbe7d6; }
+.ac-dark .ctrl-legend__x { color:#aebaa9; }
+.ac-dark .ctrl-legend kbd { background:#222b23; border-color:#465446; color:#d5e1d0; box-shadow:0 2px 0 rgba(0,0,0,.25); }
+.ac-dark .match-result { background:rgba(0,0,0,.72); }
+.ac-dark .match-result__names { color:#cbd8c5; }
+.ac-dark .match-result .ak-btn { background:#5d9038; border-color:#4f7a2a; }
+.ac-dark .match-result .ak-btn--outline { background:transparent; color:#9fd172; border-color:#6aa342; }
+.ac-dark .match-result .ak-btn--outline:hover { background:#243224; }
+.ac-dark .match-controls .lang-switcher__menu { background:#151c17; border-color:#39463a; }
+.ac-dark .match-controls .lang-switcher__menu button { color:#dfe9dc; }
+.ac-dark .match-controls .lang-switcher__menu button:hover { background:#253127; }
