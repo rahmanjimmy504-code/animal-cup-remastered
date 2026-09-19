@@ -14,6 +14,8 @@ import { PLAYABLE_TEAMS, portraitSrc, runtimeHeadSrc } from "./data/teams";
 import { FORMATIONS } from "./data/formations";
 import FormationDiagram from "./ui/FormationDiagram";
 import css from "./Landing.module.css";
+import ProfileBar from "./game/ProfileBar";
+import "./game/profile.css";
 
 // Runs before paint on the client (so fit + randomize land before the page is
 // shown); falls back to useEffect during SSR to avoid the React warning.
