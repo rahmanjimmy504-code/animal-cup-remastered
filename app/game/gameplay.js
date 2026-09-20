@@ -210,3 +210,51 @@ export function effectiveAiLevel(difficulty, aiAssist) {
 export const RULE_STATES = ["kickoff", "inPlay", "cornerStage1", "cornerStage2", "freeKickAim", "penaltyAim", "goalKick", "throwIn", "halfTime", "fullTime"];
 export const SHOT_TYPES = ["normal", "finesse", "chip", "power"];
 export const PASS_TYPES = ["ground", "through", "lofted", "cross"];
+
+// ---------------------------------------------------------------------------
+// Current IFAB 2026/27 rule set used by the game's referee layer.
+// These are gameplay rules, not a claim that every optional competition
+// protocol is enabled in every mode.
+// ---------------------------------------------------------------------------
+export const CURRENT_RULES = {
+  version: "2026/27",
+  goalkeeperHoldSeconds: 8,
+  restartCountdownSeconds: 5,
+  substitutionExitSeconds: 10,
+  rules: [
+    { id: "gk-eight", label: "Goalkeeper 8-second limit", implemented: true, detail: "Holding the ball with the hands for more than 8 seconds awards the opponents a corner." },
+    { id: "throw-five", label: "Throw-in 5-second countdown", implemented: true, detail: "Deliberate delay beyond the visible 5-second restart countdown reverses the throw-in." },
+    { id: "goal-kick-five", label: "Goal-kick 5-second countdown", implemented: true, detail: "Deliberate delay beyond the visible 5-second restart countdown awards a corner to the opponents." },
+    { id: "penalty-double-touch", label: "Accidental penalty double-touch clarification", implemented: true, detail: "An accidental immediate double touch is retaken if the ball enters the goal, otherwise recorded as missed." },
+    { id: "dogso-advantage", label: "DOGSO advantage clarification", implemented: true, detail: "If advantage is played for DOGSO and a goal is scored, no yellow card is shown for that DOGSO offence." },
+    { id: "captain-only", label: "Only the captain", implemented: false, detail: "Available as a competition protocol; not forced in Animal Cup yet." },
+    { id: "var-expansion", label: "Expanded VAR reviews", implemented: false, detail: "Competition-dependent VAR additions are documented but not simulated by the browser referee." }
+  ]
+};
+
+export const CONTROL_PRESETS = {
+  pc: {
+    move: "Arrow keys",
+    pass: "A",
+    lob: "W",
+    shoot: "D (hold for power)",
+    tackle: "S",
+    switchPlayer: "Q",
+    jockey: "Ctrl",
+    trap: "T",
+    sprint: "Shift",
+    pause: "Esc"
+  },
+  mobile: {
+    move: "Left virtual joystick",
+    pass: "Pass button",
+    lob: "Lob/Cross button",
+    shoot: "Hold Shoot button",
+    tackle: "Tackle button",
+    switchPlayer: "Switch button",
+    jockey: "Hold Jockey button",
+    sprint: "Hold Sprint button",
+    camera: "Pinch to zoom"
+  }
+};
+
