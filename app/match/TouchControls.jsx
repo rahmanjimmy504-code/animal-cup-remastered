@@ -17,6 +17,11 @@
 // with a notch at the top, bold uppercase labels, pressed glow, a golden power
 // arc that fills while SHOOT is held, and a small haptic tick on press.
 //
+// Touch tuning (MatchExtras panel): reads window.__acMatchOptions.sensitivity
+// at pointer-move time (runtime only — never during SSR) and multiplies the
+// stick output, clamped to ±1. Button scale comes from the --ac-touch-scale
+// CSS var consumed by .fc-cluster in match.css.
+//
 // Input seam is unchanged: every button writes the same window.__touchInput
 // fields the engine's acApplyInput() already consumes (vx/vy/shoot/pass/…).
 // ============================================================================
@@ -72,6 +77,11 @@ function capture(e) {
   try { e.currentTarget.setPointerCapture?.(e.pointerId); } catch { /* not capturable — fine */ }
 }
 
+// Stick sensitivity from the in-match touch-tuning panel (default 1).
+function stickSensitivity() {
+  try { return window.__acMatchOptions?.sensitivity || 1; } catch { return 1; }
+}
+
 export default function TouchControls() {
   const baseRef = useRef(null);
   const thumbRef = useRef(null);
@@ -124,8 +134,9 @@ export default function TouchControls() {
     const len = Math.hypot(x, y);
     if (len > max) { x = x / len * max; y = y / len * max; }
     thumb.style.transform = `translate(${x}px, ${y}px)`;
-    setAction("vx", x / max);
-    setAction("vy", y / max);
+    const sensitivity = stickSensitivity();
+    setAction("vx", Math.max(-1, Math.min(1, x / max * sensitivity)));
+    setAction("vy", Math.max(-1, Math.min(1, y / max * sensitivity)));
   }
 
   function stickUp(e) {

@@ -1101,7 +1101,7 @@ body.ac-touch-play .match-controls .lang-switcher__menu {
    the FC Mobile HUD (SHOOT red · PASS blue · THROUGH gold · SPRINT big green).
    Geometry lives on one unit var --fc-u so the whole cluster scales together;
    the joystick on the left is NOT part of this block and stays untouched. */
-.fc-cluster{--fc-u:1;position:absolute;right:max(10px,env(safe-area-inset-right));bottom:max(10px,env(safe-area-inset-bottom));width:calc(252px*var(--fc-u));height:calc(276px*var(--fc-u));pointer-events:none;z-index:3}
+.fc-cluster{--fc-s:1;--fc-u:calc(var(--fc-s)*var(--ac-touch-scale,1));position:absolute;right:max(10px,env(safe-area-inset-right));bottom:max(10px,env(safe-area-inset-bottom));width:calc(252px*var(--fc-u));height:calc(276px*var(--fc-u));pointer-events:none;z-index:3}
 .fc-group{position:absolute;inset:0;transform-origin:92% 96%;transition:opacity .18s ease,transform .18s ease}
 .fc-group.is-off{opacity:0;transform:scale(.85);visibility:hidden;transition:opacity .18s ease,transform .18s ease,visibility 0s linear .18s}
 .fc-group.is-off .fc-btn{pointer-events:none}
@@ -1136,9 +1136,9 @@ body.ac-touch-play .match-controls .lang-switcher__menu {
 .fc-power circle{fill:none;stroke:#ffd75e;stroke-width:4;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;opacity:.95;filter:drop-shadow(0 0 3px rgba(255,215,94,.8))}
 .fc-btn.is-charging .fc-power circle{stroke-dashoffset:0;transition:stroke-dashoffset 1.05s linear}
 /* cluster scaling: shrink as one piece on small phones / short landscape */
-@media(max-width:600px){.fc-cluster{--fc-u:.92}}
-@media(max-width:380px){.fc-cluster{--fc-u:.84}}
-@media(max-height:500px) and (orientation:landscape){.fc-cluster{--fc-u:.68}}
+@media(max-width:600px){.fc-cluster{--fc-s:.92}}
+@media(max-width:380px){.fc-cluster{--fc-s:.84}}
+@media(max-height:500px) and (orientation:landscape){.fc-cluster{--fc-s:.68}}
 .phase-chip{border:2px solid rgba(255,255,255,.65);box-shadow:var(--fc-hud-shadow)}
 .event-card__frame{border-radius:18px;background:#fffef8;box-shadow:var(--fc-hud-shadow);border:2px solid rgba(120,90,50,.18)}
 .match-result__card{border-radius:22px;background:#fffef8;border:2px solid rgba(120,90,50,.18);box-shadow:0 14px 40px rgba(35,45,25,.3)}
