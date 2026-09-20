@@ -138,3 +138,10 @@ body.ac-dark .lang-switcher__menu button.is-active, html[data-theme="dark"] .lan
 .ac-menu-btn{border:2px solid #41702a;background:#5d9038;color:#fff7e2;box-shadow:0 4px 0 #41702a;padding:10px 16px;}
 .ac-dark .ac-menu-shell,.ac-dark .game-settings,.ac-dark .cup-page,.ac-dark .season-page,.ac-dark .profile-page{background:radial-gradient(120% 100% at 50% 45%,#30472b 0%,#243a24 55%,#111811 100%);}
 .ac-dark .ac-menu-card,.ac-dark .game-settings .settings-card,.ac-dark .cup-card,.ac-dark .season-card,.ac-dark .profile-card{background:#171d18;border-color:#2e392f;}
+
+/* Base-game menu consistency: all career/cup/season/profile/settings surfaces share the same paper-card language. */
+.cup-page,.season-page,.profile-page,.game-settings{font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;}
+.cup-page .cup-card,.season-page .season-card,.profile-page .profile-card,.game-settings .settings-card{border-radius:20px;box-shadow:0 8px 20px rgba(60,50,30,.32);}
+.cup-page button,.season-page button,.profile-page button,.game-settings button,.cup-page a,.season-page a,.profile-page a,.game-settings a{font-family:inherit;font-weight:900;border-radius:14px;}
+.cup-page .cup-primary,.season-page .season-primary,.profile-page .ak-btn,.game-settings .preset-grid button.selected{background:#5d9038;color:#fff7e2;border-color:#41702a;box-shadow:0 4px 0 #41702a;}
+.ac-dark .cup-page .cup-card,.ac-dark .season-page .season-card,.ac-dark .profile-page .profile-card,.ac-dark .game-settings .settings-card{background:#171d18;border-color:#2e392f;color:#eef4e9;}
