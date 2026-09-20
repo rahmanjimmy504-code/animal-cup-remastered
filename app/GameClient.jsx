@@ -53,7 +53,7 @@ function loadScript(src) {
     const script = document.createElement("script");
     script.dataset.gameScript = src;
 
-    installFcKeyboardBridge();\n  // If we have prefetched text, use a blob URL (instant, no network)
+    // If we have prefetched text, use a blob URL (instant, no network)
     const text = _prefetchedScripts[src];
     if (text) {
       const blob = new Blob([text], { type: "application/javascript" });
@@ -270,7 +270,7 @@ function installFcKeyboardBridge() {
     if(k==="l")set("shoot",false); if(k==="f")set("finesse",false); if(k==="p")set("powerShot",false); if(k==="e")set("secondDefender",false);
   });
 }
-\nexport default function GameClient() {
+\nexport default function GameClient() {\n  installFcKeyboardBridge();
   const [mounted, setMounted] = useState(false);
   const bootStarted = useRef(false);
 
