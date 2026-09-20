@@ -950,7 +950,7 @@ body.ab-goal-pop .match-score { animation: score-pop 520ms cubic-bezier(0.2, 1.6
 /* Jockey — held, just above the left stick (left thumb). Muted steel so it
    reads as a modifier next to the bright action diamond. */
 .tc-btn--jockey { left: 34px; bottom: 168px; width: 54px; height: 54px; background: #5f7d94; color: #eef6ff; }
-/* (switch-player button removed — auto-switch picks the nearest player) */
+/* Switch player — explicit manual switch alongside the jockey modifier. */\n.tc-btn--switch { left: 96px; bottom: 168px; width: 54px; height: 54px; background: #8b6fb1; color: #fff7e2; }
 
 /* touch-play: lift the HUD icon strip to a top row so it clears the on-screen
    pad in the bottom-right thumb zone (scoreboard sits top-left) */
