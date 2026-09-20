@@ -122,7 +122,7 @@ export default function SettingsPage() {
         </div>
 
         {/* ---------- controls reference (PC + touch + LAN pad) ---------- */}
-\n        <h2 className="settings-h2">2026/27 football rules</h2>\n        <div className="rules-grid">\n          {CURRENT_RULES.rules.map((rule) => (\n            <div className="rule-card" key={rule.id}>\n              <div><b>{rule.label}</b><span className={rule.implemented ? "rule-live" : "rule-optional"}>{rule.implemented ? "IN GAME" : "OPTIONAL"}</span></div>\n              <small>{rule.detail}</small>\n            </div>\n          ))}\n        </div>\n        <p className="ctrl-note">Restart countdowns use the 5-second 2026/27 protocol; goalkeeper hand control is limited to 8 seconds.</p>\n        <h2 className="settings-h2">{t("settings.controlsTitle")}</h2>
+\n        <h2 className="settings-h2">2026/27 football rules</h2>\n        <div className="rules-grid">\n          {CURRENT_RULES.rules.map((rule) => (\n            <div className="rule-card" key={rule.id}>\n              <div><b>{rule.label}</b><span className={rule.implemented === true ? "rule-live" : rule.implemented === "partial" ? "rule-partial" : "rule-optional"}>{rule.implemented === true ? "IN GAME" : rule.implemented === "partial" ? "PARTIAL" : "OPTIONAL"}</span></div>\n              <small>{rule.detail}</small>\n            </div>\n          ))}\n        </div>\n        <p className="ctrl-note">Restart countdowns use the 5-second 2026/27 protocol; goalkeeper hand control is limited to 8 seconds.</p>\n        <h2 className="settings-h2">{t("settings.controlsTitle")}</h2>
         <div className="ctrl-columns">
           <div className="ctrl-col">
             <b>{t("settings.pc")}</b>
