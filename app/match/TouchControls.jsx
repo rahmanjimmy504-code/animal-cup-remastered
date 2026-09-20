@@ -32,4 +32,5 @@ function ti() {
         <button type="button" className="tc-mobile-btn tc-mobile-btn--second" {...hold("secondDefender")}>2nd Defender</button>
       </div>
     </div>
-  );}
+  );
+}}
