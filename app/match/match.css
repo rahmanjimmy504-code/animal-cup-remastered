@@ -740,7 +740,6 @@ body.ab-goal-pop .match-score { animation: score-pop 520ms cubic-bezier(0.2, 1.6
   box-shadow: 0 6px 16px rgba(40, 60, 25, 0.35);
 }
 
-
 /* lighting must never tint the HUD: scoreboard rises above light(59)+vignette(60) */
 .match-score { z-index: 70; }
 
@@ -852,7 +851,6 @@ body.ab-goal-pop .match-score { animation: score-pop 520ms cubic-bezier(0.2, 1.6
   to { transform: rotate(360deg); }
 }
 
-
 /* play-mode controls legend (bottom-left, dismissable) */
 .ctrl-legend {
   position: fixed;
@@ -923,34 +921,6 @@ body.ab-goal-pop .match-score { animation: score-pop 520ms cubic-bezier(0.2, 1.6
   box-shadow: 0 3px 8px rgba(40,60,25,0.35);
   will-change: transform;
 }
-
-/* right action diamond */
-.tc-pad {
-  position: absolute; right: 22px; bottom: 22px;
-  width: 208px; height: 208px; pointer-events: none;
-}
-.tc-btn {
-  position: absolute; width: 62px; height: 62px; border-radius: 50%;
-  pointer-events: auto; touch-action: none;
-  display: flex; align-items: center; justify-content: center;
-  border: 2.5px solid rgba(255,255,255,0.5);
-  box-shadow: 0 4px 0 rgba(40,60,25,0.28), 0 7px 14px rgba(40,60,25,0.28);
-  color: #fff7e2; cursor: pointer; transition: transform 90ms ease, filter 90ms ease;
-  -webkit-tap-highlight-color: transparent; user-select: none;
-}
-.tc-btn:active { transform: translateY(2px) scale(0.96); filter: brightness(1.12); box-shadow: 0 2px 0 rgba(40,60,25,0.28); }
-/* symmetric diamond: 4 equal 62px buttons, equidistant (73px each way) around
-   the centre, so spacing is uniform and it reads tidy */
-.tc-btn--lob    { top: 0;    left: 73px; background: #c98a3b; }
-.tc-btn--pass   { top: 73px; left: 0;    background: #4f8a2f; }
-.tc-btn--tackle { top: 73px; right: 0;   background: #7b8a9a; }
-.tc-btn--shoot  { bottom: 0; left: 73px; background: #5d9038; }
-/* Sprint — held, dead-centre of the diamond (owner: 加速键放四个按钮中间) */
-.tc-btn--sprint { top: 76px; left: 76px; width: 56px; height: 56px; background: #f2b705; color: #3a2e0a; }
-/* Jockey — held, just above the left stick (left thumb). Muted steel so it
-   reads as a modifier next to the bright action diamond. */
-.tc-btn--jockey { left: 34px; bottom: 168px; width: 54px; height: 54px; background: #5f7d94; color: #eef6ff; }
-/* Switch player — explicit manual switch alongside the jockey modifier. */\n.tc-btn--switch { left: 96px; bottom: 168px; width: 54px; height: 54px; background: #8b6fb1; color: #fff7e2; }
 
 /* touch-play: lift the HUD icon strip to a top row so it clears the on-screen
    pad in the bottom-right thumb zone (scoreboard sits top-left) */
@@ -1090,21 +1060,6 @@ body.ac-touch-play .match-controls .lang-switcher__menu {
 .ac-dark .ctrl-legend__note { border-top-color: #465446; color: #9db198; }
 .ac-dark .phase-chip { background: rgba(18, 26, 16, 0.9); color: #cfe8bc; }
 
-/* FC-style mobile modifiers: compact, cream/green paper buttons matching the base HUD. */
-.tc-btn--modifier{position:absolute;width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,247,226,.85);background:rgba(35,61,29,.82);color:#fff7e2;font:900 12px "Arial Rounded MT Bold",Arial,sans-serif;box-shadow:0 4px 10px rgba(0,0,0,.28);z-index:3;display:grid;place-items:center}
-.tc-btn--finesse{right:174px;bottom:142px}.tc-btn--chip{right:124px;bottom:190px}.tc-btn--power{right:72px;bottom:142px}.tc-btn--through{right:124px;bottom:94px}.tc-btn--second{right:22px;bottom:142px}
-
-/* ===== FC Mobile-inspired labelled touch controls ===== */
-.tc-mobile-btn{min-width:var(--tc-btn-size,72px);height:62px;padding:0 10px;border:2px solid rgba(255,255,255,.72);border-radius:18px;pointer-events:auto;touch-action:none;display:grid;place-items:center;color:#fff7e2;font:900 14px "Arial Rounded MT Bold","Trebuchet MS",sans-serif;letter-spacing:.01em;text-shadow:0 2px 0 rgba(0,0,0,.22);box-shadow:0 5px 0 rgba(40,60,25,.3),0 8px 16px rgba(40,60,25,.28);cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;transition:transform 90ms ease,filter 90ms ease}
-.tc-mobile-btn:active{transform:translateY(3px) scale(.96);filter:brightness(1.1);box-shadow:0 2px 0 rgba(40,60,25,.3)}
-.tc-actions{position:absolute;right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));width:min(50vw,390px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-areas:"lob through shoot" "pass sprint finesse" "tackle chip power" ". second second";gap:9px;align-items:end;pointer-events:none}
-.tc-actions .tc-mobile-btn{width:100%;min-width:0}
-.tc-mobile-btn--lob{grid-area:lob;background:#c98a3b}.tc-mobile-btn--through{grid-area:through;background:#5d9038}.tc-mobile-btn--shoot{grid-area:shoot;background:#d24b3d;height:70px}.tc-mobile-btn--pass{grid-area:pass;background:#4f8a2f}.tc-mobile-btn--sprint{grid-area:sprint;background:#e0a914;color:#3a2e0a;text-shadow:none}.tc-mobile-btn--finesse{grid-area:finesse;background:#7b62a8}.tc-mobile-btn--tackle{grid-area:tackle;background:#697b8d}.tc-mobile-btn--chip{grid-area:chip;background:#b27643}.tc-mobile-btn--power{grid-area:power;background:#9b3f32}.tc-mobile-btn--second{grid-area:second;background:#536b43;width:100%!important}
-.tc-left-actions{position:absolute;left:max(18px,env(safe-area-inset-left));bottom:calc(max(18px,env(safe-area-inset-bottom)) + 145px);display:flex;gap:8px;pointer-events:none}
-.tc-left-actions .tc-mobile-btn{min-width:82px;height:48px}.tc-mobile-btn--jockey{background:#5f7d94}.tc-mobile-btn--switch{background:#8b6fb1}
-@media(max-width:600px){.tc-actions{width:min(58vw,340px);gap:7px}.tc-mobile-btn{height:56px;font-size:12px;border-radius:15px;padding:0 7px}.tc-mobile-btn--shoot{height:64px}.tc-left-actions{bottom:calc(max(18px,env(safe-area-inset-bottom)) + 138px)}}
-@media(max-height:500px) and (orientation:landscape){.tc-actions{width:min(53vw,430px);gap:5px}.tc-mobile-btn{height:45px;font-size:11px;border-radius:12px}.tc-mobile-btn--shoot{height:50px}.tc-left-actions{bottom:calc(max(12px,env(safe-area-inset-bottom)) + 82px)}.tc-left-actions .tc-mobile-btn{height:38px;min-width:68px}}
-
 /* ===== top HUD controls: always visible and reachable on touch ===== */
 .match-controls{top:12px;right:12px;bottom:auto;z-index:120;flex-direction:row;align-items:center;gap:8px}
 .match-controls .glass-btn,.match-controls .lang-switcher__toggle{width:46px;height:46px}
@@ -1141,17 +1096,49 @@ body.ac-touch-play .match-controls .lang-switcher__menu {
 .tc-stick{position:absolute;left:22px;bottom:22px;width:132px;height:132px;border-radius:50%;pointer-events:auto;touch-action:none;background:radial-gradient(circle at 50% 50%,rgba(255,254,248,.30),rgba(255,254,248,.14));border:2.5px solid rgba(255,255,255,.45);box-shadow:inset 0 2px 10px rgba(0,0,0,.18),0 4px 14px rgba(40,60,25,.28);display:flex;align-items:center;justify-content:center}
 .tc-thumb{width:60px;height:60px;border-radius:50%;background:rgba(255,254,248,.92);border:2px solid rgba(120,90,50,.30);box-shadow:0 3px 8px rgba(40,60,25,.35);will-change:transform;pointer-events:none}
 .tc-stick-label{display:none}
-/* Compact labelled action pad: 3 columns, equal cells, no overlap. */
-.tc-actions{position:absolute;right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));width:min(52vw,300px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-areas:"lob through shoot" "pass sprint finesse" "tackle chip power" "second second second";gap:6px;pointer-events:none;align-items:stretch}
-.tc-actions .tc-mobile-btn{width:100%;min-width:0;height:52px}
-.tc-mobile-btn{padding:0 5px;border:2px solid rgba(255,255,255,.72);border-radius:14px;pointer-events:auto;touch-action:none;display:grid;place-items:center;color:#fff7e2;font:900 12px "Arial Rounded MT Bold","Trebuchet MS",sans-serif;letter-spacing:.01em;text-shadow:0 2px 0 rgba(0,0,0,.22);box-shadow:0 4px 0 rgba(40,60,25,.3),0 6px 12px rgba(40,60,25,.25);cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;transition:transform 90ms ease,filter 90ms ease}
-.tc-mobile-btn:active{transform:translateY(2px) scale(.97);filter:brightness(1.1);box-shadow:0 2px 0 rgba(40,60,25,.3)}
-.tc-mobile-btn--lob{grid-area:lob;background:#c98a3b}.tc-mobile-btn--through{grid-area:through;background:#5d9038}.tc-mobile-btn--shoot{grid-area:shoot;background:#d24b3d;height:56px!important;font-size:14px}
-.tc-mobile-btn--pass{grid-area:pass;background:#4f8a2f}.tc-mobile-btn--sprint{grid-area:sprint;background:#e0a914;color:#3a2e0a;text-shadow:none}.tc-mobile-btn--finesse{grid-area:finesse;background:#7b62a8}
-.tc-mobile-btn--tackle{grid-area:tackle;background:#697b8d}.tc-mobile-btn--chip{grid-area:chip;background:#b27643}.tc-mobile-btn--power{grid-area:power;background:#9b3f32}.tc-mobile-btn--second{grid-area:second;background:#536b43}
-.tc-left-actions{position:absolute;left:22px;bottom:168px;display:flex;gap:6px;pointer-events:none;z-index:2}
-.tc-left-actions .tc-mobile-btn{width:58px;min-width:58px;height:42px;padding:0 4px;border-radius:12px;font-size:10px}
-.tc-mobile-btn--jockey{background:#5f7d94}.tc-mobile-btn--switch{background:#8b6fb1}
+/* ===== FC Mobile contextual action cluster (bottom-right thumb zone) =====
+   Dark charcoal circles with coloured accent rings + top notch, exactly like
+   the FC Mobile HUD (SHOOT red · PASS blue · THROUGH gold · SPRINT big green).
+   Geometry lives on one unit var --fc-u so the whole cluster scales together;
+   the joystick on the left is NOT part of this block and stays untouched. */
+.fc-cluster{--fc-s:1;--fc-u:calc(var(--fc-s)*var(--ac-touch-scale,1));position:absolute;right:max(10px,env(safe-area-inset-right));bottom:max(10px,env(safe-area-inset-bottom));width:calc(252px*var(--fc-u));height:calc(276px*var(--fc-u));pointer-events:none;z-index:3}
+.fc-group{position:absolute;inset:0;transform-origin:92% 96%;transition:opacity .18s ease,transform .18s ease}
+.fc-group.is-off{opacity:0;transform:scale(.85);visibility:hidden;transition:opacity .18s ease,transform .18s ease,visibility 0s linear .18s}
+.fc-group.is-off .fc-btn{pointer-events:none}
+.fc-btn{--ring:#8a9384;position:absolute;border-radius:50%;pointer-events:auto;touch-action:none;border:calc(3.5px*var(--fc-u)) solid var(--ring);background:radial-gradient(circle at 50% 28%,rgba(66,74,64,.95),rgba(21,26,20,.94));color:#fff;font:900 calc(12.5px*var(--fc-u))/1.05 "Arial Rounded MT Bold","Trebuchet MS",sans-serif;letter-spacing:.05em;text-transform:uppercase;text-shadow:0 1px 2px rgba(0,0,0,.65);box-shadow:0 calc(5px*var(--fc-u)) calc(14px*var(--fc-u)) rgba(0,0,0,.38),inset 0 calc(2px*var(--fc-u)) calc(6px*var(--fc-u)) rgba(255,255,255,.09);display:grid;place-items:center;text-align:center;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;overflow:visible;transition:transform 90ms ease,filter 90ms ease,box-shadow 90ms ease}
+/* ring notch — the little arrow FC Mobile puts on top of every ring */
+.fc-btn::after{content:"";position:absolute;top:calc(-9px*var(--fc-u));left:50%;width:calc(11px*var(--fc-u));height:calc(11px*var(--fc-u));transform:translateX(-50%) rotate(45deg);border-radius:calc(3px*var(--fc-u)) 0 0 0;background:#262b23;border-top:calc(3.5px*var(--fc-u)) solid var(--ring);border-left:calc(3.5px*var(--fc-u)) solid var(--ring)}
+.fc-btn.is-down{transform:scale(.93);filter:brightness(1.3);box-shadow:0 calc(2px*var(--fc-u)) calc(6px*var(--fc-u)) rgba(0,0,0,.4),0 0 calc(16px*var(--fc-u)) var(--ring),inset 0 calc(2px*var(--fc-u)) calc(6px*var(--fc-u)) rgba(255,255,255,.14)}
+/* sizes: main diamond 70u · sprint 96u · arc satellites 48u · lob 56u */
+.fc-btn--main{width:calc(70px*var(--fc-u));height:calc(70px*var(--fc-u))}
+.fc-btn--big{width:calc(96px*var(--fc-u));height:calc(96px*var(--fc-u));font-size:calc(14px*var(--fc-u))}
+.fc-btn--sat{width:calc(48px*var(--fc-u));height:calc(48px*var(--fc-u));font-size:calc(9.5px*var(--fc-u));letter-spacing:.03em}
+.fc-btn--lob{width:calc(56px*var(--fc-u));height:calc(56px*var(--fc-u));font-size:calc(10.5px*var(--fc-u))}
+/* diamond slots (same spots in both modes — muscle memory, like FC Mobile) */
+.fc-slot-top{right:calc(8px*var(--fc-u));bottom:calc(110px*var(--fc-u))}   /* SHOOT / TACKLE */
+.fc-slot-left{right:calc(112px*var(--fc-u));bottom:calc(4px*var(--fc-u))}  /* PASS / SWITCH */
+.fc-slot-mid{right:calc(100px*var(--fc-u));bottom:calc(102px*var(--fc-u))} /* THROUGH / CLEAR */
+.fc-slot-big{right:0;bottom:0}                                             /* SPRINT corner */
+/* modifier arc curving over the diamond */
+.fc-arc-a{right:calc(198px*var(--fc-u));bottom:calc(206px*var(--fc-u))}
+.fc-arc-b{right:calc(136px*var(--fc-u));bottom:calc(224px*var(--fc-u))}
+.fc-arc-c{right:calc(72px*var(--fc-u));bottom:calc(224px*var(--fc-u))}
+.fc-arc-d{right:calc(14px*var(--fc-u));bottom:calc(206px*var(--fc-u))}
+/* ring accents */
+.fc-ring-shoot{--ring:#c4453a}.fc-ring-tackle{--ring:#c4453a}
+.fc-ring-pass{--ring:#3f7dc4}.fc-ring-switch{--ring:#9a7bc4}
+.fc-ring-through{--ring:#d9a521}.fc-ring-clear{--ring:#d9772b}
+.fc-ring-sprint{--ring:#46a44c}
+.fc-ring-finesse{--ring:#8b6fb1}.fc-ring-lob{--ring:#2f9e8f}.fc-ring-chip{--ring:#c9762b}.fc-ring-power{--ring:#a03a2e}
+.fc-ring-second{--ring:#6f8fa8}.fc-ring-jockey{--ring:#6f8fa8}
+/* golden charge arc — fills while SHOOT is held (FC power-up feel) */
+.fc-power{position:absolute;inset:calc(-8px*var(--fc-u));width:calc(100% + 16px*var(--fc-u));height:calc(100% + 16px*var(--fc-u));pointer-events:none;transform:rotate(-90deg)}
+.fc-power circle{fill:none;stroke:#ffd75e;stroke-width:4;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;opacity:.95;filter:drop-shadow(0 0 3px rgba(255,215,94,.8))}
+.fc-btn.is-charging .fc-power circle{stroke-dashoffset:0;transition:stroke-dashoffset 1.05s linear}
+/* cluster scaling: shrink as one piece on small phones / short landscape */
+@media(max-width:600px){.fc-cluster{--fc-s:.92}}
+@media(max-width:380px){.fc-cluster{--fc-s:.84}}
+@media(max-height:500px) and (orientation:landscape){.fc-cluster{--fc-s:.68}}
 .phase-chip{border:2px solid rgba(255,255,255,.65);box-shadow:var(--fc-hud-shadow)}
 .event-card__frame{border-radius:18px;background:#fffef8;box-shadow:var(--fc-hud-shadow);border:2px solid rgba(120,90,50,.18)}
 .match-result__card{border-radius:22px;background:#fffef8;border:2px solid rgba(120,90,50,.18);box-shadow:0 14px 40px rgba(35,45,25,.3)}
@@ -1162,14 +1149,10 @@ body.ac-touch-play .match-controls .lang-switcher__menu {
 @media(max-width:600px){
  .player-info{top:72px}.phase-chip{top:116px;max-width:calc(100vw - 24px)}
  .tc-stick{width:120px;height:120px;left:16px;bottom:16px}.tc-thumb{width:54px;height:54px}
- .tc-actions{right:10px;bottom:12px;width:min(55vw,290px);gap:5px}.tc-actions .tc-mobile-btn{height:48px}.tc-mobile-btn--shoot{height:52px!important}
- .tc-left-actions{left:16px;bottom:148px}.tc-left-actions .tc-mobile-btn{width:54px;min-width:54px;height:38px;font-size:9px}
 }
 @media(max-height:500px) and (orientation:landscape){
  .player-info{top:62px;transform:scale(.8);transform-origin:top left}.phase-chip{top:56px}
  .tc-stick{width:100px;height:100px;left:14px;bottom:14px}.tc-thumb{width:46px;height:46px}
- .tc-actions{width:min(48vw,360px);gap:4px}.tc-actions .tc-mobile-btn{height:40px;font-size:10px}.tc-mobile-btn--shoot{height:44px!important}
- .tc-left-actions{left:14px;bottom:120px}.tc-left-actions .tc-mobile-btn{width:50px;min-width:50px;height:32px;font-size:8px}
 }
 .ac-dark .ctrl-legend{background:#171d18;border-color:#354035}.ac-dark .ctrl-legend kbd{background:#222b23;border-color:#465446;color:#d5e1d0}
 .ac-dark .tc-stick{background:radial-gradient(circle at 50% 50%,rgba(237,244,233,.16),rgba(237,244,233,.06));border-color:rgba(220,235,215,.55)}

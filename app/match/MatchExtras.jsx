@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocale } from "../i18n/LocaleProvider";
 import { captureMatch } from "./captureMatch";
 import { PLAYABLE_TEAMS } from "../data/teams";
@@ -9,9 +9,17 @@ const OPTIONS_KEY = "animalCupMatchOptions";
 const TACTICS = ["balanced", "attacking", "defensive", "counter"];
 const PERFORMANCE = ["auto", "quality", "performance"];
 
+// Defaults MUST match MatchChrome's — used as the server-prerender snapshot.
+// currentMatch() reads window.location and therefore can only run in the
+// browser: calling it from useMemo during render broke `next build`
+// prerendering of /match with "ReferenceError: window is not defined" (CI
+// 2026-09-20). So teams starts at the defaults and is filled in after
+// hydration, exactly like MatchChrome does.
+const DEFAULT_TEAMS = { red: "england", blue: "france" };
+
 function currentMatch() {
   const q = new URLSearchParams(window.location.search);
-  return { red: q.get("red") || "england", blue: q.get("blue") || "france" };
+  return { red: q.get("red") || DEFAULT_TEAMS.red, blue: q.get("blue") || DEFAULT_TEAMS.blue };
 }
 
 export default function MatchExtras() {
@@ -19,7 +27,10 @@ export default function MatchExtras() {
   const [panel, setPanel] = useState(null);
   const [highlights, setHighlights] = useState([]);
   const [options, setOptions] = useState({ tactic: "balanced", performance: "auto", touchScale: 1, sensitivity: 1 });
-  const teams = useMemo(() => currentMatch(), []);
+  const [teams, setTeams] = useState(DEFAULT_TEAMS);
+
+  // Client-only: read ?red=&blue= from the URL (never during prerender).
+  useEffect(() => { setTeams(currentMatch()); }, []);
 
   useEffect(() => {
     try { setOptions((old) => ({ ...old, ...JSON.parse(localStorage.getItem(OPTIONS_KEY) || "{}") })); } catch {}

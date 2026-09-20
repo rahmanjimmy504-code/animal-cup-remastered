@@ -113,5 +113,20 @@
   "match.rematch": "Rematch",
   "match.newmatch": "New Match",
   "settings.title": "Gameplay Settings",
-  "settings.back": "← Main menu"
+  "settings.back": "← Main menu",
+  "match.traits": "Team traits",
+  "match.highlights": "Highlights",
+  "match.noHighlights": "No highlights yet — goals land here.",
+  "match.tactics": "Tactics",
+  "match.tacticsHint": "Sets how your AI teammates position and press.",
+  "match.tactic.balanced": "Balanced",
+  "match.tactic.attacking": "Attacking",
+  "match.tactic.defensive": "Defensive",
+  "match.tactic.counter": "Counter",
+  "match.performance": "Performance",
+  "match.touchSize": "Button size",
+  "match.touchSensitivity": "Stick sensitivity",
+  "match.performance.auto": "Auto",
+  "match.performance.quality": "Quality",
+  "match.performance.performance": "Performance"
 }
