@@ -97,8 +97,6 @@ Intended deployment flow:
 
 This project acknowledges the original Animal Cup experience and its creators/platform. The remastered repository is maintained as a separate community-developed project.
 
-The repository also contains development work produced with AI-assisted coding tools, including Claude Code.
-
 ## 📄 License
 
 This repository is released under the **Apache License 2.0**. See [LICENSE](./LICENSE) for the full license text.
