@@ -34,7 +34,8 @@ const ShootIcon = () => (
 const LobIcon = () => <SVG><path d="M4 16.5C8 7.5 16 7.5 20 14" /><path d="M20 14l.4-3.9M20 14l-3.8 1.2" /></SVG>;
 // Tackle — defender shield
 const TackleIcon = () => <SVG><path d="M12 3.4l6.6 2.4v5c0 3.9-2.9 6.6-6.6 7.8C8.3 17.4 5.4 14.7 5.4 10.8v-5z" /></SVG>;
-const SwitchIcon = () => <SVG><path d="M5 8h12" /><path d="M14 5l3 3-3 3" /><path d="M19 16H7" /><path d="M10 13l-3 3 3 3" /></SVG>;\n// Sprint — double chevron (hold to run), sits in the centre of the diamond
+const SwitchIcon = () => <SVG><path d="M5 8h12" /><path d="M14 5l3 3-3 3" /><path d="M19 16H7" /><path d="M10 13l-3 3 3 3" /></SVG>;
+// Sprint — double chevron (hold to run), sits in the centre of the diamond
 const SprintIcon = () => <SVG s={26}><path d="M6 6l6 6-6 6" /><path d="M13 6l6 6-6 6" /></SVG>;
 // Jockey — single chevron (hold to walk/track at reduced speed; the touch
 // contract has no walk field, so we scale the stick output — acApplyInput
@@ -138,7 +139,8 @@ export default function TouchControls() {
       {/* Jockey — held, just above the left stick (left thumb). Walks the
           controlled player at reduced speed for tighter close-downs, mirroring
           the PC Ctrl (walk) key. FC-style, easily reachable on mobile. */}
-      <button type="button" className="tc-btn tc-btn--jockey" {...hold("jockey")}><JockeyIcon /></button>\n      <button type="button" className="tc-btn tc-btn--switch" {...tap("switchPlayer")}><SwitchIcon /></button>
+      <button type="button" className="tc-btn tc-btn--jockey" {...hold("jockey")}><JockeyIcon /></button>
+      <button type="button" className="tc-btn tc-btn--switch" {...tap("switchPlayer")}><SwitchIcon /></button>
       <button type="button" className="tc-btn tc-btn--modifier tc-btn--finesse" {...hold("finesse")}>F</button>
       <button type="button" className="tc-btn tc-btn--modifier tc-btn--chip" {...tap("chip")}>C</button>
       <button type="button" className="tc-btn tc-btn--modifier tc-btn--power" {...hold("powerShot")}>P</button>
