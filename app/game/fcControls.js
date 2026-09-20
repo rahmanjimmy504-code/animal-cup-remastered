@@ -19,12 +19,13 @@ export const FC_CONTROLS = {
     shield:"Space", trap:"T", pause:"Esc"
   },
   mobile: {
-    move:"Left joystick", sprint:"Sprint (hold)", jockey:"Jockey (hold)",
-    pass:"Pass", throughPass:"Through", lobCross:"Lob/Cross", shoot:"Shoot (hold)",
-    finesse:"Finesse modifier", chip:"Chip modifier", powerShot:"Power modifier",
-    lowDriven:"Tap Shoot again", trivela:"Trivela modifier", tackle:"Tackle",
-    slide:"Slide", secondDefender:"2nd Defender", switchPlayer:"Switch",
-    teammateRun:"Run", teammateCall:"Call", shield:"Shield",
+    move:"Left joystick (bottom-left, fixed)", sprint:"SPRINT — big corner button (hold)",
+    jockey:"JOCKEY — hold (defend set)", pass:"PASS", throughPass:"THROUGH",
+    lobCross:"LOB (attack set) / CLEAR (defend set)", shoot:"SHOOT — hold to charge (power arc)",
+    finesse:"FINESSE — hold with SHOOT", chip:"CHIP — tap with SHOOT", powerShot:"POWER — hold with SHOOT",
+    lowDriven:"Tap Shoot again", trivela:"Trivela modifier", tackle:"TACKLE (defend set)",
+    slide:"TACKLE — slide (defend set)", secondDefender:"2ND DEF — hold (defend set)",
+    switchPlayer:"SWITCH (defend set)", teammateRun:"Run", teammateCall:"Call", shield:"Shield",
     setPieces:"Contextual set-piece buttons", tactics:"Tactics panel",
     camera:"Pinch / drag camera"
   }
