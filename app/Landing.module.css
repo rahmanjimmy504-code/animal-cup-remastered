@@ -234,8 +234,8 @@
   .actions { gap: 10px; }
 }
 
-/* language switcher pinned top-right, cream/green like the HUD */
-.lang { position: fixed; top: 14px; right: 14px; z-index: 20; }
+/* top-right language + dark-mode buttons */
+.topActions { position: fixed; top: 14px; right: 14px; z-index: 30; display: flex; align-items: center; gap: 8px; }\n.lang { position: static; }\n.theme { position: static; }
 .lang :global(.lang-switcher__toggle) {
   width: 44px;
   height: 44px;
@@ -396,3 +396,11 @@
 .ac-dark .cup:hover,.ac-dark .lan:hover { background:#263327; }
 
 .settings-link{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 13px;border-radius:12px;border:2px solid rgba(70,100,50,.18);background:#fffef8;color:#4f8a2f;font-weight:900;text-decoration:none;box-sizing:border-box}.settings-link:hover{transform:translateY(-1px);background:#f4eed9}.ac-dark .settings-link{background:#1b241c;border-color:#465446;color:#dff2ce}.ac-dark .settings-link:hover{background:#263327}
+
+
+/* Moon button: deliberately mirrors the home-menu language button. */
+.theme :global(.theme-toggle) { width:44px; height:44px; padding:0; display:grid; place-items:center; border-radius:14px; border:1px solid rgba(120,90,50,.2); background:var(--ak-card,#fffef8); color:#4f8a2f; box-shadow:0 4px 10px rgba(70,90,120,.25); cursor:pointer; transition:transform 120ms ease, background 120ms ease, box-shadow 120ms ease; }
+.theme :global(.theme-toggle:hover) { transform:translateY(-1px); background:#f4eed9; }
+.ac-dark .theme :global(.theme-toggle), .ac-dark .lang :global(.lang-switcher__toggle) { background:#1b241c; border-color:#465446; color:#dff2ce; box-shadow:0 4px 10px rgba(0,0,0,.35); }
+.ac-dark .theme :global(.theme-toggle:hover), .ac-dark .lang :global(.lang-switcher__toggle:hover) { background:#263327; }
+@media (max-width:720px) { .topActions { top:10px; right:10px; gap:6px; } .theme :global(.theme-toggle), .lang :global(.lang-switcher__toggle) { width:40px; height:40px; border-radius:12px; } }
