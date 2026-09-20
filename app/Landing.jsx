@@ -221,7 +221,7 @@ export default function Landing() {
     <main className={css.stage}>
       <div className={css.pattern} aria-hidden />
       <ProfileBar />
-      <span className={css.lang}><LangSwitcher /></span>
+      <div className={css.topActions}><span className={css.lang}><LangSwitcher /></span><span className={css.theme}><ThemeToggle /></span></div>
       <div className={`${css.wrap} ${ready ? css.ready : ""}`} ref={wrapRef}>
         <h1 className={css.title}>{t("home.title")}</h1>
 
@@ -290,7 +290,6 @@ export default function Landing() {
           <button type="button" className={css.cup} onClick={() => router.push("/profile")}>
             {t("home.profile")}
           </button>
-          <ThemeToggle />
           {/* css["settings-link"] — a literal class name would miss the hashed
               module class and render as an unstyled link (2026-09 fix); the
               old line also carried a stray literal \n that rendered as text */}
