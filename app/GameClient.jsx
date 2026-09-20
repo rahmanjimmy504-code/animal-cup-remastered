@@ -85,8 +85,7 @@ function installForceRefresh() {
     console.error(
       "[uncaught] " +
         message +
-        "
-" +
+        "\n" +
         "File: " +
         source +
         "@" +
@@ -125,8 +124,7 @@ function markBoot(stage) {
   try {
     localStorage.setItem(
       "bootStages",
-      (localStorage.getItem("bootStages") || "") + Date.now() + " " + stage + "
-",
+      (localStorage.getItem("bootStages") || "") + Date.now() + " " + stage + "\n",
     );
   } catch (e) {}
 }
