@@ -14,9 +14,23 @@ function input() {
   return window.__touchInput;
 }
 
+const pulseTimers = new Map();
+
 function setAction(name, value) {
   const state = input();
   state[name] = value;
+  state.active = true;
+}
+
+function pulseAction(name) {
+  const state = input();
+  state.active = true;
+  state[name] = true;
+  clearTimeout(pulseTimers.get(name));
+  pulseTimers.set(name, setTimeout(() => {
+    state[name] = false;
+    state.active = state.vx !== 0 || state.vy !== 0;
+  }, 140));
 }
 
 export default function TouchControls() {
@@ -49,16 +63,16 @@ export default function TouchControls() {
     const len = Math.hypot(x, y);
     if (len > max) { x = x / len * max; y = y / len * max; }
     thumb.style.transform = `translate(${x}px, ${y}px)`;
-    setAction("x", x / max);
-    setAction("y", y / max);
+    setAction("vx", x / max);
+    setAction("vy", y / max);
   }
 
   function stickUp(e) {
     if (pointerRef.current !== null && e.pointerId !== pointerRef.current) return;
     pointerRef.current = null;
     if (thumbRef.current) thumbRef.current.style.transform = "translate(0,0)";
-    setAction("x", 0);
-    setAction("y", 0);
+    setAction("vx", 0);
+    setAction("vy", 0);
   }
 
   function hold(name) {
@@ -75,11 +89,10 @@ export default function TouchControls() {
       onPointerDown: (e) => {
         e.preventDefault();
         e.currentTarget.setPointerCapture?.(e.pointerId);
-        setAction(name, true);
+        pulseAction(name);
       },
-      onPointerUp: (e) => { e.preventDefault(); setAction(name, false); },
-      onPointerCancel: () => setAction(name, false),
-      onPointerLeave: () => setAction(name, false),
+      onPointerUp: (e) => e.preventDefault(),
+      onPointerCancel: () => {},
     };
   }
 
