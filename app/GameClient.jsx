@@ -85,7 +85,8 @@ function installForceRefresh() {
     console.error(
       "[uncaught] " +
         message +
-        "\n" +
+        "
+" +
         "File: " +
         source +
         "@" +
@@ -124,7 +125,8 @@ function markBoot(stage) {
   try {
     localStorage.setItem(
       "bootStages",
-      (localStorage.getItem("bootStages") || "") + Date.now() + " " + stage + "\n",
+      (localStorage.getItem("bootStages") || "") + Date.now() + " " + stage + "
+",
     );
   } catch (e) {}
 }
@@ -270,7 +272,9 @@ function installFcKeyboardBridge() {
     if(k==="l")set("shoot",false); if(k==="f")set("finesse",false); if(k==="p")set("powerShot",false); if(k==="e")set("secondDefender",false);
   });
 }
-\nexport default function GameClient() {\n  installFcKeyboardBridge();
+
+export default function GameClient() {
+  installFcKeyboardBridge();
   const [mounted, setMounted] = useState(false);
   const bootStarted = useRef(false);
 
