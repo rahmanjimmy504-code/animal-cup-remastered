@@ -223,8 +223,8 @@ export const CURRENT_RULES = {
   substitutionExitSeconds: 10,
   rules: [
     { id: "gk-eight", label: "Goalkeeper 8-second limit", implemented: true, detail: "Holding the ball with the hands for more than 8 seconds awards the opponents a corner." },
-    { id: "throw-five", label: "Throw-in 5-second countdown", implemented: true, detail: "Deliberate delay beyond the visible 5-second restart countdown reverses the throw-in." },
-    { id: "goal-kick-five", label: "Goal-kick 5-second countdown", implemented: true, detail: "Deliberate delay beyond the visible 5-second restart countdown awards a corner to the opponents." },
+    { id: "throw-five", label: "Throw-in 5-second countdown", implemented: "partial", detail: "The human throw-in control already times out at 5 seconds; the full referee reversal animation/decision is not yet simulated." },
+    { id: "goal-kick-five", label: "Goal-kick 5-second countdown", implemented: "partial", detail: "The human goal-kick control times out after 5 seconds; the full referee reversal-to-corner behaviour is not yet simulated." },
     { id: "penalty-double-touch", label: "Accidental penalty double-touch clarification", implemented: true, detail: "An accidental immediate double touch is retaken if the ball enters the goal, otherwise recorded as missed." },
     { id: "dogso-advantage", label: "DOGSO advantage clarification", implemented: true, detail: "If advantage is played for DOGSO and a goal is scored, no yellow card is shown for that DOGSO offence." },
     { id: "captain-only", label: "Only the captain", implemented: false, detail: "Available as a competition protocol; not forced in Animal Cup yet." },
