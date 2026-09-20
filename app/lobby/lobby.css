@@ -149,3 +149,13 @@
 .lb-btn--ghost { background: rgba(0, 0, 0, 0.28); color: #fff; }
 .lb-btn--go { background: #ffd23c; color: #2a3d10; box-shadow: 0 5px 0 #c79a16; }
 .lb-btn--go:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+
+/* ===== dark mode (2026-09): the lobby is a self-contained green scene; in
+   dark theme it becomes a night-green floodlit scene (white text stays). ===== */
+.ac-dark .lb { background: radial-gradient(120% 90% at 50% 0%, #2c4d1f 0%, #1c3813 45%, #0c1a08 100%); }
+.ac-dark .lb-pattern { background-image: radial-gradient(rgba(255, 255, 255, 0.045) 2px, transparent 2px); }
+.ac-dark .lb-card { background: rgba(0, 0, 0, 0.34); border-color: rgba(255, 255, 255, 0.10); }
+.ac-dark .lb-slot { background: rgba(255, 255, 255, 0.05); }
+.ac-dark .lb-slot.is-on { background: rgba(255, 255, 255, 0.10); }
+.ac-dark .lb-btn--ghost { background: rgba(0, 0, 0, 0.42); }
+.ac-dark .lb-url { background: rgba(0, 0, 0, 0.38); }

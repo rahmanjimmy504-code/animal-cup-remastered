@@ -55,6 +55,18 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Theme boot — runs BEFORE first paint. ThemeBootstrap (React) only
+            applies the theme post-hydration, so dark users flashed the light
+            theme on every navigation (FOUC). This script mirrors cup.js's
+            readTheme/setTheme: same localStorage key, same data-theme
+            attribute + ac-dark class. html[data-theme] survives hydration,
+            and every page's dark rules are descendant-scoped (.ac-dark .x),
+            so the pre-hydration frames are fully themed. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("animalCupRemastered.theme")||"light";if(t==="dark"){document.documentElement.dataset.theme="dark";document.documentElement.classList.add("ac-dark");document.body.classList.add("ac-dark");}}catch(e){}})();`,
+          }}
+        />
         {/* Display fonts. Titan One = chunky cartoon face for the hero logo
             (Latin only); ZCOOL KuaiLe covers the CJK title fallback (动物杯);
             Baloo 2 is the rounded UI display font used across the HUD. Google

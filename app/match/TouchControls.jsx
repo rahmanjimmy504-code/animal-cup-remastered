@@ -7,11 +7,12 @@
 // into the controller each tick. Pointer events (finger + mouse); SVG glyphs,
 // no emoji, to match the HUD icon style.
 import { useEffect, useRef } from "react";
+import { getGameplayConfig } from "../game/gameplay.js";
 
 function ti() {
   return (window.__touchInput =
     window.__touchInput ||
-    { active: false, vx: 0, vy: 0, shoot: false, sprint: false, pass: false, lob: false, switchPlayer: false, tackle: false });
+    { active: false, vx: 0, vy: 0, shoot: false, sprint: false, pass: false, lob: false, switchPlayer: false, tackle: false, jockey: false });
 }
 
 const SVG = (props) => (
@@ -35,6 +36,10 @@ const LobIcon = () => <SVG><path d="M4 16.5C8 7.5 16 7.5 20 14" /><path d="M20 1
 const TackleIcon = () => <SVG><path d="M12 3.4l6.6 2.4v5c0 3.9-2.9 6.6-6.6 7.8C8.3 17.4 5.4 14.7 5.4 10.8v-5z" /></SVG>;
 // Sprint — double chevron (hold to run), sits in the centre of the diamond
 const SprintIcon = () => <SVG s={26}><path d="M6 6l6 6-6 6" /><path d="M13 6l6 6-6 6" /></SVG>;
+// Jockey — single chevron (hold to walk/track at reduced speed; the touch
+// contract has no walk field, so we scale the stick output — acApplyInput
+// derives controller speed from the vx/vy magnitude).
+const JockeyIcon = () => <SVG s={26}><path d="M9 6l6 6-6 6" /></SVG>;
 
 export default function TouchControls() {
   const baseRef = useRef(null);
@@ -99,15 +104,19 @@ export default function TouchControls() {
     const m = Math.hypot(vx, vy);
     if (m > 1) { vx /= m; vy /= m; }
     const T = ti();
+    // Jockey (FC-style walk/track): scale the stick so the controller's speed
+    // drops to the preset's jockey value. Read per-frame so a settings change
+    // mid-session applies without a reload.
+    const jk = T.jockey ? (getGameplayConfig().jockeySpeed || 0.55) : 1;
     if (m < 0.18) { T.vx = 0; T.vy = 0; } // dead zone
-    else { T.vx = vx; T.vy = vy; }        // sprint is the centre button now
+    else { T.vx = vx * jk; T.vy = vy * jk; } // sprint is the centre button now
   }
   function stickUp(e) {
     const s = st.current;
     if (s.id !== e.pointerId) return;
     s.id = null;
     if (thumbRef.current) thumbRef.current.style.transform = "translate(0px,0px)";
-    const T = ti(); T.vx = 0; T.vy = 0;
+    const T = ti(); T.vx = 0; T.vy = 0; T.jockey = false;
   }
 
   const hold = (key) => ({
@@ -126,6 +135,10 @@ export default function TouchControls() {
            onPointerUp={stickUp} onPointerCancel={stickUp}>
         <span className="tc-thumb" ref={thumbRef} />
       </div>
+      {/* Jockey — held, just above the left stick (left thumb). Walks the
+          controlled player at reduced speed for tighter close-downs, mirroring
+          the PC Ctrl (walk) key. FC-style, easily reachable on mobile. */}
+      <button type="button" className="tc-btn tc-btn--jockey" {...hold("jockey")}><JockeyIcon /></button>
       <div className="tc-pad">
         <button type="button" className="tc-btn tc-btn--lob" {...tap("lob")}><LobIcon /></button>
         <button type="button" className="tc-btn tc-btn--pass" {...tap("pass")}><PassIcon /></button>

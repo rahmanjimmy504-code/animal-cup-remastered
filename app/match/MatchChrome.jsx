@@ -5,6 +5,8 @@ import { useLocale } from "../i18n/LocaleProvider";
 import { portraitSrc, runtimeHeadSrc } from "../data/teams";
 import MatchEvents from "./MatchEvents";
 import TouchControls from "./TouchControls";
+import PlayerInfo from "./PlayerInfo";
+import { useUserAssist } from "../game/userAssist";
 import LangSwitcher from "../i18n/LangSwitcher";
 import LoadingScreen from "./LoadingScreen";
 import GoalFx from "./GoalFx";
@@ -172,6 +174,8 @@ function ControlsLegend({ t }) {
     { keys: ["W"], a: t("controls.lob") },
     { keys: ["S"], a: t("controls.tackle") },
     { keys: ["Q"], a: t("controls.switch") },
+    { keys: ["Ctrl"], a: t("controls.jockey") },
+    { keys: ["T"], a: t("controls.trap") },
     { keys: ["Shift"], a: t("controls.sprint") },
   ];
   return (
@@ -189,12 +193,16 @@ function ControlsLegend({ t }) {
           <span className="ctrl-legend__act">{r.a}</span>
         </div>
       ))}
+      <div className="ctrl-legend__note">{t("controls.modNote")}</div>
     </div>
   );
 }
 
 export default function MatchChrome() {
   const { t } = useLocale();
+  // Copy the settings' assisted/manual pass mode onto the live engine users
+  // (user.passing 0–3) — the assist knob the engine honours at match time.
+  useUserAssist();
   const [loading, setLoading] = useState("cover"); // "cover" | "parting" | false
   const [result, setResult] = useState(null); // { red, blue, score:[r,b] }
   const [teams, setTeams] = useState(null); // { red, blue } for the scoreboard
@@ -372,6 +380,9 @@ export default function MatchChrome() {
 
       {play && !touch && !result ? <ControlsLegend t={t} /> : null}
       {play && touch && !loading && !result ? <TouchControls /> : null}
+      {/* FC-style controlled-player info (role + weak-foot/skill stars + the
+          two key stats for that role) — polls users.list[0].player */}
+      {play && !result && teams ? <PlayerInfo teamId={teams.red} enabled={!loading} /> : null}
 
       <MatchEvents />
 

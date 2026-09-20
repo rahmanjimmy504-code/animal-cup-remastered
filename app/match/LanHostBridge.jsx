@@ -9,12 +9,13 @@
 // that dropped) cleanly reverts that side to AI in the engine loop.
 import { useEffect } from "react";
 import { createLanClient } from "../lan/lanClient";
+import { getGameplayConfig } from "../game/gameplay.js";
 
 function ti(slot) {
   const key = slot === 1 ? "__touchInput2" : "__touchInput";
   return (window[key] =
     window[key] ||
-    { active: false, vx: 0, vy: 0, shoot: false, sprint: false, pass: false, lob: false, switchPlayer: false, tackle: false });
+    { active: false, vx: 0, vy: 0, shoot: false, sprint: false, pass: false, lob: false, switchPlayer: false, tackle: false, jockey: false });
 }
 
 export default function LanHostBridge() {
@@ -35,7 +36,7 @@ export default function LanHostBridge() {
             const T = ti(slot);
             const live = present.has(slot);
             T.active = live;
-            if (!live) { T.vx = 0; T.vy = 0; T.shoot = false; T.sprint = false; }
+            if (!live) { T.vx = 0; T.vy = 0; T.shoot = false; T.sprint = false; T.jockey = false; }
           }
           return;
         }
@@ -43,9 +44,13 @@ export default function LanHostBridge() {
           const T = ti(msg.slot);
           const d = msg.d || {};
           T.active = true;
+          // jockey (held on the pad) scales velocity with the HOST preset —
+          // the phone's own localStorage doesn't hold the host's settings
+          const jk = d.jockey ? (getGameplayConfig().jockeySpeed || 0.55) : 1;
           // continuous axes + held buttons: assign straight through
-          T.vx = d.vx || 0;
-          T.vy = d.vy || 0;
+          T.vx = (d.vx || 0) * jk;
+          T.vy = (d.vy || 0) * jk;
+          T.jockey = !!d.jockey;
           T.shoot = !!d.shoot;
           T.sprint = !!d.sprint;
           // one-shot taps: OR them in so the engine consumes+clears them itself

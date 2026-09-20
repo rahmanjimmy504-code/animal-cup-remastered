@@ -1,2 +1,148 @@
-"use client";import{useEffect,useState}from"react";import{readGameplay,saveGameplay,PRESETS}from"../game/gameplay";import ThemeToggle from"../game/ThemeToggle";import"./settings.css";
-export default function SettingsPage(){const[s,setS]=useState(null);useEffect(()=>setS(readGameplay()),[]);if(!s)return null;const set=(k,v)=>{const n={...s,[k]:v};setS(n);saveGameplay(n)};return <main className="game-settings"><header><a href="/">← Main Menu</a><ThemeToggle/></header><section className="settings-card"><h1>⚙️ Gameplay Settings</h1><p>Choose how Animal Cup plays.</p><div className="preset-grid">{Object.keys(PRESETS).map(k=><button className={s.preset===k?"selected":""} onClick={()=>set("preset",k)} key={k}><b>{k==="arcade"?"🎮 Arcade":"🧠 Authentic"}</b><small>{k==="arcade"?"Fast, responsive, skill-focused":"Slower, tactical, physics-focused"}</small></button>)}</div><div className="settings-list"><label>Passing assistance<select value={String(s.assistedPassing)} onChange={e=>set("assistedPassing",e.target.value==="true")}><option value="true">Assisted</option><option value="false">Manual</option></select></label><label>Shooting assistance<select value={String(s.assistedShooting)} onChange={e=>set("assistedShooting",e.target.value==="true")}><option value="true">Assisted</option><option value="false">Manual</option></select></label><label>AI assistance<select value={s.aiAssist} onChange={e=>set("aiAssist",e.target.value)}><option>low</option><option>medium</option><option>high</option></select></label><label>Aim indicators<select value={String(s.aimGuide)} onChange={e=>set("aimGuide",e.target.value==="true")}><option value="false">Off</option><option value="true">On</option></select></label></div><div className="rules-box"><b>Advanced controls</b><span>A Pass · D Shoot · W Lob · S Tackle · Shift Sprint · F Finesse · C Chip · P Power · J Jockey</span><span>Core rules include offside tolerance, fouls/cards, physical duels, goalkeeper tuning and set-piece states.</span></div></section></main>}
+"use client";
+// ============================================================================
+// Gameplay settings — FC 26/27-style playstyle presets + the control layer.
+//
+// Everything shown here is HONEST about what the engine honours:
+//   • Preset multipliers (speed/acceleration) → applied by the engine in
+//     setupMatch via window.__acGameplay.config (see app/match/match.jsx).
+//   • Passing assisted/manual → applied to the live engine users at match
+//     time by useUserAssist() (user.passing 1/2; sprint flips the mode).
+//   • AI assistance → applied to the AI level when a match is launched from
+//     the landing screen (effectiveAiLevel, app/game/gameplay.js).
+//   • The controls reference below mirrors the ENGINE's real default key
+//     layout (arrows / A / W / D / S / Q / Ctrl / T / Shift) — the old
+//     "F finesse / C chip / P power" text described keys the engine never
+//     bound, so it is gone.
+// The resolution algorithms behind the presets live in app/game/gameplay.js
+// and are documented in docs/gameplay-rules.md.
+// ============================================================================
+import { useEffect, useState } from "react";
+import { readGameplay, saveGameplay, PRESETS } from "../game/gameplay";
+import { useLocale } from "../i18n/LocaleProvider";
+import ThemeToggle from "../game/ThemeToggle";
+import "./settings.css";
+
+export default function SettingsPage() {
+  const { t } = useLocale();
+  const [s, setS] = useState(null);
+  useEffect(() => setS(readGameplay()), []);
+  if (!s) return null;
+  const set = (k, v) => { const n = { ...s, [k]: v }; setS(n); saveGameplay(n); };
+
+  // PC rows — the engine's ACTUAL default keyboard layout (match.rebuilt.js
+  // keyDown map in standalone-match.js), not an aspirational one.
+  const pcRows = [
+    { keys: ["↑", "↓", "←", "→"], label: t("controls.move") },
+    { keys: ["A"], label: t("controls.pass") },
+    { keys: ["W"], label: t("controls.lob") },
+    { keys: ["D"], label: t("controls.shoot") },
+    { keys: ["S"], label: t("controls.tackle") },
+    { keys: ["Q"], label: t("controls.switch") },
+    { keys: ["Ctrl"], label: t("controls.jockey") },
+    { keys: ["T"], label: t("controls.trap") },
+    { keys: ["Shift"], label: t("controls.sprint") },
+  ];
+  // Touch + LAN pad use on-screen buttons (no keys), so they render as plain
+  // action rows. Order mirrors the on-screen layout (move, then the diamond).
+  const touchRows = [
+    t("settings.stick"),
+    t("settings.shootHold"),
+    `${t("controls.pass")} / ${t("controls.lob")} / ${t("controls.tackle")} — ${t("settings.actions")}`,
+    `${t("controls.sprint")} (${t("settings.hold")})`,
+    `${t("controls.jockey")} (${t("settings.hold")})`,
+  ];
+  const padRows = [
+    t("settings.stick"),
+    t("settings.shootHold"),
+    `${t("controls.pass")} / ${t("controls.lob")} / ${t("controls.tackle")} — ${t("settings.actions")}`,
+    `${t("controls.sprint")} (${t("settings.hold")})`,
+    `${t("controls.jockey")} (${t("settings.hold")})`,
+  ];
+
+  const ctrlTable = (rows) => (
+    <div className="ctrl-table">
+      {rows.map((r, i) => (
+        <div className="ctrl-table__row" key={i}>
+          <span className="ctrl-table__keys">{r.keys.map((k) => <kbd key={k}>{k}</kbd>)}</span>
+          <span className="ctrl-table__act">{r.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+  const actionList = (rows) => (
+    <ul className="ctrl-list">
+      {rows.map((r, i) => <li key={i}>{r}</li>)}
+    </ul>
+  );
+
+  return (
+    <main className="game-settings">
+      <header>
+        <a href="/">{t("settings.back")}</a>
+        <ThemeToggle />
+      </header>
+      <section className="settings-card">
+        <h1>{t("settings.title")}</h1>
+        <p className="settings-sub">{t("settings.sub")}</p>
+
+        {/* ---------- presets ---------- */}
+        <h2 className="settings-h2">{t("settings.preset")}</h2>
+        <div className="preset-grid">
+          {Object.keys(PRESETS).map((k) => (
+            <button className={s.preset === k ? "selected" : ""} onClick={() => set("preset", k)} key={k}>
+              <b>{k === "arcade" ? "🎮 Arcade" : "🧠 Authentic"}</b>
+              <small>{k === "arcade" ? t("settings.arcadeDesc") : t("settings.authenticDesc")}</small>
+            </button>
+          ))}
+        </div>
+
+        {/* ---------- per-toggle settings ---------- */}
+        <div className="settings-list">
+          <label>
+            <span>
+              {t("settings.passing")}
+              <small>{t("settings.passingDesc")}</small>
+            </span>
+            <select value={String(s.assistedPassing)} onChange={(e) => set("assistedPassing", e.target.value === "true")}>
+              <option value="true">{t("settings.assisted")}</option>
+              <option value="false">{t("settings.manual")}</option>
+            </select>
+          </label>
+          <label>
+            <span>
+              {t("settings.aiAssist")}
+              <small>{t("settings.aiAssistDesc")}</small>
+            </span>
+            <select value={s.aiAssist} onChange={(e) => set("aiAssist", e.target.value)}>
+              <option value="low">{t("settings.aiLow")}</option>
+              <option value="medium">{t("settings.aiMedium")}</option>
+              <option value="high">{t("settings.aiHigh")}</option>
+            </select>
+          </label>
+        </div>
+
+        {/* ---------- controls reference (PC + touch + LAN pad) ---------- */}
+        <h2 className="settings-h2">{t("settings.controlsTitle")}</h2>
+        <div className="ctrl-columns">
+          <div className="ctrl-col">
+            <b>{t("settings.pc")}</b>
+            {ctrlTable(pcRows)}
+            <p className="ctrl-note">{t("controls.modNote")}</p>
+          </div>
+          <div className="ctrl-col">
+            <b>{t("settings.touch")}</b>
+            {actionList(touchRows)}
+            <p className="ctrl-note">{t("settings.aimLine")}</p>
+            <p className="ctrl-note">{t("settings.autoSwitch")}</p>
+            <p className="ctrl-note">{t("settings.pinch")}</p>
+          </div>
+          <div className="ctrl-col">
+            <b>{t("settings.pad")}</b>
+            {actionList(padRows)}
+            <p className="ctrl-note">{t("settings.pinch")}</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}

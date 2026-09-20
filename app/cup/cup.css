@@ -18,5 +18,6 @@ html,body{min-height:100%;margin:0}.cup-page{min-height:100vh;padding:22px;backg
 .ac-dark .cup-round small { color:#aebaa9; }
 .ac-dark .cup-secondary { background:#263127; color:#cfe8bc; }
 .ac-dark .cup-progress { background:#303a31; }
+.ac-dark .cup-match b { color:#9fd172; }
 .ac-dark .cup-hero { background:#263426; color:#edf4e9; }
 .ac-dark .cup-hero b,.ac-dark .you { color:#9fd172; }
