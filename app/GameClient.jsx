@@ -53,7 +53,7 @@ function loadScript(src) {
     const script = document.createElement("script");
     script.dataset.gameScript = src;
 
-    // If we have prefetched text, use a blob URL (instant, no network)
+    installFcKeyboardBridge();\n  // If we have prefetched text, use a blob URL (instant, no network)
     const text = _prefetchedScripts[src];
     if (text) {
       const blob = new Blob([text], { type: "application/javascript" });
@@ -242,7 +242,35 @@ async function bootRuntime() {
   markBoot("startStandaloneMatch returned");
 }
 
-export default function GameClient() {
+
+// FC 27-style PC keyboard bridge: supports WASD alongside the game's original
+// arrow/A/W/D/S layout. Advanced actions reuse the same controller contract.
+function installFcKeyboardBridge() {
+  if (typeof window === "undefined" || window.__acFcKeyboard) return;
+  window.__acFcKeyboard = true;
+  const down = new Set();
+  const set = (k,v) => { const t = window.__touchInput || (window.__touchInput = {active:true,vx:0,vy:0}); t.active=true; t[k]=v; };
+  const move = () => {
+    const x=(down.has("d")?1:0)-(down.has("a")?1:0), y=(down.has("s")?1:0)-(down.has("w")?1:0);
+    const t=window.__touchInput||(window.__touchInput={active:true,vx:0,vy:0});
+    t.vx=x; t.vy=y;
+  };
+  window.addEventListener("keydown",(e)=>{
+    const k=e.key.toLowerCase();
+    if(["w","a","s","d","shift","control","j","k","f","c","p","i","o","q","e","t"].includes(k)) e.preventDefault();
+    down.add(k); move();
+    if(k==="shift")set("sprint",true); if(k==="control")set("jockey",true);
+    if(k==="j")set("pass",true); if(k==="k")set("throughPass",true);
+    if(k==="l")set("shoot",true); if(k==="f")set("finesse",true); if(k==="c")set("chip",true); if(k==="p")set("powerShot",true);
+    if(k==="i")set("tackle",true); if(k==="o")set("tackle",true); if(k==="q")set("switchPlayer",true); if(k==="e")set("secondDefender",true); if(k==="t")set("lob",true);
+  },{passive:false});
+  window.addEventListener("keyup",(e)=>{
+    const k=e.key.toLowerCase(); down.delete(k); move();
+    if(k==="shift")set("sprint",false); if(k==="control")set("jockey",false);
+    if(k==="l")set("shoot",false); if(k==="f")set("finesse",false); if(k==="p")set("powerShot",false); if(k==="e")set("secondDefender",false);
+  });
+}
+\nexport default function GameClient() {
   const [mounted, setMounted] = useState(false);
   const bootStarted = useRef(false);
 
