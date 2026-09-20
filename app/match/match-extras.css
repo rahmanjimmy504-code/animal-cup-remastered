@@ -1,0 +1,20 @@
+/* Match extras: highlight capture, tactics, team traits, touch tuning and
+   low-end rendering profiles. */
+.match-extras__buttons { position: fixed; right: 14px; top: 68px; z-index: 86; display: flex; gap: 7px; }
+.match-extras__traits { position: fixed; right: 14px; bottom: 14px; z-index: 71; display: grid; gap: 4px; pointer-events: none; }
+.match-extras__traits span { padding: 5px 9px; border-radius: 999px; background: var(--ak-card,#fffef8); color: #4f8a2f; border: 1px solid rgba(120,90,50,.2); box-shadow: 0 4px 10px rgba(70,90,120,.2); font-size: 11px; font-weight: 800; }
+.match-extras__panel { position: fixed; right: 14px; top: 122px; z-index: 87; width: min(300px, 82vw); padding: 14px; display: grid; gap: 10px; background: var(--ak-card,#fffef8); color: #4a6b35; border: 3px solid var(--ak-edge,#fffef8); border-radius: 16px; box-shadow: 0 8px 22px rgba(30,50,20,.3); }
+.match-extras__panel b { color: #4f8a2f; }
+.match-choice-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 6px; }
+.match-choice-grid button, .match-highlight button { border: 2px solid #c7d5bd; background: transparent; color: #4f8a2f; border-radius: 10px; padding: 7px; font-weight: 800; cursor: pointer; }
+.match-choice-grid button.is-selected { background: #5d9038; color: #fff7e2; border-color: #41702a; }
+.match-highlight { display: flex; justify-content: space-between; align-items: center; gap: 8px; border-top: 1px solid rgba(120,90,50,.15); padding-top: 7px; font-size: 12px; }
+.match-highlight button { padding: 4px 7px; flex-shrink: 0; }
+.match-extras__panel label { display: grid; gap: 4px; font-size: 12px; font-weight: 700; }
+body[data-performance="performance"] .match-light, body[data-performance="performance"] .match-vignette { opacity: .35; }
+body[data-performance="performance"] .cc-pattern, body[data-performance="performance"] .pattern { display: none; }
+body[data-performance="quality"] .match-light { opacity: 1; }
+body.ac-large-hud .match-extras__traits { font-size: 1.12em; }
+body.ac-large-hud .match-extras__buttons { transform: scale(1.12); transform-origin: top right; }
+.tc-stick, .tc-actions, .tc-left-actions { transform: scale(var(--ac-touch-scale, 1)); }
+@media (max-width: 720px) { .match-extras__buttons { top: 116px; right: 10px; } .match-extras__traits { right: 10px; bottom: 10px; max-width: 42vw; } .match-extras__panel { top: 166px; right: 10px; } }
