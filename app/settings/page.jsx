@@ -17,7 +17,7 @@
 // and are documented in docs/gameplay-rules.md.
 // ============================================================================
 import { useEffect, useState } from "react";
-import { readGameplay, saveGameplay, PRESETS } from "../game/gameplay";
+import { readGameplay, saveGameplay, PRESETS, CURRENT_RULES, CONTROL_PRESETS } from "../game/gameplay";
 import { useLocale } from "../i18n/LocaleProvider";
 import ThemeToggle from "../game/ThemeToggle";
 import "./settings.css";
@@ -122,7 +122,7 @@ export default function SettingsPage() {
         </div>
 
         {/* ---------- controls reference (PC + touch + LAN pad) ---------- */}
-        <h2 className="settings-h2">{t("settings.controlsTitle")}</h2>
+\n        <h2 className="settings-h2">2026/27 football rules</h2>\n        <div className="rules-grid">\n          {CURRENT_RULES.rules.map((rule) => (\n            <div className="rule-card" key={rule.id}>\n              <div><b>{rule.label}</b><span className={rule.implemented ? "rule-live" : "rule-optional"}>{rule.implemented ? "IN GAME" : "OPTIONAL"}</span></div>\n              <small>{rule.detail}</small>\n            </div>\n          ))}\n        </div>\n        <p className="ctrl-note">Restart countdowns use the 5-second 2026/27 protocol; goalkeeper hand control is limited to 8 seconds.</p>\n        <h2 className="settings-h2">{t("settings.controlsTitle")}</h2>
         <div className="ctrl-columns">
           <div className="ctrl-col">
             <b>{t("settings.pc")}</b>
