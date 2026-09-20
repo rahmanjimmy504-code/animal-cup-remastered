@@ -1104,3 +1104,15 @@ body.ac-touch-play .match-controls .lang-switcher__menu {
 .tc-left-actions .tc-mobile-btn{min-width:82px;height:48px}.tc-mobile-btn--jockey{background:#5f7d94}.tc-mobile-btn--switch{background:#8b6fb1}
 @media(max-width:600px){.tc-actions{width:min(58vw,340px);gap:7px}.tc-mobile-btn{height:56px;font-size:12px;border-radius:15px;padding:0 7px}.tc-mobile-btn--shoot{height:64px}.tc-left-actions{bottom:calc(max(18px,env(safe-area-inset-bottom)) + 138px)}}
 @media(max-height:500px) and (orientation:landscape){.tc-actions{width:min(53vw,430px);gap:5px}.tc-mobile-btn{height:45px;font-size:11px;border-radius:12px}.tc-mobile-btn--shoot{height:50px}.tc-left-actions{bottom:calc(max(12px,env(safe-area-inset-bottom)) + 82px)}.tc-left-actions .tc-mobile-btn{height:38px;min-width:68px}}
+
+/* ===== top HUD controls: always visible and reachable on touch ===== */
+.match-controls{top:12px;right:12px;bottom:auto;z-index:120;flex-direction:row;align-items:center;gap:8px}
+.match-controls .glass-btn,.match-controls .lang-switcher__toggle{width:46px;height:46px}
+@media(max-width:760px){
+  .match-controls{top:max(10px,env(safe-area-inset-top));right:max(10px,env(safe-area-inset-right));gap:7px}
+  .match-controls .glass-btn,.match-controls .lang-switcher__toggle{width:48px;height:48px;border-radius:14px}
+}
+@media(max-width:600px){
+  .match-score{top:max(10px,env(safe-area-inset-top));left:12px;transform:none;width:min(320px,calc(100vw - 150px));padding:6px 10px}
+  .match-score .ms-row{gap:7px}.match-score .ms-head{width:34px;height:34px}.match-score .ms-flag{width:25px;height:17px}.match-score .ms-num{font-size:22px;min-width:24px}.match-score .ms-clock{font-size:11px;min-width:38px;padding:2px 6px}
+}
