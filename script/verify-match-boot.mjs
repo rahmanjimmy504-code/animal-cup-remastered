@@ -9,7 +9,7 @@
  */
 import { chromium } from "playwright-core";
 
-const baseUrl = process.argv[2] || "http://localhost:3001";
+const baseUrl = process.argv[2] || "http://localhost:13000";
 const matchUrl = `${baseUrl}/match?red=england&blue=france`;
 const HARD_TIMEOUT_MS = 60_000;
 const SETTLE_MS = 4_000;

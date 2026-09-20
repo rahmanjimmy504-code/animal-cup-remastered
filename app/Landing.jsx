@@ -259,7 +259,7 @@ export default function Landing() {
           <button type="button" className={css.watch} onClick={() => go(false)}>
             <EyeIcon /> {t("home.watchAi")}
           </button>
-          <button type="button" className={css.play} onClick={() => go(true)}>
+          <button type="button" className={css.play} data-test="kickoff" onClick={() => go(true)}>
             <CtrlIcon /> {t("home.kickoff")}
           </button>
         </div>

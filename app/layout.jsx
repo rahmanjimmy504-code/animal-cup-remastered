@@ -11,7 +11,7 @@ const HS_PROJECT_ID = typeof process.env.PROJECT_ID === 'string' ? process.env.P
 
 export const metadata = {
   title: 'Animal Cup - AI Animal Football Simulator',
-  description: 'Watch adorable animal teams battle it out on the pitch! Pick your national squad, choose formations, and enjoy a fully simulated 6v6 football match powered by AI.',
+  description: 'Watch adorable animal teams battle it out on the pitch! Pick your national squad, choose formations, and enjoy a fully simulated 7v7 football match powered by AI.',
   keywords: ['animal football', 'soccer simulator', 'AI game', 'animal cup', 'football match', 'web game', 'pixi.js'],
   openGraph: {
     title: 'Animal Cup - AI Animal Football Simulator',

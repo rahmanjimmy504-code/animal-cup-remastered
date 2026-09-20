@@ -14,12 +14,20 @@ export function getAchievementList(){return[["first-match","First Match"],["firs
 export function getUnlocks(p=readProfile()){return[{id:"classic",name:"Classic Stadium",cost:0,kind:"stadium",icon:"🏟️"},{id:"sunset",name:"Sunset Stadium",cost:150,kind:"stadium",icon:"🌅"},{id:"champion-stadium",name:"Champion Stadium",cost:300,kind:"stadium",icon:"🏆"},{id:"classic-ball",name:"Classic Ball",cost:0,kind:"ball",icon:"⚽"},{id:"pro-ball",name:"Pro Ball",cost:200,kind:"ball",icon:"🟠"}].map(x=>({...x,unlocked:p.unlocks.includes(x.id)}))}
 export function buyUnlock(id){const p=readProfile(),item=getUnlocks(p).find(x=>x.id===id);if(!item||item.unlocked||p.coins<item.cost)return false;p.coins-=item.cost;unlock(p,id);saveProfile(p);return true}
 export function upgradeStat(stat){const p=readProfile(),level=Number(p.upgrades[stat]||1),cost=level*100;if(level>=5||p.coins<cost)return false;p.coins-=cost;p.upgrades[stat]=level+1;saveProfile(p);return true}
-export function readCup(){if(typeof window==="undefined")return null;try{return JSON.parse(localStorage.getItem(CUP)||"null")}catch{return null}}
 export function writeCup(c){localStorage.setItem(CUP,JSON.stringify(c));return c}
-const shuffle=a=>[...a].sort(()=>Math.random()-.5);
-export function newCup(team){const others=shuffle(CUP_TEAMS.filter(t=>t!==team));const teams=[team,...others];return writeCup({version:2,team,round:1,wins:0,eliminated:false,champion:false,startedAt:Date.now(),results:[],bracket:{quarter:[...teams],semi:[],final:[],champion:null}})}
+const shuffle=a=>{const r=[...a];for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]]}return r};
+// Cup state v3: opponents is the flat list of the THREE knockout opponents
+// (one per round) shown on /cup. v2 only kept a bracket object and the page
+// read cup.opponents[round-1] — which crashed (undefined) the moment a cup
+// existed, and its bracket math re-used the same team for rounds 2 and 3.
+export function newCup(team){const others=shuffle(CUP_TEAMS.filter(t=>t!==team));return writeCup({version:3,team,round:1,wins:0,eliminated:false,champion:false,startedAt:Date.now(),results:[],opponents:others.slice(0,3)})}
 export function resetCup(){if(typeof window!=="undefined")localStorage.removeItem(CUP)}
-export function recordCupResult(score){const c=readCup();if(!c||c.eliminated||c.champion)return c;const[r,b]=score.map(Number);const opp=c.round===1?c.bracket.quarter[1]:c.round===2?c.bracket.semi[1]:c.bracket.final[1];c.results.push({round:c.round,opponent:opp,score:[r,b],at:Date.now()});if(r<=b){c.eliminated=true;return writeCup(c)}c.wins++;if(c.round===1){c.bracket.semi=[c.team,c.bracket.quarter[2]];c.round=2}else if(c.round===2){c.bracket.final=[c.team,c.bracket.semi[1]];c.round=3}else{c.champion=true;c.bracket.champion=c.team;const p=readProfile();p.trophies++;p.coins+=250;award(p,"champion");unlock(p,"champion-stadium");saveProfile(p)}return writeCup(c)}
+export function readCup(){if(typeof window==="undefined")return null;try{const c=JSON.parse(localStorage.getItem(CUP)||"null");if(!c)return null;if(c.bracket&&!Array.isArray(c.opponents)&&Array.isArray(c.bracket.quarter)){// migrate legacy v2 saves: derive 3 distinct opponents from the old bracket
+const q=c.bracket.quarter;c.opponents=[q[1],q[2],q[3]].filter(Boolean);delete c.bracket;c.version=3;writeCup(c)}
+// normalize so a hand-edited/corrupted save can never crash the page or
+// the full-time recordCupResult: arrays + sane round/wins, booleans coerced
+if(!Array.isArray(c.opponents))c.opponents=[];if(!Array.isArray(c.results))c.results=[];if(typeof c.round!=="number"||c.round<1||c.round>3)c.round=1;if(typeof c.wins!=="number"||c.wins<0||c.wins>3)c.wins=0;c.eliminated=!!c.eliminated;c.champion=!!c.champion;return c}catch{return null}}
+export function recordCupResult(score){const c=readCup();if(!c||c.eliminated||c.champion)return c;const[r,b]=score.map(Number);const opp=(Array.isArray(c.opponents)?c.opponents:[])[c.round-1]||null;c.results.push({round:c.round,opponent:opp,score:[r,b],at:Date.now()});if(r<=b){c.eliminated=true;return writeCup(c)}c.wins++;if(c.round>=3){c.champion=true;const p=readProfile();p.trophies++;p.coins+=250;award(p,"champion");unlock(p,"champion-stadium");saveProfile(p)}else c.round++;return writeCup(c)}
 export function readSeason(){if(typeof window==="undefined")return null;try{return JSON.parse(localStorage.getItem(SEASON)||"null")}catch{return null}}
 export function saveSeason(s){if(typeof window!=="undefined")localStorage.setItem(SEASON,JSON.stringify(s));return s}
 export function resetSeason(){if(typeof window!=="undefined")localStorage.removeItem(SEASON)}

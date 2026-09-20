@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 // Asserts the locale switcher actually switches: the kick-off label must
-// differ across all six locales and no raw dict keys may leak into the DOM.
+// differ across all seven locales and no raw dict keys may leak into the DOM.
 import { chromium } from "playwright-core";
 
-const baseUrl = process.argv[2] || "http://localhost:3001";
-const LOCALES = ["zh", "en", "ja", "es", "pt", "fr"];
+const baseUrl = process.argv[2] || "http://localhost:13000";
+const LOCALES = ["zh", "zh-TW", "en", "ja", "es", "pt", "fr"];
 
 const browser = await chromium.launch({ channel: "chrome", headless: false });
 const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
@@ -17,7 +17,7 @@ for (const locale of LOCALES) {
   await page.evaluate((id) => localStorage.setItem("animalCupLocale", id), locale);
   await page.reload({ waitUntil: "domcontentloaded" });
   await page.waitForTimeout(900);
-  labels[locale] = (await page.locator(".lb-kick .ak-btn").first().textContent())?.trim();
+  labels[locale] = (await page.locator("[data-test=\"kickoff\"]').first().textContent())?.trim();
   const leaked = await page.evaluate(() =>
     [...document.querySelectorAll("main *")].some((el) =>
       /^[a-z]+\.[a-zA-Z.]+$/.test(el.textContent?.trim() || "") && el.children.length === 0,
