@@ -127,3 +127,14 @@ body.ac-dark .lang-switcher__menu, html[data-theme="dark"] .lang-switcher__menu 
 body.ac-dark .lang-switcher__menu button, html[data-theme="dark"] .lang-switcher__menu button { color:#dfe9dc; }
 body.ac-dark .lang-switcher__menu button:hover, html[data-theme="dark"] .lang-switcher__menu button:hover { background:#253127; }
 body.ac-dark .lang-switcher__menu button.is-active, html[data-theme="dark"] .lang-switcher__menu button.is-active { background:#5d9038; color:#fff; }
+
+/* ===== Animal Cup Remastered shared menu skin =====
+   Secondary screens deliberately reuse the base game's storybook language:
+   grass gradient, cream cards, rounded green controls, soft paper shadows.
+*/
+.ac-menu-shell,.game-settings,.cup-page,.season-page,.profile-page{min-height:100vh;background:radial-gradient(120% 100% at 50% 45%,#6aa843 0%,#5d9038 55%,#4f8a2f 100%);font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;}
+.ac-menu-card,.game-settings .settings-card,.cup-card,.season-card,.profile-card{border-radius:20px;border:4px solid #fffef8;box-shadow:0 8px 20px rgba(60,50,30,.32);background:#fffef8;}
+.ac-menu-btn,.game-settings button,.game-settings select{border-radius:14px;font-family:inherit;font-weight:900;}
+.ac-menu-btn{border:2px solid #41702a;background:#5d9038;color:#fff7e2;box-shadow:0 4px 0 #41702a;padding:10px 16px;}
+.ac-dark .ac-menu-shell,.ac-dark .game-settings,.ac-dark .cup-page,.ac-dark .season-page,.ac-dark .profile-page{background:radial-gradient(120% 100% at 50% 45%,#30472b 0%,#243a24 55%,#111811 100%);}
+.ac-dark .ac-menu-card,.ac-dark .game-settings .settings-card,.ac-dark .cup-card,.ac-dark .season-card,.ac-dark .profile-card{background:#171d18;border-color:#2e392f;}
