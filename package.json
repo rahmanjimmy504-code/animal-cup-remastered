@@ -1,5 +1,5 @@
 {
-  "name": "animal-cup",
+  "name": "animal-cup-remastered",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -33,5 +33,6 @@
       "esbuild",
       "workerd"
     ]
-  }
+  },
+  "description": "Animal Cup Remastered — a storybook animal football game."
 }
