@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 function input() {
   if (!window.__touchInput) {
     window.__touchInput = {
-      x: 0, y: 0,
+      active: false, vx: 0, vy: 0,
       shoot: false, pass: false, sprint: false, throughPass: false,
       lob: false, tackle: false, finesse: false, chip: false,
       powerShot: false, switchPlayer: false, secondDefender: false, jockey: false,
@@ -20,6 +20,12 @@ function setAction(name, value) {
   const state = input();
   state[name] = value;
   state.active = true;
+}
+
+function releaseAction(name) {
+  const state = input();
+  state[name] = false;
+  state.active = state.vx !== 0 || state.vy !== 0;
 }
 
 function pulseAction(name) {
@@ -78,9 +84,9 @@ export default function TouchControls() {
   function hold(name) {
     return {
       onPointerDown: (e) => { e.preventDefault(); e.currentTarget.setPointerCapture?.(e.pointerId); setAction(name, true); },
-      onPointerUp: (e) => { e.preventDefault(); setAction(name, false); },
-      onPointerCancel: () => setAction(name, false),
-      onPointerLeave: () => setAction(name, false),
+      onPointerUp: (e) => { e.preventDefault(); releaseAction(name); },
+      onPointerCancel: () => releaseAction(name),
+      onPointerLeave: () => releaseAction(name),
     };
   }
 
