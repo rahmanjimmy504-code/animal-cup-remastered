@@ -168,15 +168,20 @@ function ControlsLegend({ t }) {
     );
   }
   const rows = [
-    { keys: ["↑", "↓", "←", "→"], a: t("controls.move") },
-    { keys: ["A"], a: t("controls.pass") },
-    { keys: ["D"], a: t("controls.shoot") },
-    { keys: ["W"], a: t("controls.lob") },
-    { keys: ["S"], a: t("controls.tackle") },
+    { keys: ["W", "A", "S", "D"], a: t("controls.move") },
+    { keys: ["J"], a: t("controls.pass") },
+    { keys: ["K"], a: "Through pass" },
+    { keys: ["L"], a: t("controls.shoot") },
+    { keys: ["F"], a: "Finesse" },
+    { keys: ["C"], a: "Chip" },
+    { keys: ["P"], a: "Power shot" },
+    { keys: ["I"], a: t("controls.tackle") },
     { keys: ["Q"], a: t("controls.switch") },
+    { keys: ["E"], a: "2nd defender" },
     { keys: ["Ctrl"], a: t("controls.jockey") },
-    { keys: ["T"], a: t("controls.trap") },
+    { keys: ["T"], a: t("controls.lob") },
     { keys: ["Shift"], a: t("controls.sprint") },
+    { keys: ["Esc"], a: "Pause" },
   ];
   return (
     <div className="ctrl-legend">
