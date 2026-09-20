@@ -96,6 +96,17 @@
   pointer-events: none;
 }
 
+/* jockey — held, just above the stick (left thumb). Muted steel to read as a
+   modifier, distinct from the bright action diamond. */
+.pad-btn--jockey {
+  left: max(24px, env(safe-area-inset-left));
+  bottom: calc(max(24px, env(safe-area-inset-bottom)) + 44vw + 14px);
+  width: 13vw; height: 13vw;
+  max-width: 62px; max-height: 62px;
+  background: #5f7d94;
+  z-index: 2;
+}
+
 /* action diamond */
 .pad-pad {
   position: absolute;

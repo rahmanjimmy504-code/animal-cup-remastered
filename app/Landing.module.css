@@ -99,23 +99,6 @@
   gap: 15px;
   align-content: start;
 }
-.side {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 900;
-  color: #4f8a2f;
-}
-.sideTag {
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  color: #fff7e2;
-  background: #5d9038;
-  border-radius: 999px;
-  padding: 2px 10px;
-}
-.sideTagBlue { background: #3f7fb1; }
 
 .grid {
   display: grid;
@@ -138,6 +121,26 @@
 .cardOff { opacity: 0.38; cursor: not-allowed; }
 .cardPic { width: 56px; height: 56px; object-fit: contain; }
 .card b { font-size: 12.5px; color: #4a6b35; font-weight: 800; }
+/* FC-style headline under the team name: OVR · top stat · skill stars */
+.cardStats {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #7a8a6d;
+  font-style: normal;
+}
+.cardStats .cardOvr {
+  font-style: normal;
+  background: #4f8a2f;
+  color: #fff7e2;
+  border-radius: 6px;
+  padding: 1px 5px;
+  font-size: 10.5px;
+}
+.cardStats .cardStars { color: #d8a018; letter-spacing: 0.05em; }
 
 .formRow {
   display: grid;
@@ -196,45 +199,7 @@
   max-width: 400px;
   margin: 0 auto;
 }
-.kick {
-  border: 0;
-  border-radius: 16px;
-  padding: 13px 0;
-  width: 200px;
-  font-size: 16px;
-  font-weight: 900;
-  font-family: inherit;
-  color: #fff7e2;
-  background: #5d9038;
-  cursor: pointer;
-  box-shadow: 0 5px 0 #41702a, 0 10px 20px rgba(40, 60, 25, 0.35);
-  transition: transform 120ms ease, background 120ms ease;
-}
-.kick:hover { background: #6aa342; transform: translateY(-2px); }
-.kick:active { transform: translateY(1px); box-shadow: 0 3px 0 #41702a; }
-.lucky {
-  border: 2px solid rgba(120, 90, 50, 0.22);
-  border-radius: 16px;
-  padding: 11px 0;
-  width: 200px;
-  font-size: 16px;
-  font-weight: 900;
-  font-family: inherit;
-  color: #4f8a2f;
-  background: var(--ak-card, #fffef8);
-  cursor: pointer;
-  box-shadow: 0 4px 0 rgba(120, 90, 50, 0.25), 0 8px 16px rgba(70, 90, 120, 0.25);
-  transition: background 120ms ease, transform 120ms ease;
-}
-.lucky:hover { background: #f4eed9; transform: translateY(-2px); }
 
-.playHint {
-  margin: 12px 0 0;
-  text-align: center;
-  font-size: 13px;
-  font-weight: 700;
-  color: rgba(70, 60, 40, 0.6);
-}
 
 /* portrait / narrow: stack the two panels. Fitting is handled by scale-to-fit
    (no scrolling), so no sticky CTA is needed. */
@@ -248,7 +213,6 @@
 @media (max-width: 720px), (max-height: 560px) {
   .wrap { padding: 12px 12px 18px; gap: 9px; }
   .title { font-size: clamp(28px, 8vmin, 40px); padding: 0 56px; line-height: 1.2; }
-  .controlQ { margin-top: -2px; font-size: 12px; }
   .panel { padding: 10px 11px 12px; gap: 8px; }
   .grid { gap: 7px; }
   .card { padding: 6px 3px 6px; }
@@ -267,9 +231,7 @@
   .card { padding: 5px 3px 5px; }
   .card b { font-size: 10px; }
   .pill { padding: 3px 10px; font-size: 11px; }
-  .diffRow { gap: 8px; margin-top: 0; }
   .actions { gap: 10px; }
-  .kick, .lucky { width: 168px; padding: 9px 0; font-size: 14px; }
 }
 
 /* language switcher pinned top-right, cream/green like the HUD */
@@ -297,41 +259,9 @@
 /* ===== 2026-06-15 redesign v2: segmented control + stable tags ===== */
 
 /* "Who do you control?" caption + segmented control */
-.controlQ {
-  margin: -4px 0 0; text-align: center;
-  font-size: 13px; font-weight: 800; color: rgba(255, 255, 255, 0.92);
-  text-shadow: 0 1px 0 rgba(70, 100, 60, 0.6);
-}
-.seg {
-  justify-self: center;
-  display: inline-flex; gap: 4px; padding: 5px;
-  border-radius: 16px;
-  background: rgba(255, 254, 248, 0.9);
-  box-shadow: 0 4px 12px rgba(40, 60, 25, 0.28);
-}
-.segBtn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-  border: 0; border-radius: 12px;
-  padding: 9px 18px; min-height: 40px;
-  max-width: 30vw; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
-  font-family: inherit; font-size: 14px; font-weight: 900;
-  color: #6b7a55; background: transparent; cursor: pointer;
-  transition: background 120ms ease, color 120ms ease;
-}
-.segBtn:hover { background: rgba(93, 144, 56, 0.1); }
-.segOn { background: #5d9038; color: #fff7e2; box-shadow: 0 2px 0 #41702a; }
-.segOn:hover { background: #5d9038; }
 
 /* panel header: fixed-size role tag (YOU/AI — colour change only, no reflow) */
 .head { display: flex; align-items: center; gap: 9px; width: 100%; }
-.tag {
-  flex-shrink: 0;
-  min-width: 44px; text-align: center;
-  border-radius: 999px; padding: 3px 9px;
-  font-size: 11px; font-weight: 900; letter-spacing: 0.06em;
-}
-.tagYou { background: #5d9038; color: #fff7e2; }
-.tagAi  { background: rgba(120, 90, 50, 0.16); color: #8a7a62; }
 .headName {
   flex: 1; min-width: 0;
   font-size: 13px; font-weight: 900; color: #4f8a2f;
@@ -354,7 +284,6 @@
   box-shadow: 0 1px 3px rgba(40, 60, 25, 0.4);
 }
 
-.diffRow { display: flex; align-items: center; justify-content: center; gap: 12px; }
 /* settings row: Your side + Difficulty groups, side by side (wrap on mobile) */
 .settings { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 26px; }
 .setGroup { display: flex; align-items: center; gap: 10px; }
@@ -411,7 +340,6 @@
 .lan:active { transform: translateY(1px); box-shadow: 0 3px 0 #2f5aa8; }
 
 @media (max-width: 720px), (max-height: 560px) {
-  .segBtn { padding: 8px 12px; font-size: 13px; max-width: 38vw; }
 }
 
 /* ===== selection motion — same spring as the formation diagram ===== */
@@ -445,12 +373,20 @@
 .ac-dark .card { background:#222b23; border-color:#39463a; color:#edf4e9; }
 .ac-dark .cardOn { background:#2a3a29; border-color:#78ad50; }
 .ac-dark .card b,.ac-dark .formLabel { color:#cfe8bc; }
+/* dark: the "your team" panel's light cream gradient reads as a bright slab —
+   swap it for a dark green wash (the 2026-09 dark-mode fix) */
+.ac-dark .panelYou {
+  border-color:#5d9038;
+  background:linear-gradient(180deg,#24331f 0%,#171d18 60%);
+}
+.ac-dark .headName { color:#cfe8bc; }
+.ac-dark .roleOpp { background:rgba(150,170,150,.14); color:#aebbae; }
+.ac-dark .cardStats { color:#93a88b; }
+.ac-dark .cardStats .cardOvr { background:#5d9038; color:#eaf5e2; }
+.ac-dark .cardStats .cardStars { color:#e8c14f; }
 .ac-dark .pill { background:#222b23; border-color:#39463a; color:#dbe8d5; }
 .ac-dark .pillOn { background:#5d9038; border-color:#6aa342; color:#fff; }
 .ac-dark .preview :global(.form-diagram) { filter:drop-shadow(0 5px 12px rgba(0,0,0,.42)); }
-.ac-dark .lucky { background:#222b23; color:#cfe8bc; border-color:#39463a; }
-.ac-dark .lucky:hover { background:#2b352c; }
-.ac-dark .playHint { color:rgba(235,240,230,.62); }
 .ac-dark .cup,.ac-dark .lan {
   background:#1b241c;
   color:#dff2ce;

@@ -11,6 +11,8 @@ import { useRouter } from "next/navigation";
 import LangSwitcher from "./i18n/LangSwitcher";
 import { useLocale } from "./i18n/LocaleProvider";
 import { PLAYABLE_TEAMS, portraitSrc, runtimeHeadSrc } from "./data/teams";
+import { teamHeadline, STAT_LABELS } from "./data/players.js";
+import { readGameplay, effectiveAiLevel } from "./game/gameplay.js";
 import { FORMATIONS } from "./data/formations";
 import FormationDiagram from "./ui/FormationDiagram";
 import css from "./Landing.module.css";
@@ -74,14 +76,24 @@ function TeamGrid({ picked, taken, onPick }) {
       {PLAYABLE_TEAMS.map((team) => {
         const on = picked === team.id;
         const off = !on && taken === team.id;
+        // FC-style headline: team OVR + top stat + skill-move stars
+        // (attribute sheet: app/data/players.js)
+        const h = teamHeadline(team.id);
+        const top = h.best[0];
         return (
           <button key={team.id} type="button" disabled={off}
+                  title={`OVR ${h.ovr} · ${h.best.map(([k, v]) => `${STAT_LABELS[k]} ${v}`).join(" · ")} · skill ${h.skillMoves}/5`}
                   className={`${css.card} ${on ? css.cardOn : ""} ${off ? css.cardOff : ""}`}
                   onClick={() => onPick(team.id)}>
             {on ? <span className={css.cardCheck} aria-hidden>✓</span> : null}
             <img className={css.cardPic} src={portraitSrc(team.id)} alt=""
                  onError={(e) => { e.currentTarget.src = runtimeHeadSrc(team.id); }} />
             <b>{t(`team.${team.id}.name`)}</b>
+            <span className={css.cardStats} aria-hidden>
+              <i className={css.cardOvr}>{h.ovr}</i>
+              <i>{STAT_LABELS[top[0]]} {top[1]}</i>
+              <i className={css.cardStars}>{"★".repeat(h.skillMoves)}</i>
+            </span>
           </button>
         );
       })}
@@ -179,6 +191,11 @@ export default function Landing() {
     return () => { window.removeEventListener("resize", onFit); if (ro) ro.disconnect(); };
   }, []);
 
+  // The AI-assist setting (settings page) nudges the chosen difficulty:
+  // high = a touch easier, low = a touch harder. Computed here so every launch
+  // path (play / watch / LAN) honours the same setting.
+  function ai() { return effectiveAiLevel(diff, readGameplay().aiAssist); }
+
   function go(play) {
     // your team -> engine red slot (the controlled side); opponent -> blue
     const forms = {
@@ -188,7 +205,7 @@ export default function Landing() {
     try { sessionStorage.setItem("matchFormations", JSON.stringify(forms)); } catch {}
     // side = which kit YOUR team wears (home / away); the runtime picks a
     // contrasting kit for the opponent.
-    let url = `/match?red=${mine}&blue=${opp}&ai=${diff}&side=${side}&time=${time}`;
+    let url = `/match?red=${mine}&blue=${opp}&ai=${ai()}&side=${side}&time=${time}`;
     if (play) url += "&play=1";
     router.push(url);
   }
@@ -197,7 +214,7 @@ export default function Landing() {
   // screen hosts a room and phones join as gamepads. Two humans, no shared
   // keyboard — each plays from their own phone over the local network.
   function goLan() {
-    router.push(`/lobby?red=${mine}&blue=${opp}&ai=${diff}&side=${side}&time=${time}`);
+    router.push(`/lobby?red=${mine}&blue=${opp}&ai=${ai()}&side=${side}&time=${time}`);
   }
 
   return (
@@ -259,21 +276,25 @@ export default function Landing() {
           <button type="button" className={css.watch} onClick={() => go(false)}>
             <EyeIcon /> {t("home.watchAi")}
           </button>
-          <button type="button" className={css.play} onClick={() => go(true)}>
+          <button type="button" className={css.play} data-test="kickoff" onClick={() => go(true)}>
             <CtrlIcon /> {t("home.kickoff")}
           </button>
         </div>
         <div className={css.actionsLan}>
           <button type="button" className={css.cup} onClick={() => router.push("/cup")}>
-            🏆 Championship Cup
+            {t("home.cup")}
           </button>
           <button type="button" className={css.cup} onClick={() => router.push("/season")}>
-            🌟 Season Mode
+            {t("home.season")}
           </button>
           <button type="button" className={css.cup} onClick={() => router.push("/profile")}>
-            👤 Save & Profile
+            {t("home.profile")}
           </button>
-          <ThemeToggle />\n          <a className="settings-link" href="/settings">⚙️ Gameplay Settings</a>
+          <ThemeToggle />
+          {/* css["settings-link"] — a literal class name would miss the hashed
+              module class and render as an unstyled link (2026-09 fix); the
+              old line also carried a stray literal \n that rendered as text */}
+          <a className={css["settings-link"]} href="/settings">⚙️ {t("settings.title")}</a>
           <button type="button" className={css.lan} onClick={goLan}>
             <LanIcon /> {t("home.lan")}
           </button>

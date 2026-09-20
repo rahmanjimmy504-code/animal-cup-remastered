@@ -28,6 +28,9 @@ const ShootIcon = () => (
 const LobIcon = () => <SVG><path d="M4 16.5C8 7.5 16 7.5 20 14" /><path d="M20 14l.4-3.9M20 14l-3.8 1.2" /></SVG>;
 const TackleIcon = () => <SVG><path d="M12 3.4l6.6 2.4v5c0 3.9-2.9 6.6-6.6 7.8C8.3 17.4 5.4 14.7 5.4 10.8v-5z" /></SVG>;
 const SprintIcon = () => <SVG s={28}><path d="M6 6l6 6-6 6" /><path d="M13 6l6 6-6 6" /></SVG>;
+// Jockey — single chevron (hold to walk at reduced speed for tighter
+// close-downs; mirrors the PC Ctrl key). Streamed raw, scaled by the host.
+const JockeyIcon = () => <SVG s={28}><path d="M9 6l6 6-6 6" /></SVG>;
 
 const SIDE = { 0: { key: "P1", cls: "pad--red" }, 1: { key: "P2", cls: "pad--blue" } };
 
@@ -39,8 +42,10 @@ export default function PadController({ room }) {
   const baseRef = useRef(null);
   const thumbRef = useRef(null);
   const stick = useRef({ id: null, cx: 0, cy: 0, r: 56 });
-  // live continuous input (streamed); taps are sent as immediate one-offs
-  const input = useRef({ vx: 0, vy: 0, shoot: false, sprint: false });
+  // live continuous input (streamed); taps are sent as immediate one-offs.
+  // jockey is streamed RAW — the host (LanHostBridge) scales the velocity with
+  // ITS preset, since the phone's localStorage doesn't hold the host's settings.
+  const input = useRef({ vx: 0, vy: 0, shoot: false, sprint: false, jockey: false });
 
   useEffect(() => {
     if (!room) { setStatus("no-room"); return undefined; }
@@ -63,7 +68,7 @@ export default function PadController({ room }) {
     // stream continuous state at ~30Hz (only while joined)
     const iv = setInterval(() => {
       const i = input.current;
-      lan.send({ t: "input", d: { vx: i.vx, vy: i.vy, shoot: i.shoot, sprint: i.sprint } });
+      lan.send({ t: "input", d: { vx: i.vx, vy: i.vy, shoot: i.shoot, sprint: i.sprint, jockey: i.jockey } });
     }, 33);
 
     // lock the page from scrolling/zooming under the controls
@@ -112,7 +117,7 @@ export default function PadController({ room }) {
     if (s.id !== e.pointerId) return;
     s.id = null;
     if (thumbRef.current) thumbRef.current.style.transform = "translate(0px,0px)";
-    input.current.vx = 0; input.current.vy = 0;
+    input.current.vx = 0; input.current.vy = 0; input.current.jockey = false;
   }
 
   const hold = (key) => ({
@@ -144,6 +149,7 @@ export default function PadController({ room }) {
         <span className="pad-thumb" ref={thumbRef} />
       </div>
 
+      <button type="button" className="pad-btn pad-btn--jockey" {...hold("jockey")}><JockeyIcon /></button>
       <div className="pad-pad">
         <button type="button" className="pad-btn pad-btn--lob" {...tap("lob")}><LobIcon /></button>
         <button type="button" className="pad-btn pad-btn--pass" {...tap("pass")}><PassIcon /></button>

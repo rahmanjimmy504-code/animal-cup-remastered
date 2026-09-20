@@ -46,6 +46,19 @@ Animal Cup Remastered is more than a match viewer. The current game layer includ
 
 Progress is stored in browser `localStorage`; no login, database or paid service is required for the core progression systems.
 
+## ⚽ Gameplay (FC 26/27-style)
+
+The remaster layers a FIFA/EA-FC-style rules layer over the match engine. The full spec — match rules, preset tuning table, control maps, the player attribute model, resolution algorithms, AI, set pieces, keepers, physicality, UI feedback and the engine-side roadmap — lives in **[docs/gameplay-rules.md](docs/gameplay-rules.md)**.
+
+Highlights:
+
+- **Two playstyle presets** — 🎮 **Arcade** (fast, forgiving) and 🧠 **Authentic** (slower, tighter, more physical). Player speed/acceleration multipliers are applied live by the engine; the rest of the tuning table is the reference contract for pass/shot/tackle/duel resolution.
+- **Assisted vs manual passing** — FC-style, with **Shift** (or the touch sprint button) flipping the mode mid-match, applied to the live engine users.
+- **AI assistance** — low/medium/high shifts the effective AI level of launched matches.
+- **Player attribute model** — per-team, per-role stat sheets (PAC/SHO/PAS/DRI/DEF/PHY/HEA) plus **weak-foot** and **skill-move stars**, shown on the landing team cards and on the in-match controlled-player chip.
+- **Controls for every platform** — the in-game legend and Settings page show the engine's *real* keyboard layout (including **Ctrl = jockey**, **T = trap**), the mobile touch layout, and the LAN pad. A **jockey button** (walk for tight close-downs) is available on touch and pad, matching the PC `Ctrl` key.
+- **Match feedback** — controlled-player info chip, set-piece phase banners (corner / goal kick / throw-in / kick-off), pass aim line, and slow-mo shooting (hold shoot).
+
 ## 🚀 Technology
 - **Framework:** Next.js 15 (App Router) + React 19
 - **Match engine:** Pixi.js runtime (`public/match-runtime-min/`)
