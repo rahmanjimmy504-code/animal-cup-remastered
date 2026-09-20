@@ -12,7 +12,7 @@ import { getGameplayConfig } from "../game/gameplay.js";
 function ti() {
   return (window.__touchInput =
     window.__touchInput ||
-    { active: false, vx: 0, vy: 0, shoot: false, sprint: false, pass: false, lob: false, switchPlayer: false, tackle: false, jockey: false });
+    { active: false, vx: 0, vy: 0, shoot: false, sprint: false, pass: false, lob: false, switchPlayer: false, tackle: false, jockey: false, secondDefender: false, finesse: false, chip: false, powerShot: false, throughPass: false });
 }
 
 const SVG = (props) => (
@@ -49,7 +49,7 @@ export default function TouchControls() {
   useEffect(() => {
     const T = ti();
     T.active = true;
-    return () => { T.active = false; T.vx = 0; T.vy = 0; T.shoot = false; T.sprint = false; T.jockey = false; T.switchPlayer = false; };
+    return () => { T.active = false; T.vx = 0; T.vy = 0; T.shoot = false; T.sprint = false; T.jockey = false; T.switchPlayer = false; T.secondDefender = false; T.finesse = false; T.chip = false; T.powerShot = false; T.throughPass = false; };
   }, []);
 
   // two-finger pinch -> camera zoom (window.__matchZoom). Page zoom is locked
@@ -139,6 +139,11 @@ export default function TouchControls() {
           controlled player at reduced speed for tighter close-downs, mirroring
           the PC Ctrl (walk) key. FC-style, easily reachable on mobile. */}
       <button type="button" className="tc-btn tc-btn--jockey" {...hold("jockey")}><JockeyIcon /></button>\n      <button type="button" className="tc-btn tc-btn--switch" {...tap("switchPlayer")}><SwitchIcon /></button>
+      <button type="button" className="tc-btn tc-btn--modifier tc-btn--finesse" {...hold("finesse")}>F</button>
+      <button type="button" className="tc-btn tc-btn--modifier tc-btn--chip" {...tap("chip")}>C</button>
+      <button type="button" className="tc-btn tc-btn--modifier tc-btn--power" {...hold("powerShot")}>P</button>
+      <button type="button" className="tc-btn tc-btn--modifier tc-btn--through" {...tap("throughPass")}>TH</button>
+      <button type="button" className="tc-btn tc-btn--modifier tc-btn--second" {...hold("secondDefender")}>2</button>
       <div className="tc-pad">
         <button type="button" className="tc-btn tc-btn--lob" {...tap("lob")}><LobIcon /></button>
         <button type="button" className="tc-btn tc-btn--pass" {...tap("pass")}><PassIcon /></button>
