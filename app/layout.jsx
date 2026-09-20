@@ -10,17 +10,17 @@ const HS_API_BASE = HS_ORIGIN ? `${HS_ORIGIN}/v1/project` : '';
 const HS_PROJECT_ID = typeof process.env.PROJECT_ID === 'string' ? process.env.PROJECT_ID.trim() : '';
 
 export const metadata = {
-  title: 'Animal Cup - AI Animal Football Simulator',
+  title: 'Animal Cup Remastered',
   description: 'Watch adorable animal teams battle it out on the pitch! Pick your national squad, choose formations, and enjoy a fully simulated 7v7 football match powered by AI.',
   keywords: ['animal football', 'soccer simulator', 'AI game', 'animal cup', 'football match', 'web game', 'pixi.js'],
   openGraph: {
-    title: 'Animal Cup - AI Animal Football Simulator',
+    title: 'Animal Cup Remastered',
     description: 'Pick your animal team and watch them play a full football match. 8 national teams, unique animal mascots, real-time AI simulation.',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Animal Cup - AI Animal Football Simulator',
+    title: 'Animal Cup Remastered',
     description: 'Pick your animal team and watch them play a full football match.',
   },
   // PWA: "Add to Home Screen" launches fullscreen (no browser bars). iOS Safari
@@ -29,7 +29,7 @@ export const metadata = {
   manifest: '/manifest.webmanifest',
   appleWebApp: {
     capable: true,
-    title: 'Animal Cup',
+    title: 'Animal Cup Remastered',
     statusBarStyle: 'black-translucent',
   },
   icons: {
