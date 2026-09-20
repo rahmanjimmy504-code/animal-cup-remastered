@@ -17,7 +17,7 @@
 // and are documented in docs/gameplay-rules.md.
 // ============================================================================
 import { useEffect, useState } from "react";
-import { readGameplay, saveGameplay, PRESETS, CURRENT_RULES, CONTROL_PRESETS } from "../game/gameplay";
+import { readGameplay, saveGameplay, PRESETS, CURRENT_RULES, CONTROL_PRESETS } from "../game/gameplay";\nimport { FC_CONTROLS, WORLD_CUP_2026_RULES } from "../game/fcControls";
 import { useLocale } from "../i18n/LocaleProvider";
 import ThemeToggle from "../game/ThemeToggle";
 import "./settings.css";
@@ -122,7 +122,16 @@ export default function SettingsPage() {
         </div>
 
         {/* ---------- controls reference (PC + touch + LAN pad) ---------- */}
-\n        <h2 className="settings-h2">2026/27 football rules</h2>\n        <div className="rules-grid">\n          {CURRENT_RULES.rules.map((rule) => (\n            <div className="rule-card" key={rule.id}>\n              <div><b>{rule.label}</b><span className={rule.implemented === true ? "rule-live" : rule.implemented === "partial" ? "rule-partial" : "rule-optional"}>{rule.implemented === true ? "IN GAME" : rule.implemented === "partial" ? "PARTIAL" : "OPTIONAL"}</span></div>\n              <small>{rule.detail}</small>\n            </div>\n          ))}\n        </div>\n        <p className="ctrl-note">Restart countdowns use the 5-second 2026/27 protocol; goalkeeper hand control is limited to 8 seconds.</p>\n        <h2 className="settings-h2">{t("settings.controlsTitle")}</h2>
+\n        <h2 className="settings-h2">2026/27 football rules</h2>\n        <div className="rules-grid">\n          {CURRENT_RULES.rules.map((rule) => (\n            <div className="rule-card" key={rule.id}>\n              <div><b>{rule.label}</b><span className={rule.implemented === true ? "rule-live" : rule.implemented === "partial" ? "rule-partial" : "rule-optional"}>{rule.implemented === true ? "IN GAME" : rule.implemented === "partial" ? "PARTIAL" : "OPTIONAL"}</span></div>\n              <small>{rule.detail}</small>\n            </div>\n          ))}\n        </div>\n        <p className="ctrl-note">Restart countdowns use the 5-second 2026/27 protocol; goalkeeper hand control is limited to 8 seconds.</p>\n        <h2 className="settings-h2">FC 26/27-style controls</h2>
+        <div className="control-mode-row"><b>PC layout</b><span>WASD or Arrow Keys</span></div>
+        <div className="ctrl-columns">
+          <div className="ctrl-col"><b>WASD + mouse/keyboard</b>{Object.entries(FC_CONTROLS.pcWASD).map(([k,v])=><div className="ctrl-table__row" key={k}><kbd>{Array.isArray(v)?v.join(" / "):v}</kbd><span className="ctrl-table__act">{k}</span></div>)}</div>
+          <div className="ctrl-col"><b>Arrow Keys + mouse/keyboard</b>{Object.entries(FC_CONTROLS.pcArrows).map(([k,v])=><div className="ctrl-table__row" key={k}><kbd>{Array.isArray(v)?v.join(" / "):v}</kbd><span className="ctrl-table__act">{k}</span></div>)}</div>
+          <div className="ctrl-col"><b>Mobile</b>{Object.entries(FC_CONTROLS.mobile).map(([k,v])=><div className="ctrl-table__row" key={k}><span className="ctrl-table__keys">●</span><span className="ctrl-table__act">{k}: {v}</span></div>)}</div>
+        </div>
+        <h2 className="settings-h2">World Cup 2026 rules & match flow</h2>
+        <div className="rules-grid">{WORLD_CUP_2026_RULES.map((r,i)=><div className="rule-card" key={i}><b>{r}</b></div>)}</div>
+        <h2 className="settings-h2">{t("settings.controlsTitle")}</h2>
         <div className="ctrl-columns">
           <div className="ctrl-col">
             <b>{t("settings.pc")}</b>
