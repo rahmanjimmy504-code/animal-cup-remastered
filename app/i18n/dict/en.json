@@ -125,5 +125,8 @@
   "match.tactic.counter": "Counter",
   "match.performance": "Performance",
   "match.touchSize": "Button size",
-  "match.touchSensitivity": "Stick sensitivity"
+  "match.touchSensitivity": "Stick sensitivity",
+  "match.performance.auto": "Auto",
+  "match.performance.quality": "Quality",
+  "match.performance.performance": "Performance"
 }
