@@ -17,7 +17,8 @@
 // and are documented in docs/gameplay-rules.md.
 // ============================================================================
 import { useEffect, useState } from "react";
-import { readGameplay, saveGameplay, PRESETS, CURRENT_RULES, CONTROL_PRESETS } from "../game/gameplay";\nimport { FC_CONTROLS, WORLD_CUP_2026_RULES } from "../game/fcControls";
+import { readGameplay, saveGameplay, PRESETS, CURRENT_RULES, CONTROL_PRESETS } from "../game/gameplay";
+import { FC_CONTROLS, WORLD_CUP_2026_RULES } from "../game/fcControls";
 import { useLocale } from "../i18n/LocaleProvider";
 import ThemeToggle from "../game/ThemeToggle";
 import "./settings.css";
@@ -122,7 +123,18 @@ export default function SettingsPage() {
         </div>
 
         {/* ---------- controls reference (PC + touch + LAN pad) ---------- */}
-\n        <h2 className="settings-h2">2026/27 football rules</h2>\n        <div className="rules-grid">\n          {CURRENT_RULES.rules.map((rule) => (\n            <div className="rule-card" key={rule.id}>\n              <div><b>{rule.label}</b><span className={rule.implemented === true ? "rule-live" : rule.implemented === "partial" ? "rule-partial" : "rule-optional"}>{rule.implemented === true ? "IN GAME" : rule.implemented === "partial" ? "PARTIAL" : "OPTIONAL"}</span></div>\n              <small>{rule.detail}</small>\n            </div>\n          ))}\n        </div>\n        <p className="ctrl-note">Restart countdowns use the 5-second 2026/27 protocol; goalkeeper hand control is limited to 8 seconds.</p>\n        <h2 className="settings-h2">FC 26/27-style controls</h2>
+
+        <h2 className="settings-h2">2026/27 football rules</h2>
+        <div className="rules-grid">
+          {CURRENT_RULES.rules.map((rule) => (
+            <div className="rule-card" key={rule.id}>
+              <div><b>{rule.label}</b><span className={rule.implemented === true ? "rule-live" : rule.implemented === "partial" ? "rule-partial" : "rule-optional"}>{rule.implemented === true ? "IN GAME" : rule.implemented === "partial" ? "PARTIAL" : "OPTIONAL"}</span></div>
+              <small>{rule.detail}</small>
+            </div>
+          ))}
+        </div>
+        <p className="ctrl-note">Restart countdowns use the 5-second 2026/27 protocol; goalkeeper hand control is limited to 8 seconds.</p>
+        <h2 className="settings-h2">FC 26/27-style controls</h2>
         <div className="control-mode-row"><b>PC layout</b><span>WASD or Arrow Keys</span></div>
         <div className="ctrl-columns">
           <div className="ctrl-col"><b>WASD + mouse/keyboard</b>{Object.entries(FC_CONTROLS.pcWASD).map(([k,v])=><div className="ctrl-table__row" key={k}><kbd>{Array.isArray(v)?v.join(" / "):v}</kbd><span className="ctrl-table__act">{k}</span></div>)}</div>
