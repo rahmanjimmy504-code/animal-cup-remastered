@@ -1089,3 +1089,7 @@ body.ac-touch-play .match-controls .lang-switcher__menu {
 .ctrl-legend__note { margin-top: 8px; padding-top: 7px; border-top: 1px dashed rgba(120,90,50,.25); font-size: 10px; line-height: 1.35; color: #8a7a5f; }
 .ac-dark .ctrl-legend__note { border-top-color: #465446; color: #9db198; }
 .ac-dark .phase-chip { background: rgba(18, 26, 16, 0.9); color: #cfe8bc; }
+
+/* FC-style mobile modifiers: compact, cream/green paper buttons matching the base HUD. */
+.tc-btn--modifier{position:absolute;width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,247,226,.85);background:rgba(35,61,29,.82);color:#fff7e2;font:900 12px "Arial Rounded MT Bold",Arial,sans-serif;box-shadow:0 4px 10px rgba(0,0,0,.28);z-index:3;display:grid;place-items:center}
+.tc-btn--finesse{right:174px;bottom:142px}.tc-btn--chip{right:124px;bottom:190px}.tc-btn--power{right:72px;bottom:142px}.tc-btn--through{right:124px;bottom:94px}.tc-btn--second{right:22px;bottom:142px}
