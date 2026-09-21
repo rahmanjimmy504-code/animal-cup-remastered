@@ -140,5 +140,6 @@
   "lan.connected": "Connected",
   "lan.waiting": "Waiting",
   "lan.back": "Back",
-  "lan.start": "Start Match"
+  "lan.start": "Start Match",
+  "home.back": "← Main Menu"
 }
