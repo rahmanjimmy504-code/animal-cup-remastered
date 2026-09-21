@@ -186,5 +186,9 @@
   "rush.basicChance": "BASIC CHANCE",
   "rush.fans": "+{fans} fans",
   "rush.division": "{division}",
-  "rush.final": "RUSH CUP FULL TIME"
+  "rush.final": "RUSH CUP FULL TIME",
+  "lan.copy": "Copy join link",
+  "lan.copied": "Copied!",
+  "lan.extraTime": "Extra time",
+  "lan.penalties": "Penalties"
 }
