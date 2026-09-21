@@ -159,3 +159,5 @@
 .ac-dark .lb-slot.is-on { background: rgba(255, 255, 255, 0.10); }
 .ac-dark .lb-btn--ghost { background: rgba(0, 0, 0, 0.42); }
 .ac-dark .lb-url { background: rgba(0, 0, 0, 0.38); }
+
+.lb-copy{margin-top:8px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);color:#fff;border-radius:999px;padding:6px 11px;font:800 12px/1 inherit;cursor:pointer}.lb-match-options{display:grid;gap:8px;margin-top:10px;padding:10px;border-radius:12px;background:rgba(0,0,0,.16);text-align:left}.lb-match-options label{display:flex;gap:8px;align-items:center;font-size:13px}.ac-dark .lb-copy{background:rgba(255,255,255,.06)}
