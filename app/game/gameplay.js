@@ -225,6 +225,48 @@ export const DISCIPLINARY_SANCTIONS = {
   temporaryDismissal: false,
 };
 
+export const HANDBALL_SCENARIOS = {
+  deliberateControl: { restart: "directFreeKick", card: "none" },
+  unnaturalBodyExpansion: { restart: "directFreeKick", card: "none" },
+  accidentalImmediateGoalByScorer: { restart: "directFreeKick", card: "none" },
+  deliberateInsidePenaltyArea: { restart: "penaltyKick", card: "none" },
+  nonDeliberateDOGSOInsidePenaltyArea: { restart: "penaltyKick", card: "yellow" },
+  deliberateDOGSOAnywhere: { restart: "directFreeKickOrPenalty", card: "red" },
+  nonDeliberateDOGSOOutsidePenaltyArea: { restart: "directFreeKick", card: "red" },
+  promisingAttack: { restart: "directFreeKickOrPenalty", card: "yellow" },
+  goalkeeperIllegalHandlingInsideArea: { restart: "indirectFreeKick", card: "none" },
+  goalkeeperHandlingOutsideArea: { restart: "directFreeKick", card: "none" },
+  accidentalTeamMateGoalChance: { restart: "none", card: "none" },
+  shoulder: { restart: "none", card: "none" },
+  selfDeflection: { restart: "none", card: "none" }
+};
+
+export const OFFSIDE_SCENARIOS = {
+  activePlay: "indirectFreeKick",
+  interfereOpponent: "indirectFreeKick",
+  reboundOrDeflection: "indirectFreeKick",
+  deliberateSave: "indirectFreeKick",
+  goalKickException: "none",
+  throwInException: "none",
+  cornerException: "none",
+  deliberateOpponentPlay: "none",
+  secondLastOpponent: "reference",
+  ownHalf: "none"
+};
+
+export const DOGSO_CRITERIA = [
+  "distanceToGoal",
+  "generalDirectionOfPlay",
+  "likelihoodOfKeepingOrGainingControl",
+  "locationAndNumberOfDefendersAndAttackers",
+  "penaltyAreaDoublePunishment",
+  "deliberateHandballRed",
+  "nonDeliberateHandballPenaltyYellow",
+  "challengeForBallPenaltyYellow",
+  "nonChallengePenaltyRed",
+  "advantageGoalNoDOGSOCard"
+];
+
 export const CURRENT_RULES = {
   version: "2026/27",
   goalkeeperHoldSeconds: 8,
