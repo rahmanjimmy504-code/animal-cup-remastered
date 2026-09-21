@@ -1165,9 +1165,8 @@ body.ac-touch-play .match-controls .lang-switcher__menu {
 .match-score .ms-side { display:flex; align-items:center; gap:6px; }
 .match-score .ms-flag { width:24px; height:16px; object-fit:cover; border-radius:2px; }
 .match-score .ms-stats-toggle { appearance:none; border:0; margin:4px 0 0; padding:0; width:100%; display:flex; align-items:center; justify-content:center; gap:8px; background:transparent; color:inherit; cursor:pointer; }
-.match-score .ms-stats-toggle .ms-poss { flex:1; }
 .match-score .ms-chev { width:17px; height:17px; flex:0 0 17px; transition:transform .18s ease; }
 .match-score .ms-stats-toggle.is-open .ms-chev { transform:rotate(180deg); }
 .match-score .ms-detail { margin-top:6px; }
-/* old base-game sprint position: centre slot of the right-side action grid */
-.fc-slot-big.fc-ring-sprint { right:calc(104px*var(--fc-u)); bottom:calc(4px*var(--fc-u)); width:calc(70px*var(--fc-u)); height:calc(70px*var(--fc-u)); font-size:calc(12.5px*var(--fc-u)); }
+/* Sprint is the large action in the bottom-right corner. */
+.fc-slot-big.fc-ring-sprint { right:0; bottom:0; }
