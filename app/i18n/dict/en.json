@@ -179,5 +179,12 @@
   "match.setPiece.low": "LOW",
   "match.setPiece.placement": "PLACEMENT",
   "match.setPiece.chip": "CHIP",
-  "match.setPiece.power": "POWER"
+  "match.setPiece.power": "POWER",
+  "rush.title": "RUSH CUP",
+  "rush.greatChance": "GREAT CHANCE!",
+  "rush.goodChance": "GOOD CHANCE",
+  "rush.basicChance": "BASIC CHANCE",
+  "rush.fans": "+{fans} fans",
+  "rush.division": "{division}",
+  "rush.final": "RUSH CUP FULL TIME"
 }
