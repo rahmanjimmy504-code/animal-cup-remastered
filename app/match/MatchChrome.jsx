@@ -214,7 +214,8 @@ export default function MatchChrome() {
   const [teams, setTeams] = useState(null); // { red, blue } for the scoreboard
   const [forms, setForms] = useState(null); // { red:{name}, blue:{name} } chosen formations
   const [shot, setShot] = useState("idle"); // idle | busy | done — screenshot button
-  const [finalStats, setFinalStats] = useState(null); // full-time stats snapshot
+  const [finalStats, setFinalStats] = useState(null);
+  const [rushResult, setRushResult] = useState(null); // full-time stats snapshot
   // lighting system (owner 2026-06-12): morning / noon / night wash over the
   // SIMULATION only — random per match, ?light= overrides for tuning
   const [light, setLight] = useState(null);
@@ -307,6 +308,8 @@ export default function MatchChrome() {
     window.addEventListener("ab-match-started", onStarted);
     window.addEventListener("ab-match-ended", onEnded);
     window.addEventListener("ab-formations", onForms);
+    const onRushResult = (e) => setRushResult(e.detail || null);
+    window.addEventListener("ac-rush-result", onRushResult);
     // Dismiss ONLY on ab-match-started — that fires after the crowd is baked,
     // so the curtain covers the bake instead of exposing a 4-FPS run-in.
     // Long fallback in case the event never arrives (boot failure).
@@ -315,6 +318,7 @@ export default function MatchChrome() {
       window.removeEventListener("ab-match-started", onStarted);
       window.removeEventListener("ab-match-ended", onEnded);
       window.removeEventListener("ab-formations", onForms);
+      window.removeEventListener("ac-rush-result", onRushResult);
       clearTimeout(fallback);
     };
   }, []);
@@ -352,6 +356,7 @@ export default function MatchChrome() {
               {winner ? t("match.win", { name: tn(winner) }) : t("match.draw")}
             </b>
             {finalStats ? <div className="match-result__stats"><StatsBars data={finalStats} /></div> : null}
+            {rushResult ? <div className="rush-result"><b>{t("rush.final")}</b><span>{t("rush.fans",{fans:rushResult.results?.[0]?.fans||0})}</span><strong>{t("rush.division",{division:rushResult.division||"ROOKIE"})}</strong><small>{rushResult.fans||0} fans</small></div> : null}
             <div className="match-result__actions">
               {/* native listener, NOT React onClick: on the end screen the
                   engine shim re-dispatches pointer events (one physical click
