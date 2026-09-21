@@ -216,7 +216,7 @@ export const PASS_TYPES = ["ground", "through", "lofted", "cross"];
 // These are gameplay rules, not a claim that every optional competition
 // protocol is enabled in every mode.
 // ---------------------------------------------------------------------------
-export const CURRENT_RULES = {
+export const DISCIPLINARY_SANCTIONS = {\n  directFreeKick: ["charge","jumpAt","kickOrAttempt","push","strikeOrAttempt","tackleOrChallenge","tripOrAttempt","handball","holding","impedingWithContact","biteOrSpit","throwObject"],\n  indirectFreeKick: ["dangerousPlay","impedingWithoutContact","dissentOrVerbalOffence","goalkeeperIllegalHandling","offside","secondTouchAfterRestart"],\n  penaltyKick: ["directFreeKickOffenceInsidePenaltyArea","handballInsidePenaltyArea","DOGSOInsidePenaltyArea"],\n  cards: { yellow: ["reckless","unsportingBehaviour","delayRestart","dissent","illegalEntry","persistentOffences","failureDistance","simulation"], red: ["seriousFoulPlay","violentConduct","DOGSO","deliberateHandballDOGSO","secondYellow","biting","spitting","offensiveAbusiveLanguage"] },\n  restarts: ["directFreeKick","indirectFreeKick","penaltyKick","cornerKick","goalKick","throwIn","droppedBall","retake"],\n  temporaryDismissal: false,\n};\n\nexport const CURRENT_RULES = {
   version: "2026/27",
   goalkeeperHoldSeconds: 8,
   restartCountdownSeconds: 5,
