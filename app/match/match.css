@@ -1158,41 +1158,16 @@ body.ac-touch-play .match-controls .lang-switcher__menu {
 
 
 
-/* player info lives inside the scoreboard now: score → possession → controlled player */
-.match-score > .player-info {
-  position: relative;
-  top: auto; left: auto; right: auto; bottom: auto;
-  transform: none;
-  z-index: auto;
-  width: 100%;
-  max-width: none;
-  margin: 7px 0 0;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  padding: 6px 9px;
-  border: 1px solid rgba(93,144,56,.18);
-  border-radius: 12px;
-  background: #f8f3df;
-  box-shadow: none;
-  color: #4a6b35;
-  font-family: var(--ak-font-display, "Baloo 2", sans-serif);
-}
-.match-score > .player-info .pi-flag { width: 22px; height: 15px; }
-.match-score > .player-info .pi-name { font-weight: 900; color: #4f8a2f; white-space: nowrap; }
-.match-score > .player-info .pi-role { padding: 2px 5px; border-radius: 6px; font-size: 9px; }
-.match-score > .player-info .pi-stars { display:flex; flex-direction:column; gap:1px; line-height:1; font-size:8px; letter-spacing:0; }
-.match-score > .player-info .pi-sm { color:#d6a928; }
-.match-score > .player-info .pi-wf { color:#7a9b5a; }
-.match-score > .player-info .pi-goals { display:flex; align-items:baseline; gap:2px; font-size:9px; color:#6b8a55; }
-.match-score > .player-info .pi-goals b { font-size:13px; color:#4f8a2f; }
-.match-score > .player-info .pi-stat { display:flex; align-items:baseline; gap:2px; font-size:8px; }
-.match-score > .player-info .pi-stat b { font-size:12px; color:#4f8a2f; }
-.match-score > .player-info .pi-trait { display:none; }
-.match-score > .player-info .pi-stamina { display:none; }
-.ac-dark .match-score > .player-info { background:#20291f; border-color:#39463a; color:#dbe7d6; }
-.ac-dark .match-score > .player-info .pi-name { color:#a8d77f; }
-.ac-dark .match-score > .player-info .pi-stat b,
-.ac-dark .match-score > .player-info .pi-goals b { color:#a8d77f; }
+
+/* base-game scoreboard: compact flags/score row + explicit stats dropdown */
+.match-score { cursor: default; }
+.match-score .ms-row { align-items:center; }
+.match-score .ms-side { display:flex; align-items:center; gap:6px; }
+.match-score .ms-flag { width:24px; height:16px; object-fit:cover; border-radius:2px; }
+.match-score .ms-stats-toggle { appearance:none; border:0; margin:4px 0 0; padding:0; width:100%; display:flex; align-items:center; justify-content:center; gap:8px; background:transparent; color:inherit; cursor:pointer; }
+.match-score .ms-stats-toggle .ms-poss { flex:1; }
+.match-score .ms-chev { width:17px; height:17px; flex:0 0 17px; transition:transform .18s ease; }
+.match-score .ms-stats-toggle.is-open .ms-chev { transform:rotate(180deg); }
+.match-score .ms-detail { margin-top:6px; }
+/* old base-game sprint position: centre slot of the right-side action grid */
+.fc-slot-big.fc-ring-sprint { right:calc(104px*var(--fc-u)); bottom:calc(4px*var(--fc-u)); width:calc(70px*var(--fc-u)); height:calc(70px*var(--fc-u)); font-size:calc(12.5px*var(--fc-u)); }
