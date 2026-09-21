@@ -1,1 +1,17 @@
-{"name":"Animal Cup Remastered","short_name":"Animal Cup Remastered","description":"A storybook animal football game.","start_url":"/","display":"standalone","background_color":"#5d9038","theme_color":"#5d9038","icons":[{"src":"/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}
+{
+  "name": "Animal Cup Remastered",
+  "short_name": "Animal Cup Remastered",
+  "description": "Animal Cup Remastered",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#5d9038",
+  "theme_color": "#5d9038",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
