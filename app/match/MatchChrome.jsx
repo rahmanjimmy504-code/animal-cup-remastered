@@ -6,7 +6,6 @@ import { portraitSrc, runtimeHeadSrc } from "../data/teams";
 import MatchEvents from "./MatchEvents";
 import TouchControls from "./TouchControls";
 import RefereeSystem from "./RefereeSystem";
-import PlayerInfo from "./PlayerInfo";
 import RushCup from "./RushCup";
 import { useUserAssist } from "../game/userAssist";
 import LangSwitcher from "../i18n/LangSwitcher";
@@ -38,7 +37,6 @@ function Scoreboard({ teams }) {
   const { t } = useLocale();
   const [score, setScore] = useState([0, 0]);
   const [minute, setMinute] = useState(0);
-  const [poss, setPoss] = useState(null);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState(null);
   useEffect(() => {
@@ -48,37 +46,27 @@ function Scoreboard({ teams }) {
         setScore([p.redTeam.score | 0, p.blueTeam.score | 0]);
         setMinute(Math.min(90, Math.floor((p.matchTime || 0) / 60)));
       }
-      const s = readStats();
-      if (s) { setPoss(s.possession || { red: 50, blue: 50 }); if (open) setData(s); }
+      if (open) setData(readStats());
     }, 500);
     return () => clearInterval(id);
   }, [open]);
-  const beast = (id) => (
-    <span className="ms-head"><img src={portraitSrc(id)} alt="" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = runtimeHeadSrc(id); }} /></span>
-  );
-  const flag = (id) => (
-    <img className="ms-flag" src={`/match-runtime-min/data/teams/${id}/flag.png`} alt="" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-  );
-  const p = poss || { red: 50, blue: 50 };
-  // toggle the inline dropdown (no modal): tap the bar to drop the full stats
-  // down beneath it, tap again to collapse.
+  const teamSkill = (id) => { try { return teamHeadline(id).skillMoves || 1; } catch { return 1; } };
+  const stars = (id) => {
+    const n = teamSkill(id);
+    return <span className="ms-skill" title={t("match.playerStars")} aria-label={t("match.playerStars")}>{"★".repeat(n)}{"☆".repeat(5-n)}</span>;
+  };
+  const beast = (id) => <span className="ms-head"><img src={portraitSrc(id)} alt="" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = runtimeHeadSrc(id); }} /></span>;
+  const flag = (id) => <img className="ms-flag" src={`/match-runtime-min/data/teams/${id}/flag.png`} alt="" onError={(e) => { e.currentTarget.style.display = "none"; }} />;
   const toggle = () => { setOpen((o) => !o); setData(readStats()); };
   const onKey = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } };
   return (
-    <div className={`match-score${open ? " is-open" : ""}`} role="button" tabIndex={0}
-         aria-expanded={open} aria-label={t("stats.title")} onClick={toggle} onKeyDown={onKey}>
+    <div className={`match-score${open ? " is-open" : ""}`} role="button" tabIndex={0} aria-expanded={open} aria-label={t("stats.title")} onClick={toggle} onKeyDown={onKey}>
       <span className="ms-row">
         <span className="ms-side">{flag(teams.red)}{beast(teams.red)}</span>
-        <span className="ms-num">{score[0]}</span>
+        <span className="ms-team-score"><span className="ms-num">{score[0]}</span>{stars(teams.red)}</span>
         <span className="ms-clock">{minute}&apos;</span>
-        <span className="ms-num">{score[1]}</span>
+        <span className="ms-team-score"><span className="ms-num">{score[1]}</span>{stars(teams.blue)}</span>
         <span className="ms-side">{beast(teams.blue)}{flag(teams.blue)}</span>
-      </span>
-      <span className="ms-poss">
-        <i className="ms-pct ms-pct--r">{p.red}%</i>
-        <span className="ms-bar"><span className="ms-barR" style={{ width: p.red + "%" }} /><span className="ms-barB" style={{ width: p.blue + "%" }} /></span>
-        <i className="ms-pct ms-pct--b">{p.blue}%</i>
-        <svg className="ms-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M8 10l4 4 4-4" /></svg>
       </span>
       {open ? <div className="ms-detail"><StatsBars data={data} /></div> : null}
     </div>
@@ -401,7 +389,6 @@ export default function MatchChrome() {
       {play && !result ? <RefereeSystem /> : null}
       {/* FC-style controlled-player info (role + weak-foot/skill stars + the
           two key stats for that role) — polls users.list[0].player */}
-      {play && !result && teams ? <PlayerInfo teamId={teams.red} enabled={!loading} /> : null}
 
       <MatchEvents />
 
