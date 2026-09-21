@@ -308,6 +308,10 @@ body {
 .match-score .ms-team-score { display: grid; justify-items: center; align-items: center; gap: 2px; min-width: 38px; }
 .match-score .ms-skill { display: block; font-size: 8px; line-height: 1; letter-spacing: -0.02em; color: #d6b33f; white-space: nowrap; text-shadow: 0 1px 1px rgba(80,50,20,.15); }
 
+.match-score .ms-possession { display:flex; align-items:center; justify-content:center; gap:8px; margin-top:3px; }
+.match-score .ms-possession-bar { width:min(180px,34vw); height:4px; overflow:hidden; border-radius:999px; background:rgba(255,255,255,.16); }
+.match-score .ms-possession-bar i { display:block; height:100%; background:currentColor; border-radius:inherit; }
+
 /* national flag = SMALL badge next to the beast (must not balloon) */
 .match-score .ms-flag {
   width: 30px; height: 21px; flex: 0 0 auto;
