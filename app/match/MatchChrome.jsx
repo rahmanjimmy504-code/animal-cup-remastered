@@ -284,6 +284,11 @@ export default function MatchChrome() {
       if (!detail) return;
       setResult(detail);
       setFinalStats(readStats()); // freeze the stats at the whistle
+      // Career rewards are only for matches the player actually participates in.
+      // AI-vs-AI is watch/simulation mode, so it never grants career rewards.
+      const params = new URLSearchParams(window.location.search);
+      const humanControlled = params.get("play") === "1";
+      if (!humanControlled) return;
       // The runtime owns the match simulation; this seam owns career persistence.
       // Guard against duplicate end events so one match can never award stats twice.
       if (!recordedRef.current) {
@@ -293,9 +298,9 @@ export default function MatchChrome() {
           score,
           red: detail.red,
           blue: detail.blue,
-          mode: new URLSearchParams(window.location.search).get("mode") || "quick",
+          mode: params.get("mode") || "quick",
         });
-        const mode = new URLSearchParams(window.location.search).get("mode") || "quick";
+        const mode = params.get("mode") || "quick";
         if (mode === "cup") {
           recordCupResult(score);
         }
