@@ -20,10 +20,25 @@ const ROLE_ABBR = { gk: "GK", d: "DEF", m: "MID", a: "ATT" };
 
 export default function PlayerInfo({ teamId, enabled }) {
   const { t } = useLocale();
-  const [info,setInfo]=useState(null),[stamina,setStamina]=useState(1);
+  const [info,setInfo]=useState(null),[stamina,setStamina]=useState(1),[goals,setGoals]=useState(0);
+  const infoRef = { current: info };
 
   useEffect(() => {
     if (!enabled) { setInfo(null); return; }
+    setGoals(0);
+    let currentId = null;
+    const onGoal = (e) => {
+      const d = (e && e.detail) || {};
+      const scorer = d.scorerPlayer || d.scorer || d.player || null;
+      const scorerNumber = d.scorerNumber ?? d.playerNumber ?? scorer?.number;
+      const scorerTeam = d.scorerTeam || d.team || scorer?.team || scorer?.race;
+      if (!currentId) return;
+      const sameTeam = scorerTeam == null || String(scorerTeam).toLowerCase() === String(teamId).toLowerCase();
+      const samePlayer = (scorerNumber != null && infoRef.current?.number != null && Number(scorerNumber) === Number(infoRef.current.number))
+        || (scorer?.id != null && String(scorer.id) === String(currentId))
+        || (scorer?.name && infoRef.current?.name && String(scorer.name) === String(infoRef.current.name));
+      if (sameTeam && samePlayer) setGoals(g => g + 1);
+    };
     const tick = () => {
       try {
         const req = typeof window !== "undefined" ? window.require : undefined;
@@ -33,9 +48,16 @@ export default function PlayerInfo({ teamId, enabled }) {
         const p = u && u.player;
         if (!p) return;
         const key = engineRoleKey(p.role);
+        currentId = p.id ?? p.uid ?? p.number ?? p.role;
+        const displayName = p.name || p.playerName || u.name || `${teamId.toUpperCase()} #${p.number ?? "?"}`;
+        const number = p.number ?? p.jerseyNumber ?? null;
         const attrs = attrForRole(teamId, key);
-        setInfo(prev => (prev && prev.key === key) ? prev : {
+        const engineGoals = Number.isFinite(Number(p.goals)) ? Number(p.goals) : null;
+        if (engineGoals != null) setGoals(engineGoals);
+        setInfo(prev => (prev && prev.key === key && prev.name === displayName && prev.number === number) ? prev : {
           key,
+          name: displayName,
+          number,
           abbr: ROLE_ABBR[key],
           weakFoot: attrs.weakFoot,
           skillMoves: attrs.skillMoves,
@@ -45,20 +67,24 @@ export default function PlayerInfo({ teamId, enabled }) {
       try { setStamina(Number.isFinite(window.__acStamina)?window.__acStamina:1); } catch {}
     };
     tick();
+    window.addEventListener("ab-goal", onGoal);
     const iv = setInterval(tick, 180);
-    return () => { clearInterval(iv); setInfo(null); };
+    return () => { clearInterval(iv); window.removeEventListener("ab-goal", onGoal); setInfo(null); };
   }, [enabled, teamId]);
 
+  infoRef.current = info;
   if (!enabled || !info) return null;
   return (
     <div className="player-info" role="status" aria-live="off">
       <img className="pi-flag" src={`/match-runtime-min/data/teams/${teamId}/flag.png`} alt=""
            onError={(e) => { e.currentTarget.style.display = "none"; }} />
+      <span className="pi-name">{info.name}{info.number != null ? ` #${info.number}` : ""}</span>
       <span className="pi-role">{info.abbr}</span>
-      <span className="pi-stars" title="Weak foot / skill moves">
+      <span className="pi-stars" title="Skill moves / weak foot">
+        <span className="pi-sm">{"★".repeat(info.skillMoves)}{"☆".repeat(5 - info.skillMoves)}</span>
         <span className="pi-wf">{"★".repeat(info.weakFoot)}{"☆".repeat(5 - info.weakFoot)}</span>
-        <span className="pi-sm">{"✦".repeat(info.skillMoves)}{"✧".repeat(5 - info.skillMoves)}</span>
       </span>
+      <span className="pi-goals"><b>{goals}</b>G</span>
       {info.stats.map(([label, val]) => (
         <span className="pi-stat" key={label}><b>{val}</b>{label}</span>
       ))}
