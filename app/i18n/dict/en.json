@@ -128,5 +128,17 @@
   "match.touchSensitivity": "Stick sensitivity",
   "match.performance.auto": "Auto",
   "match.performance.quality": "Quality",
-  "match.performance.performance": "Performance"
+  "match.performance.performance": "Performance",
+  "lan.title": "LAN Versus",
+  "lan.sub": "Connect a second device and play head-to-head.",
+  "lan.scan": "Scan to Join",
+  "lan.code": "ROOM CODE",
+  "lan.hint": "Scan the QR code on another device to join this match.",
+  "lan.players": "Players",
+  "lan.note1p": "Waiting for Player 2.",
+  "lan.note2p": "Both players are connected. Ready to start.",
+  "lan.connected": "Connected",
+  "lan.waiting": "Waiting",
+  "lan.back": "Back",
+  "lan.start": "Start Match"
 }
