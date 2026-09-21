@@ -5,7 +5,6 @@ import { useLocale } from "../i18n/LocaleProvider";
 import { portraitSrc, runtimeHeadSrc } from "../data/teams";
 import MatchEvents from "./MatchEvents";
 import TouchControls from "./TouchControls";
-import PlayerInfo from "./PlayerInfo";
 import RefereeSystem from "./RefereeSystem";
 import RushCup from "./RushCup";
 import { useUserAssist } from "../game/userAssist";
@@ -40,41 +39,65 @@ function Scoreboard({ teams }) {
   const [minute, setMinute] = useState(0);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState(null);
-  const [possession, setPossession] = useState({ red: 50, blue: 50 });
+  const [poss, setPoss] = useState({ red: 50, blue: 50 });
+
   useEffect(() => {
     const id = setInterval(() => {
       const p = window.__matchGame && window.__matchGame.pitch;
       if (p && p.redTeam) {
         setScore([p.redTeam.score | 0, p.blueTeam.score | 0]);
         setMinute(Math.min(90, Math.floor((p.matchTime || 0) / 60)));
-        const s = readStats();
-        if (s?.possession) setPossession(s.possession);
       }
-      if (open) setData(readStats());
+      const s = readStats();
+      if (s) {
+        setPoss(s.possession || { red: 50, blue: 50 });
+        if (open) setData(s);
+      }
     }, 500);
     return () => clearInterval(id);
   }, [open]);
-  const beast = (id) => <span className="ms-head"><img src={portraitSrc(id)} alt="" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = runtimeHeadSrc(id); }} /></span>;
-  const flag = (id) => <img className="ms-flag" src={`/match-runtime-min/data/teams/${id}/flag.png`} alt="" onError={(e) => { e.currentTarget.style.display = "none"; }} />;
-  const toggle = () => { setOpen((o) => !o); setData(readStats()); };
-  const onKey = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } };
+
+  const beast = (id) => (
+    <span className="ms-head">
+      <img src={portraitSrc(id)} alt="" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = runtimeHeadSrc(id); }} />
+    </span>
+  );
+  const flag = (id) => (
+    <img className="ms-flag" src={`/match-runtime-min/data/teams/${id}/flag.png`} alt="" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+  );
+  const p = poss || { red: 50, blue: 50 };
+  const toggle = (e) => {
+    e?.stopPropagation();
+    setOpen((o) => !o);
+    setData(readStats());
+  };
+  const onKey = (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      toggle(e);
+    }
+  };
+
   return (
-    <div className={`match-score${open ? " is-open" : ""}`} role="button" tabIndex={0} aria-expanded={open} aria-label={t("stats.title")} onClick={toggle} onKeyDown={onKey}>
+    <div className={`match-score${open ? " is-open" : ""}`} aria-label={t("stats.title")}>
       <span className="ms-row">
         <span className="ms-side">{flag(teams.red)}{beast(teams.red)}</span>
-        <span className="ms-team-score"><span className="ms-num">{score[0]}</span></span>
+        <span className="ms-num">{score[0]}</span>
         <span className="ms-clock">{minute}&apos;</span>
-        <span className="ms-team-score"><span className="ms-num">{score[1]}</span></span>
+        <span className="ms-num">{score[1]}</span>
         <span className="ms-side">{beast(teams.blue)}{flag(teams.blue)}</span>
       </span>
-      <div className="ms-possession" aria-label={`${t("stats.possession")} ${possession.red}% - ${possession.blue}%`}>
-        <span>{possession.red}%</span>
-        <span className="ms-possession-bar"><i style={{ width: `${possession.red}%` }} /></span>
-        <b>{t("stats.possession")}</b>
-        <span className="ms-possession-bar"><i style={{ width: `${possession.blue}%` }} /></span>
-        <span>{possession.blue}%</span>
-      </div>
-      <PlayerInfo teamId={teams.red} enabled={true} />
+      <button type="button" className={`ms-stats-toggle${open ? " is-open" : ""}`} onClick={toggle} onKeyDown={onKey}
+              aria-expanded={open} aria-label={open ? t("stats.hide") : t("stats.title")}>
+        <span className="ms-poss" aria-hidden>
+          <i className="ms-pct ms-pct--r">{p.red}%</i>
+          <span className="ms-bar"><span className="ms-barR" style={{ width: p.red + "%" }} /><span className="ms-barB" style={{ width: p.blue + "%" }} /></span>
+          <i className="ms-pct ms-pct--b">{p.blue}%</i>
+        </span>
+        <svg className="ms-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <path d="M8 10l4 4 4-4" />
+        </svg>
+      </button>
       {open ? <div className="ms-detail"><StatsBars data={data} /></div> : null}
     </div>
   );
