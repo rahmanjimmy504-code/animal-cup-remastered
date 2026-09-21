@@ -145,3 +145,24 @@ body.ac-dark .lang-switcher__menu button.is-active, html[data-theme="dark"] .lan
 .cup-page button,.season-page button,.profile-page button,.game-settings button,.cup-page a,.season-page a,.profile-page a,.game-settings a{font-family:inherit;font-weight:900;border-radius:14px;}
 .cup-page .cup-primary,.season-page .season-primary,.profile-page .ak-btn,.game-settings .preset-grid button.selected{background:#5d9038;color:#fff7e2;border-color:#41702a;box-shadow:0 4px 0 #41702a;}
 .ac-dark .cup-page .cup-card,.ac-dark .season-page .season-card,.ac-dark .profile-page .profile-card,.ac-dark .game-settings .settings-card{background:#171d18;border-color:#2e392f;color:#eef4e9;}
+
+
+/* ===== unified Animal Cup menu finish ===== */
+.cup-page,.season-page,.profile-page,.game-settings{padding:22px;}
+.season-page,.profile-page,.game-settings{background:radial-gradient(120% 100% at 50% 45%,#6aa843 0%,#5d9038 55%,#4f8a2f 100%);color:#4b3822;}
+.season-head,.profile-head,.game-settings>header{max-width:1100px;margin:0 auto 18px;}
+.season-head,.profile-head{min-height:70px;}
+.season-head h1,.profile-head h1,.game-settings h1{font-family:"Titan One","Trebuchet MS",sans-serif;font-weight:400;}
+.season-head>button,.profile-head>button,.game-settings>header>a{border:2px solid rgba(255,255,255,.45);background:rgba(255,255,255,.12);color:#fff7e2;border-radius:12px;padding:10px 14px;text-decoration:none;font-weight:900;cursor:pointer;}
+.game-settings>header>a{display:inline-block;}
+.game-settings .settings-card{max-width:1100px;padding:clamp(20px,4vw,38px);border:4px solid #fffef8;background:#fffef8;}
+.game-settings .preset-grid button,.game-settings .settings-list label,.game-settings .ctrl-col{border-radius:14px;}
+.game-settings .settings-list label,.game-settings .ctrl-col{background:#f7f1df;}
+.game-settings .settings-card h2,.game-settings .settings-h2{color:#5d9038;}
+.game-settings .rule-card{background:#f7f1df;border-color:rgba(120,90,50,.16);}
+.ac-dark .season-page,.ac-dark .profile-page,.ac-dark .game-settings{background:radial-gradient(120% 100% at 50% 45%,#30472b 0%,#243a24 55%,#111811 100%);color:#edf4e9;}
+.ac-dark .season-head>button,.ac-dark .profile-head>button,.ac-dark .game-settings>header>a{background:#1b241c;border-color:#465446;color:#e6f0df;}
+.ac-dark .game-settings .settings-card{background:#171d18;border-color:#2e392f;}
+.ac-dark .game-settings .settings-list label,.ac-dark .game-settings .ctrl-col,.ac-dark .game-settings .rule-card{background:#222b23;color:#edf4e9;}
+.ac-dark .game-settings .settings-card h2,.ac-dark .game-settings .settings-h2{color:#9fd172;}
+@media(max-width:700px){.season-page,.profile-page,.game-settings,.cup-page{padding:14px;}.season-head,.profile-head{flex-wrap:wrap;}.game-settings .settings-card{padding:18px;}}
