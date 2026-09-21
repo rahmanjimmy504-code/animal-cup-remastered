@@ -39,7 +39,6 @@ function Scoreboard({ teams }) {
   const [minute, setMinute] = useState(0);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState(null);
-  const [poss, setPoss] = useState({ red: 50, blue: 50 });
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -50,7 +49,6 @@ function Scoreboard({ teams }) {
       }
       const s = readStats();
       if (s) {
-        setPoss(s.possession || { red: 50, blue: 50 });
         if (open) setData(s);
       }
     }, 500);
@@ -65,7 +63,6 @@ function Scoreboard({ teams }) {
   const flag = (id) => (
     <img className="ms-flag" src={`/match-runtime-min/data/teams/${id}/flag.png`} alt="" onError={(e) => { e.currentTarget.style.display = "none"; }} />
   );
-  const p = poss || { red: 50, blue: 50 };
   const toggle = (e) => {
     e?.stopPropagation();
     setOpen((o) => !o);
@@ -88,12 +85,7 @@ function Scoreboard({ teams }) {
         <span className="ms-side">{beast(teams.blue)}{flag(teams.blue)}</span>
       </span>
       <button type="button" className={`ms-stats-toggle${open ? " is-open" : ""}`} onClick={toggle} onKeyDown={onKey}
-              aria-expanded={open} aria-label={open ? t("stats.hide") : t("stats.title")}>
-        <span className="ms-poss" aria-hidden>
-          <i className="ms-pct ms-pct--r">{p.red}%</i>
-          <span className="ms-bar"><span className="ms-barR" style={{ width: p.red + "%" }} /><span className="ms-barB" style={{ width: p.blue + "%" }} /></span>
-          <i className="ms-pct ms-pct--b">{p.blue}%</i>
-        </span>
+              aria-expanded={open} aria-label={t("stats.title")}>
         <svg className="ms-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
           <path d="M8 10l4 4 4-4" />
         </svg>
