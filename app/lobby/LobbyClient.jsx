@@ -12,6 +12,7 @@
 // grace timer, so the phones stay connected straight through kickoff.
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import ThemeToggle from "../game/ThemeToggle";
 import QRCode from "qrcode";
 import { useLocale } from "../i18n/LocaleProvider";
 import LangSwitcher from "../i18n/LangSwitcher";
