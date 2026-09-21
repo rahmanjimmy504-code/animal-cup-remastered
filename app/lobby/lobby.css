@@ -161,3 +161,28 @@
 .ac-dark .lb-url { background: rgba(0, 0, 0, 0.38); }
 
 .lb-lang{display:flex;align-items:center;gap:8px}.lb-lang .theme-toggle{width:40px;height:40px;padding:0;display:grid;place-items:center;border-radius:12px;border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff}.ac-dark .lb-lang .theme-toggle{background:#1b241c;border-color:#465446;color:#dff2ce}
+
+
+/* ===== Animal Cup base-menu skin ===== */
+.lb{background:radial-gradient(120% 100% at 50% 45%,#6aa843 0%,#5d9038 55%,#4f8a2f 100%);font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;color:#4b3822;}
+.lb-pattern{background:url("/match-runtime-min/images/interface/pattern.png") repeat;opacity:.16;}
+.lb-title{color:#fff7e2;text-shadow:0 4px 0 rgba(0,0,0,.16);}
+.lb-sub{color:#fff7e2;opacity:.9;}
+.lb-card{background:#fffef8;color:#4b3822;border:4px solid #fffef8;border-radius:20px;box-shadow:0 8px 20px rgba(60,50,30,.32);backdrop-filter:none;}
+.lb-h2{color:#5d9038;}
+.lb-slot{background:#f7f1df;border-color:transparent;color:#4b3822;}
+.lb-slot.is-on{background:#f0f8e8;}
+.lb-slot-meta b{color:#4b3822;}
+.lb-slot-status{color:#6f604a;}
+.lb-code-label,.lb-hint,.lb-note{color:#6f604a;}
+.lb-url{background:#f4eed9;color:#5d6d50;}
+.lb-btn{font-family:inherit;border-radius:14px;}
+.lb-btn--ghost{background:#f4eed9;color:#5d9038;border:2px solid #d9cfb6;box-shadow:none;}
+.lb-btn--go{background:#5d9038;color:#fff7e2;box-shadow:0 4px 0 #41702a;}
+.ac-dark .lb{background:radial-gradient(120% 100% at 50% 45%,#30472b 0%,#243a24 55%,#111811 100%);color:#edf4e9;}
+.ac-dark .lb-card{background:#171d18;color:#edf4e9;border-color:#2e392f;}
+.ac-dark .lb-slot{background:#222b23;color:#edf4e9;}
+.ac-dark .lb-slot.is-on{background:#2a3a29;}
+.ac-dark .lb-slot-meta b{color:#edf4e9;}
+.ac-dark .lb-slot-status,.ac-dark .lb-code-label,.ac-dark .lb-hint,.ac-dark .lb-note{color:#b7c3b3;}
+.ac-dark .lb-url,.ac-dark .lb-btn--ghost{background:#263127;color:#cfe8bc;border-color:#39463a;}
