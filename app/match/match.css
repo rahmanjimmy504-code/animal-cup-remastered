@@ -1165,3 +1165,7 @@ body.ac-touch-play .match-controls .lang-switcher__menu {
 .ac-dark .match-brand{background:#171d18;border-color:#2e392f;color:#dff2ce;box-shadow:0 5px 14px rgba(0,0,0,.35)}
 @media(max-height:500px){.match-brand{top:6px;font-size:10px;padding:4px 8px}.match-brand img{width:18px;height:18px}}
 @media(max-width:600px){.match-brand{top:8px;font-size:10px}.match-brand img{width:19px;height:19px}}
+
+/* Discipline + substitution controls */
+.tc-sub{position:absolute;right:max(14px,env(safe-area-inset-right));top:max(68px,calc(env(safe-area-inset-top) + 58px));width:48px;height:34px;border-radius:10px;border:2px solid rgba(120,90,50,.22);background:#fffef8;color:#4f8a2f;font:900 10px Arial;pointer-events:auto;box-shadow:0 4px 10px rgba(0,0,0,.18);z-index:5}
+.ac-dark .tc-sub{background:#171d18;border-color:#465446;color:#a8d77f}
