@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocale } from "../i18n/LocaleProvider";
 import { portraitSrc, runtimeHeadSrc } from "../data/teams";
-import { teamHeadline } from "../data/players.js";
 import MatchEvents from "./MatchEvents";
 import TouchControls from "./TouchControls";
+import PlayerInfo from "./PlayerInfo";
 import RefereeSystem from "./RefereeSystem";
 import RushCup from "./RushCup";
 import { useUserAssist } from "../game/userAssist";
@@ -40,22 +40,20 @@ function Scoreboard({ teams }) {
   const [minute, setMinute] = useState(0);
   const [open, setOpen] = useState(false);
   const [data, setData] = useState(null);
+  const [possession, setPossession] = useState({ red: 50, blue: 50 });
   useEffect(() => {
     const id = setInterval(() => {
       const p = window.__matchGame && window.__matchGame.pitch;
       if (p && p.redTeam) {
         setScore([p.redTeam.score | 0, p.blueTeam.score | 0]);
         setMinute(Math.min(90, Math.floor((p.matchTime || 0) / 60)));
+        const s = readStats();
+        if (s?.possession) setPossession(s.possession);
       }
       if (open) setData(readStats());
     }, 500);
     return () => clearInterval(id);
   }, [open]);
-  const teamSkill = (id) => { try { return teamHeadline(id).skillMoves || 1; } catch { return 1; } };
-  const stars = (id) => {
-    const n = teamSkill(id);
-    return <span className="ms-skill" title={t("match.playerStars")} aria-label={t("match.playerStars")}>{"★".repeat(n)}{"☆".repeat(5-n)}</span>;
-  };
   const beast = (id) => <span className="ms-head"><img src={portraitSrc(id)} alt="" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = runtimeHeadSrc(id); }} /></span>;
   const flag = (id) => <img className="ms-flag" src={`/match-runtime-min/data/teams/${id}/flag.png`} alt="" onError={(e) => { e.currentTarget.style.display = "none"; }} />;
   const toggle = () => { setOpen((o) => !o); setData(readStats()); };
@@ -64,11 +62,19 @@ function Scoreboard({ teams }) {
     <div className={`match-score${open ? " is-open" : ""}`} role="button" tabIndex={0} aria-expanded={open} aria-label={t("stats.title")} onClick={toggle} onKeyDown={onKey}>
       <span className="ms-row">
         <span className="ms-side">{flag(teams.red)}{beast(teams.red)}</span>
-        <span className="ms-team-score"><span className="ms-num">{score[0]}</span>{stars(teams.red)}</span>
+        <span className="ms-team-score"><span className="ms-num">{score[0]}</span></span>
         <span className="ms-clock">{minute}&apos;</span>
-        <span className="ms-team-score"><span className="ms-num">{score[1]}</span>{stars(teams.blue)}</span>
+        <span className="ms-team-score"><span className="ms-num">{score[1]}</span></span>
         <span className="ms-side">{beast(teams.blue)}{flag(teams.blue)}</span>
       </span>
+      <div className="ms-possession" aria-label={`${t("stats.possession")} ${possession.red}% - ${possession.blue}%`}>
+        <span>{possession.red}%</span>
+        <span className="ms-possession-bar"><i style={{ width: `${possession.red}%` }} /></span>
+        <b>{t("stats.possession")}</b>
+        <span className="ms-possession-bar"><i style={{ width: `${possession.blue}%` }} /></span>
+        <span>{possession.blue}%</span>
+      </div>
+      <PlayerInfo teamId={teams.red} enabled={true} />
       {open ? <div className="ms-detail"><StatsBars data={data} /></div> : null}
     </div>
   );
