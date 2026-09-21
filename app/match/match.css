@@ -305,20 +305,9 @@ body {
 .match-score:focus { outline: none; }
 .match-score:focus-visible { outline: 3px solid rgba(93, 144, 56, 0.55); outline-offset: 3px; }
 .match-score .ms-row { display: flex; align-items: center; justify-content: center; gap: 12px; }
-/* possession row (replaces the old standalone stats card) */
-.match-score .ms-poss { display: flex; align-items: center; gap: 6px; padding: 0 2px; }
-.match-score .ms-pct { font-style: normal; font-size: 10px; font-weight: 900; font-variant-numeric: tabular-nums; min-width: 26px; color: #d8443a; }
-.match-score .ms-pct--b { color: #3f7fb1; text-align: right; }
-.match-score .ms-bar { flex: 1; display: flex; height: 7px; border-radius: 999px; overflow: hidden; background: rgba(120, 90, 50, 0.15); }
-.match-score .ms-barR { background: #d8443a; }
-.match-score .ms-barB { background: #3f7fb1; }
-.match-score .ms-chev { width: 13px; height: 13px; color: #9aa888; flex-shrink: 0; transition: transform 160ms ease; }
-.match-score.is-open .ms-chev { transform: rotate(180deg); }
-/* tap-to-expand dropdown: full stats drop down inside the board (no modal).
-   The board width is constant (set above), so opening only adds the detail
-   block below — nothing in the score row moves. */
-.match-score .ms-detail { width: 100%; margin-top: 8px; padding-top: 9px; border-top: 1px solid rgba(120, 90, 50, 0.18); }
-.match-score .ms-side { display: flex; align-items: center; gap: 7px; }
+.match-score .ms-team-score { display: grid; justify-items: center; align-items: center; gap: 2px; min-width: 38px; }
+.match-score .ms-skill { display: block; font-size: 8px; line-height: 1; letter-spacing: -0.02em; color: #d6b33f; white-space: nowrap; text-shadow: 0 1px 1px rgba(80,50,20,.15); }
+
 /* national flag = SMALL badge next to the beast (must not balloon) */
 .match-score .ms-flag {
   width: 30px; height: 21px; flex: 0 0 auto;
@@ -1163,8 +1152,3 @@ body.ac-touch-play .match-controls .lang-switcher__menu {
 
 .rush-result{display:grid;gap:4px;margin:12px auto 0;padding:10px 14px;border-radius:14px;background:rgba(216,184,67,.12);border:1px solid rgba(216,184,67,.32);text-align:center}.rush-result b{font-size:10px;letter-spacing:.12em}.rush-result span{font-weight:900;color:#d7b83f}.rush-result strong{font-size:17px}.rush-result small{opacity:.65}
 
-/* ===== HUD separation: scoreboard and controlled-player panel never overlap ===== */
-.match-score{top:10px;}
-.player-info{position:fixed;z-index:39;top:116px;left:50%;right:auto;transform:translateX(-50%) scale(.96);transform-origin:top center;max-width:min(420px,calc(100vw - 24px));}
-@media(max-height:500px){.player-info{top:82px;transform:translateX(-50%) scale(.84);}}
-@media(max-width:560px){.player-info{top:108px;max-width:calc(100vw - 20px);transform:translateX(-50%) scale(.88);}}
