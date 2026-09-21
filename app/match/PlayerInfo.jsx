@@ -13,12 +13,14 @@
 // full-seam guards, renders nothing until a player exists or in team modes.
 // ============================================================================
 import { useEffect, useState } from "react";
+import { useLocale } from "../i18n/LocaleProvider";
 import { attrForRole, engineRoleKey, keyStatsForRole, STAT_LABELS } from "../data/players.js";
 
 const ROLE_ABBR = { gk: "GK", d: "DEF", m: "MID", a: "ATT" };
 
 export default function PlayerInfo({ teamId, enabled }) {
-  const [info, setInfo] = useState(null);
+  const { t } = useLocale();
+  const [info,setInfo]=useState(null),[stamina,setStamina]=useState(1);
 
   useEffect(() => {
     if (!enabled) { setInfo(null); return; }
@@ -40,9 +42,10 @@ export default function PlayerInfo({ teamId, enabled }) {
           stats: keyStatsForRole(key).map(k => [STAT_LABELS[k], attrs[k]]),
         });
       } catch { /* seam guard */ }
+      try { setStamina(Number.isFinite(window.__acStamina)?window.__acStamina:1); } catch {}
     };
     tick();
-    const iv = setInterval(tick, 350);
+    const iv = setInterval(tick, 180);
     return () => { clearInterval(iv); setInfo(null); };
   }, [enabled, teamId]);
 
@@ -59,6 +62,7 @@ export default function PlayerInfo({ teamId, enabled }) {
       {info.stats.map(([label, val]) => (
         <span className="pi-stat" key={label}><b>{val}</b>{label}</span>
       ))}
+    <span className="pi-trait">{t(`team.${teamId}.trait`)}</span><span className="pi-stamina" title={t("match.stamina")}><i style={{width:`${Math.round(stamina*100)}%`}}/><b>{Math.round(stamina*100)}</b></span>
     </div>
   );
 }
