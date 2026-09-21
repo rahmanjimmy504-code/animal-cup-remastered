@@ -13,7 +13,7 @@ import LoadingScreen from "./LoadingScreen";
 import GoalFx from "./GoalFx";
 import { StatsBars, readStats } from "./StatsPanel";
 import { captureMatch } from "./captureMatch";
-import { recordMatch, recordCupResult, claimDaily, recordRushResult } from "../game/cup";
+import { recordMatch, recordCupResult, claimDaily } from "../game/cup";
 import { sfx } from "../audio/SoundBank";
 import { IconCamera, IconCheck, IconSoundOn, IconSoundOff, IconZoomIn, IconZoomOut, IconReplay, IconHome } from "../ui/Icons";
 
@@ -294,7 +294,7 @@ export default function MatchChrome() {
         const humanControlled = params.get("play") === "1";
         const score = Array.isArray(detail.score) ? detail.score.map(Number) : [0, 0];
         if (!humanControlled) return;
-        if (mode === "rush") recordRushResult(score);
+        if (mode === "rush") recordMatch({ score, red: detail.red, blue: detail.blue, mode });
         else {
           recordMatch({ score, red: detail.red, blue: detail.blue, mode });
           if (mode === "cup") recordCupResult(score);
