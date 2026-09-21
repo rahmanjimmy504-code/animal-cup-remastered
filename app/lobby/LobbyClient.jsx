@@ -26,13 +26,16 @@ function Portrait({ id }) {
   );
 }
 
-export default function LobbyClient({ red, blue, side, ai, time }) {
+export default function LobbyClient({ red, blue, side, ai, time, extraTime: initialExtraTime = true, penalties: initialPenalties = true }) {
   const { t } = useLocale();
   const router = useRouter();
   const [room, setRoom] = useState(null);
   const [join, setJoin] = useState(null); // full http URL the phone opens
   const [qr, setQr] = useState(null); // data URL
-  const [pads, setPads] = useState([]); // [{padId,name,slot,ready}]
+  const [pads, setPads] = useState([]);
+  const [extraTime, setExtraTime] = useState(initialExtraTime);
+  const [penalties, setPenalties] = useState(initialPenalties);
+  const [copied, setCopied] = useState(false); // [{padId,name,slot,ready}]
   const lanRef = useRef(null);
 
   useEffect(() => {
@@ -69,7 +72,7 @@ export default function LobbyClient({ red, blue, side, ai, time }) {
     // the relay's host grace timer keeps the room (and the phones) alive across
     // this navigation. Formations are left to the engine's random roll.
     lanRef.current && lanRef.current.send({ t: "start", info: { red, blue } });
-    const url = `/match?red=${red}&blue=${blue}&ai=${ai}&side=${side}&time=${time}&play=1&p2=1&lan=${room}`;
+    const url = `/match?red=${red}&blue=${blue}&ai=${ai}&side=${side}&time=${time}&extra=${extraTime?1:0}&pens=${penalties?1:0}&play=1&p2=1&lan=${room}`;
     router.push(url);
   }
 
@@ -94,7 +97,7 @@ export default function LobbyClient({ red, blue, side, ai, time }) {
               <b>{room || "····"}</b>
             </div>
             {join ? <code className="lb-url">{join}</code> : null}
-            <p className="lb-hint">{t("lan.hint")}</p>
+            <p className="lb-hint">{t("lan.hint")}</p>{join ? <button type="button" className="lb-copy" onClick={async()=>{try{await navigator.clipboard.writeText(join);setCopied(true);setTimeout(()=>setCopied(false),1400)}catch{}}}>{copied?t("lan.copied"):t("lan.copy")}</button>:null}
           </section>
 
           {/* right: who's in */}
@@ -102,7 +105,7 @@ export default function LobbyClient({ red, blue, side, ai, time }) {
             <h2 className="lb-h2">{t("lan.players")}</h2>
             <Slot n={1} teamId={red} tone="red" pad={slot0} t={t} />
             <Slot n={2} teamId={blue} tone="blue" pad={slot1} t={t} />
-            <p className="lb-note">{slot1 ? t("lan.note2p") : t("lan.note1p")}</p>
+            <p className="lb-note">{slot1 ? t("lan.note2p") : t("lan.note1p")}</p><div className="lb-match-options"><label><input type="checkbox" checked={extraTime} onChange={e=>setExtraTime(e.target.checked)}/>{t("lan.extraTime")}</label><label><input type="checkbox" checked={penalties} onChange={e=>setPenalties(e.target.checked)}/>{t("lan.penalties")}</label></div>
           </section>
         </div>
 
