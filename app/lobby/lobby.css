@@ -159,3 +159,5 @@
 .ac-dark .lb-slot.is-on { background: rgba(255, 255, 255, 0.10); }
 .ac-dark .lb-btn--ghost { background: rgba(0, 0, 0, 0.42); }
 .ac-dark .lb-url { background: rgba(0, 0, 0, 0.38); }
+
+.lb-lang{display:flex;align-items:center;gap:8px}.lb-lang .theme-toggle{width:40px;height:40px;padding:0;display:grid;place-items:center;border-radius:12px;border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff}.ac-dark .lb-lang .theme-toggle{background:#1b241c;border-color:#465446;color:#dff2ce}
