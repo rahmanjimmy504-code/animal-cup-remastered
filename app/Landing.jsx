@@ -281,6 +281,7 @@ export default function Landing() {
           </button>
         </div>
         <div className={css.actionsLan}>
+          <button type="button" className={css.cup} onClick={() => router.push(`/match?red=${mine}&blue=${opp}&ai=${ai()}&side=${side}&time=6&mode=rush&play=1`)}>{t("home.rush")}</button>
           <button type="button" className={css.cup} onClick={() => router.push("/cup")}>
             {t("home.cup")}
           </button>
