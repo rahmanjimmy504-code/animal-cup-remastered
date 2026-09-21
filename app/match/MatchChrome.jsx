@@ -6,13 +6,14 @@ import { portraitSrc, runtimeHeadSrc } from "../data/teams";
 import MatchEvents from "./MatchEvents";
 import TouchControls from "./TouchControls";
 import PlayerInfo from "./PlayerInfo";
+import RushCup from "./RushCup";
 import { useUserAssist } from "../game/userAssist";
 import LangSwitcher from "../i18n/LangSwitcher";
 import LoadingScreen from "./LoadingScreen";
 import GoalFx from "./GoalFx";
 import { StatsBars, readStats } from "./StatsPanel";
 import { captureMatch } from "./captureMatch";
-import { recordMatch, recordCupResult, claimDaily } from "../game/cup";
+import { recordMatch, recordCupResult, claimDaily, recordRushResult } from "../game/cup";
 import { sfx } from "../audio/SoundBank";
 import { IconCamera, IconCheck, IconSoundOn, IconSoundOff, IconZoomIn, IconZoomOut, IconReplay, IconHome } from "../ui/Icons";
 
@@ -287,19 +288,16 @@ export default function MatchChrome() {
       // Guard against duplicate end events so one match can never award stats twice.
       if (!recordedRef.current) {
         recordedRef.current = true;
+        const params = new URLSearchParams(window.location.search);
+        const mode = params.get("mode") || "quick";
+        const humanControlled = params.get("play") === "1";
         const score = Array.isArray(detail.score) ? detail.score.map(Number) : [0, 0];
-        recordMatch({
-          score,
-          red: detail.red,
-          blue: detail.blue,
-          mode: new URLSearchParams(window.location.search).get("mode") || "quick",
-        });
-        const mode = new URLSearchParams(window.location.search).get("mode") || "quick";
-        if (mode === "cup") {
-          recordCupResult(score);
-        }
-        if (mode === "daily" && score[0] > score[1]) {
-          claimDaily();
+        if (!humanControlled) return;
+        if (mode === "rush") recordRushResult(score);
+        else {
+          recordMatch({ score, red: detail.red, blue: detail.blue, mode });
+          if (mode === "cup") recordCupResult(score);
+          if (mode === "daily" && score[0] > score[1]) claimDaily();
         }
       }
     }
@@ -384,6 +382,7 @@ export default function MatchChrome() {
 
 
       {play && !touch && !result ? <ControlsLegend t={t} /> : null}
+      {play && !result ? <RushCup /> : null}
       {play && touch && !loading && !result ? <TouchControls /> : null}
       {/* FC-style controlled-player info (role + weak-foot/skill stars + the
           two key stats for that role) — polls users.list[0].player */}
