@@ -77,7 +77,7 @@ export default function LobbyClient({ red, blue, side, ai, time }) {
   return (
     <main className="lb">
       <div className="lb-pattern" aria-hidden />
-      <span className="lb-lang"><LangSwitcher /></span>
+      <span className="lb-lang"><LangSwitcher /><ThemeToggle /></span>
 
       <div className="lb-wrap">
         <h1 className="lb-title">{t("lan.title")}</h1>
