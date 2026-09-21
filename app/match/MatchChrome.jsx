@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocale } from "../i18n/LocaleProvider";
 import { portraitSrc, runtimeHeadSrc } from "../data/teams";
+import { teamHeadline } from "../data/players.js";
 import MatchEvents from "./MatchEvents";
 import TouchControls from "./TouchControls";
 import RefereeSystem from "./RefereeSystem";
