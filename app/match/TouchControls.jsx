@@ -1,280 +1,44 @@
 "use client";
-
-// ============================================================================
-// TouchControls — FC Mobile-style on-screen controls (play mode, touch).
-//
-// Layout follows EA's FC Mobile HUD: one contextual button cluster in the
-// bottom-right thumb zone (the joystick stays bottom-left, untouched).
-//   • SPRINT  — the big green-ring button pinned in the corner, both modes.
-//   • ATTACK  (your team has the ball): SHOOT / THROUGH / PASS diamond plus a
-//     small modifier arc (FINESSE · LOB · CHIP · POWER).
-//   • DEFEND  (opponents have it / loose ball): TACKLE / CLEAR / SWITCH diamond
-//     plus JOCKEY and 2ND DEF holds.
-// The cluster swaps between the two sets exactly like FC Mobile does, driven
-// by real possession polled from the engine seam (users.list[0] + ball owner).
-//
-// Visual skin matches FC Mobile: dark charcoal circles, coloured accent rings
-// with a notch at the top, bold uppercase labels, pressed glow, a golden power
-// arc that fills while SHOOT is held, and a small haptic tick on press.
-//
-// Touch tuning (MatchExtras panel): reads window.__acMatchOptions.sensitivity
-// at pointer-move time (runtime only — never during SSR) and multiplies the
-// stick output, clamped to ±1. Button scale comes from the --ac-touch-scale
-// CSS var consumed by .fc-cluster in match.css.
-//
-// Input seam is unchanged: every button writes the same window.__touchInput
-// fields the engine's acApplyInput() already consumes (vx/vy/shoot/pass/…).
-// ============================================================================
-
-import { useEffect, useRef, useState } from "react";
-
-function input() {
-  if (!window.__touchInput) {
-    window.__touchInput = {
-      active: false, vx: 0, vy: 0,
-      shoot: false, pass: false, sprint: false, throughPass: false,
-      lob: false, tackle: false, finesse: false, chip: false,
-      powerShot: false, switchPlayer: false, secondDefender: false, jockey: false,
-    };
-  }
-  return window.__touchInput;
-}
-
-const pulseTimers = new Map();
-
-function setAction(name, value) {
-  const state = input();
-  state[name] = value;
-  state.active = true;
-}
-
-function releaseAction(name) {
-  const state = input();
-  state[name] = false;
-  state.active = state.vx !== 0 || state.vy !== 0;
-}
-
-function pulseAction(name) {
-  const state = input();
-  state.active = true;
-  state[name] = true;
-  clearTimeout(pulseTimers.get(name));
-  pulseTimers.set(name, setTimeout(() => {
-    state[name] = false;
-    state.active = state.vx !== 0 || state.vy !== 0;
-  }, 140));
-}
-
-// FC Mobile gives a subtle tactile tick on every press — mirror that where the
-// browser supports the Vibration API (silently ignored elsewhere).
-function buzz(ms) {
-  try { if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate(ms); } catch { /* no haptics */ }
-}
-
-// Pointer capture can throw (pointer already released between dispatch and
-// capture, synthetic/stale pointerId) — never let it block the action itself.
-function capture(e) {
-  try { e.currentTarget.setPointerCapture?.(e.pointerId); } catch { /* not capturable — fine */ }
-}
-
-// Stick sensitivity from the in-match touch-tuning panel (default 1).
-function stickSensitivity() {
-  try { return window.__acMatchOptions?.sensitivity || 1; } catch { return 1; }
-}
-
-export default function TouchControls() {
-  const baseRef = useRef(null);
-  const thumbRef = useRef(null);
-  const pointerRef = useRef(null);
-  // true = attacking (your team owns the ball), false = defending / loose ball.
-  const [attack, setAttack] = useState(false);
-
-  useEffect(() => {
-    input();
-    const prevent = (e) => e.preventDefault();
-    document.addEventListener("contextmenu", prevent, { passive: false });
-    return () => document.removeEventListener("contextmenu", prevent);
-  }, []);
-
-  // Possession poll — same seam PlayerInfo uses (users.list[0]); the ball
-  // owner/inHands holder tells us which set of buttons FC Mobile would show.
-  useEffect(() => {
-    const iv = setInterval(() => {
-      let atk = false;
-      try {
-        const req = typeof window !== "undefined" ? window.require : undefined;
-        const users = req ? req("users") : null;
-        const u0 = users && users.list && users.list[0];
-        const pitch = window.__matchGame && window.__matchGame.pitch;
-        const ball = pitch && pitch.ball;
-        const holder = (ball && (ball.owner || ball.inHands)) || null;
-        if (u0 && holder && u0.team && holder.team === u0.team) atk = true;
-        else if (u0 && u0.player && u0.player.hasBall) atk = true;
-      } catch { /* seam not ready yet — keep last mode */ }
-      setAttack((prev) => (prev === atk ? prev : atk));
-    }, 250);
-    return () => clearInterval(iv);
-  }, []);
-
-  function stickDown(e) {
-    capture(e);
-    pointerRef.current = e.pointerId;
-    stickMove(e);
-  }
-
-  function stickMove(e) {
-    if (pointerRef.current !== null && e.pointerId !== pointerRef.current) return;
-    const base = baseRef.current;
-    const thumb = thumbRef.current;
-    if (!base || !thumb) return;
-    const r = base.getBoundingClientRect();
-    const max = Math.max(1, Math.min(r.width, r.height) * 0.36);
-    let x = e.clientX - (r.left + r.width / 2);
-    let y = e.clientY - (r.top + r.height / 2);
-    const len = Math.hypot(x, y);
-    if (len > max) { x = x / len * max; y = y / len * max; }
-    thumb.style.transform = `translate(${x}px, ${y}px)`;
-    const sensitivity = stickSensitivity();
-    setAction("vx", Math.max(-1, Math.min(1, x / max * sensitivity)));
-    setAction("vy", Math.max(-1, Math.min(1, y / max * sensitivity)));
-  }
-
-  function stickUp(e) {
-    if (pointerRef.current !== null && e.pointerId !== pointerRef.current) return;
-    pointerRef.current = null;
-    if (thumbRef.current) thumbRef.current.style.transform = "translate(0,0)";
-    setAction("vx", 0);
-    setAction("vy", 0);
-  }
-
-  // Held actions (shoot / sprint / modifiers). `charge` adds the golden FC
-  // power arc that fills while the button is down (SHOOT only).
-  function hold(name, opts) {
-    const charge = !!(opts && opts.charge);
-    const charging = (el, on) => el && el.classList && el.classList.toggle("is-charging", on);
-    return {
-      onPointerDown: (e) => {
-        e.preventDefault();
-        capture(e);
-        e.currentTarget.classList.add("is-down");
-        setAction(name, true);
-        buzz(10);
-        if (charge) charging(e.currentTarget, true);
-      },
-      onPointerUp: (e) => {
-        e.preventDefault();
-        e.currentTarget.classList.remove("is-down");
-        releaseAction(name);
-        if (charge) charging(e.currentTarget, false);
-      },
-      onPointerCancel: (e) => {
-        e.currentTarget.classList.remove("is-down");
-        releaseAction(name);
-        if (charge) charging(e.currentTarget, false);
-      },
-      onPointerLeave: (e) => {
-        e.currentTarget.classList.remove("is-down");
-        releaseAction(name);
-        if (charge) charging(e.currentTarget, false);
-      },
-    };
-  }
-
-  function tap(name) {
-    return {
-      onPointerDown: (e) => {
-        e.preventDefault();
-        capture(e);
-        e.currentTarget.classList.add("is-down");
-        pulseAction(name);
-        buzz(8);
-      },
-      onPointerUp: (e) => {
-        e.preventDefault();
-        e.currentTarget.classList.remove("is-down");
-      },
-      onPointerCancel: (e) => e.currentTarget.classList.remove("is-down"),
-    };
-  }
-
-  return (
-    <div className="tc" aria-label="Mobile match controls">
-      {/* Left analog joystick — unchanged (owner: don't move or restyle). */}
-      <div className="tc-stick" ref={baseRef}
-        onPointerDown={stickDown} onPointerMove={stickMove}
-        onPointerUp={stickUp} onPointerCancel={stickUp}>
-        <span className="tc-thumb" ref={thumbRef} />
-        <span className="tc-stick-label">MOVE</span>
-      </div>
-
-      {/* FC Mobile contextual cluster — bottom-right thumb zone. */}
-      <div className="fc-cluster" aria-label="Action buttons">
-        {/* SPRINT — the big corner button, present in both modes (FC's
-            "Sprint & Skill" slot). Hold to sprint. */}
-        <button type="button" aria-label="Sprint"
-          className="fc-btn fc-btn--big fc-slot-big fc-ring-sprint" {...hold("sprint")}>
-          Sprint
-        </button>
-
-        {/* ATTACK set — SHOOT / THROUGH / PASS diamond + modifier arc. */}
-        <div className={`fc-group ${attack ? "" : "is-off"}`} aria-hidden={!attack}>
-          <button type="button" aria-label="Shoot (hold to charge)"
-            className="fc-btn fc-btn--main fc-slot-top fc-ring-shoot" {...hold("shoot", { charge: true })}>
-            Shoot
-            <svg className="fc-power" viewBox="0 0 100 100" aria-hidden>
-              <circle cx="50" cy="50" r="46" pathLength="100" />
-            </svg>
-          </button>
-          <button type="button" aria-label="Through pass"
-            className="fc-btn fc-btn--main fc-slot-mid fc-ring-through" {...tap("throughPass")}>
-            Through
-          </button>
-          <button type="button" aria-label="Pass"
-            className="fc-btn fc-btn--main fc-slot-left fc-ring-pass" {...tap("pass")}>
-            Pass
-          </button>
-          <button type="button" aria-label="Finesse modifier (hold with shoot)"
-            className="fc-btn fc-btn--sat fc-arc-a fc-ring-finesse" {...hold("finesse")}>
-            Finesse
-          </button>
-          <button type="button" aria-label="Lob pass"
-            className="fc-btn fc-btn--lob fc-arc-b fc-ring-lob" {...tap("lob")}>
-            Lob
-          </button>
-          <button type="button" aria-label="Chip modifier (tap with shoot)"
-            className="fc-btn fc-btn--sat fc-arc-c fc-ring-chip" {...tap("chip")}>
-            Chip
-          </button>
-          <button type="button" aria-label="Power shot modifier (hold with shoot)"
-            className="fc-btn fc-btn--sat fc-arc-d fc-ring-power" {...hold("powerShot")}>
-            Power
-          </button>
-        </div>
-
-        {/* DEFEND set — TACKLE / CLEAR / SWITCH diamond + helper holds. */}
-        <div className={`fc-group ${attack ? "is-off" : ""}`} aria-hidden={attack}>
-          <button type="button" aria-label="Slide tackle"
-            className="fc-btn fc-btn--main fc-slot-top fc-ring-tackle" {...tap("tackle")}>
-            Tackle
-          </button>
-          <button type="button" aria-label="Clearance"
-            className="fc-btn fc-btn--main fc-slot-mid fc-ring-clear" {...tap("lob")}>
-            Clear
-          </button>
-          <button type="button" aria-label="Switch player"
-            className="fc-btn fc-btn--main fc-slot-left fc-ring-switch" {...tap("switchPlayer")}>
-            Switch
-          </button>
-          <button type="button" aria-label="Second defender press (hold)"
-            className="fc-btn fc-btn--sat fc-arc-b fc-ring-second" {...hold("secondDefender")}>
-            2nd Def
-          </button>
-          <button type="button" aria-label="Jockey (hold)"
-            className="fc-btn fc-btn--sat fc-arc-c fc-ring-jockey" {...hold("jockey")}>
-            Jockey
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+import { useEffect,useRef,useState } from "react";
+import { useLocale } from "../i18n/LocaleProvider";
+const KEY="animalCupMatchOptions", SK={up:"knockOn",right:"laneChange",down:"heelToHeel",left:"fakeShot"};
+function inp(){if(!window.__touchInput)window.__touchInput={active:false,vx:0,vy:0,shoot:false,pass:false,sprint:false,throughPass:false,lob:false,tackle:false,finesse:false,chip:false,powerShot:false,switchPlayer:false,secondDefender:false,jockey:false};return window.__touchInput}
+const timers=new Map();
+function setA(n,v){const s=inp();s[n]=v;s.active=true} function rel(n){const s=inp();s[n]=false;s.active=s.vx!==0||s.vy!==0}
+function pulse(n,ms=140){const s=inp();s.active=true;s[n]=true;clearTimeout(timers.get(n));timers.set(n,setTimeout(()=>{s[n]=false;s.active=s.vx!==0||s.vy!==0},ms))}
+function buzz(ms=8){try{navigator.vibrate?.(ms)}catch{}} function powerBuzz(){try{navigator.vibrate?.([20,18,45])}catch{}} function cap(e){try{e.currentTarget.setPointerCapture?.(e.pointerId)}catch{}}
+function ballMine(){try{const u=window.require?.("users")?.list?.[0],b=window.__matchGame?.pitch?.ball;return !!(u?.player?.hasBall||(b?.owner?.team&&u?.team===b.owner.team))}catch{return false}}
+function opts(){try{const o=window.__acMatchOptions||JSON.parse(localStorage.getItem(KEY)||"{}");return{...o,scheme:o.scheme||"classic",switchMode:o.switchMode||"auto",switchDelay:Number(o.switchDelay||0),powerShotZoom:o.powerShotZoom!==false,skillMoves:{...SK,...(o.skillMoves||{})}}}catch{return{scheme:"classic",switchMode:"auto",switchDelay:0,powerShotZoom:true,skillMoves:SK}}}
+function phaseOf(p){if(!p)return null;const r=String(p.restartType||p.restart||p.phase||"").toLowerCase();if(p.penalty||r.includes("penalty"))return"penalty";if(p.corner||r.includes("corner"))return"corner";if(p.freeKick||r.includes("free"))return"free";return null}
+function nearest(){try{const u=window.require?.("users")?.list?.[0],t=u?.team,b=window.__matchGame?.pitch?.ball,a=[...(t?.players||[]),...(t?.members||[]),...(t?.children||[])];let best=null,bd=Infinity;for(const p of a){if(!p||p===u.player||!b)continue;const d=(p.x-b.x)**2+(p.y-b.y)**2;if(d<bd){bd=d;best=p}}return best}catch{return null}}
+const ST={england:.95,france:1,germany:.98,spain:1.02,portugal:.97,brazil:.85,argentina:.93,usa:.9};
+export default function TouchControls(){
+ const {t}=useLocale(),base=useRef(null),thumb=useRef(null),stick=useRef(null),sp=useRef(null),start=useRef(null),origin=useRef(null),dir=useRef(null),cool=useRef(0),zoom=useRef(false),sw=useRef(null),oneTimer=useRef(null),oneHeld=useRef(false);
+ const [attack,setAttack]=useState(false),[o,setO]=useState({scheme:"classic",switchMode:"auto",switchDelay:0,powerShotZoom:true,skillMoves:SK}),[stam,setStam]=useState(1),[flash,setFlash]=useState(""),[phase,setPhase]=useState(null);
+ useEffect(()=>{inp();setO(opts());const f=e=>setO(x=>({...x,...e.detail,skillMoves:{...x.skillMoves,...(e.detail?.skillMoves||{})}}));window.addEventListener("ac-match-options",f);const p=e=>e.preventDefault();document.addEventListener("contextmenu",p,{passive:false});return()=>{window.removeEventListener("ac-match-options",f);document.removeEventListener("contextmenu",p)}},[]);
+ useEffect(()=>{const iv=setInterval(()=>{try{const u=window.require?.("users")?.list?.[0],b=window.__matchGame?.pitch?.ball;setAttack(!!(u?.player?.hasBall||(b?.owner?.team&&b.owner.team===u?.team)))}catch{}setPhase(phaseOf(window.__matchGame?.pitch));const sprint=!!window.__touchInput?.sprint,mod=ST[new URLSearchParams(window.location.search).get("red")]||1;setStam(x=>{const n=sprint?Math.max(0,x-.006*mod):Math.min(1,x+.0025);window.__acStamina=n;if(n<.2&&sprint)window.__touchInput.sprint=(Math.floor(performance.now()/220)%2)===0;return n})},100);return()=>clearInterval(iv)},[]);
+ useEffect(()=>{window.__acStamina=1;return()=>{delete window.__acStamina}},[]);
+ useEffect(()=>{const iv=setInterval(()=>{if(o.switchMode!=="loose")return;try{const b=window.__matchGame?.pitch?.ball,u=window.require?.("users")?.list?.[0];if(!b||b.owner||!u?.player)return;const n=nearest();if(!n||sw.current)return;sw.current=setTimeout(()=>{sw.current=null;if(!window.__touchInput?.switchPlayer)pulse("switchPlayer",80)},Math.min(600,Math.max(0,o.switchDelay*60)))}catch{}},120);return()=>{clearInterval(iv);if(sw.current)clearTimeout(sw.current)}},[o.switchMode,o.switchDelay]);
+ function down(e){cap(e);stick.current=e.pointerId;move(e)} function move(e){if(stick.current!==null&&e.pointerId!==stick.current)return;const r=base.current?.getBoundingClientRect();if(!r||!thumb.current)return;const m=Math.max(1,Math.min(r.width,r.height)*.36);let x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2,l=Math.hypot(x,y);if(l>m){x=x/l*m;y=y/l*m}thumb.current.style.transform=`translate(${x}px,${y}px)`;const s=window.__acMatchOptions?.sensitivity||1;setA("vx",Math.max(-1,Math.min(1,x/m*s)));setA("vy",Math.max(-1,Math.min(1,y/m*s)))} function up(e){if(stick.current!==null&&e.pointerId!==stick.current)return;stick.current=null;if(thumb.current)thumb.current.style.transform="translate(0,0)";setA("vx",0);setA("vy",0)}
+ function skill(name){if(!ballMine()||performance.now()<cool.current)return;cool.current=performance.now()+650;const s=inp(),vx=Number(s.vx)||1,vy=Number(s.vy)||0,l=Math.hypot(vx,vy)||1,x=vx/l,y=vy/l,side={vx:-y,vy:x};setFlash(t(`match.skill.${name}`)||t("match.skill.skill"));buzz(18);if(name==="laneChange"){s.vx=side.vx;s.vy=side.vy;s.sprint=true;setTimeout(()=>{s.vx=x;s.vy=y},120)}else if(name==="heelToHeel"){s.vx=-x*.7;s.vy=-y*.7;s.sprint=true;setTimeout(()=>{s.vx=x*1.15;s.vy=y*1.15},110)}else if(name==="fakeShot"){pulse("shoot",65);setTimeout(()=>pulse("pass",70),75)}else if(name==="roulette"){s.vx=side.vx*.9;s.vy=side.vy*.9;s.sprint=true;setTimeout(()=>{s.vx=-side.vx*.9;s.vy=-side.vy*.9},100);setTimeout(()=>{s.vx=x;s.vy=y},200)}else{s.vx=x*1.2;s.vy=y*1.2;s.sprint=true}s.active=true;setTimeout(()=>{s.vx=x;s.vy=y;s.sprint=false},260);setTimeout(()=>setFlash(""),520)}
+ function sprintDown(e){e.preventDefault();cap(e);sp.current=e.currentTarget;sp.current.__pointerId=e.pointerId;start.current=performance.now();origin.current={x:e.clientX,y:e.clientY};dir.current=null;e.currentTarget.classList.add("is-down");setA("sprint",true);buzz(10)}
+ function sprintMove(e){if(!start.current||e.pointerId!==sp.current?.__pointerId)return;const dx=e.clientX-origin.current.x,dy=e.clientY-origin.current.y,d=Math.hypot(dx,dy);if(d<20||dir.current)return;dir.current=Math.abs(dx)>Math.abs(dy)?(dx>0?"right":"left"):(dy>0?"down":"up");if(ballMine()){rel("sprint");skill(o.skillMoves[dir.current]||SK[dir.current])}}
+ function sprintUp(e){if(!start.current)return;e.preventDefault();e.currentTarget.classList.remove("is-down");const swipe=!!dir.current,held=performance.now()-start.current;rel("sprint");if(!swipe&&held<260)skill("knockOn");start.current=null;origin.current=null;dir.current=null;sp.current=null}
+ function hold(n,charge=false){return{onPointerDown:e=>{e.preventDefault();cap(e);e.currentTarget.classList.add("is-down");setA(n,true);buzz(10);if(charge)e.currentTarget.classList.add("is-charging")},onPointerUp:e=>{e.preventDefault();e.currentTarget.classList.remove("is-down","is-charging");rel(n);if(charge&&zoom.current){window.__matchZoom?.step?.(1/1.12);zoom.current=false}},onPointerCancel:e=>{e.currentTarget.classList.remove("is-down","is-charging");rel(n);if(charge&&zoom.current){window.__matchZoom?.step?.(1/1.12);zoom.current=false}},onPointerLeave:e=>{e.currentTarget.classList.remove("is-down","is-charging");rel(n);if(charge&&zoom.current){window.__matchZoom?.step?.(1/1.12);zoom.current=false}}}}
+ useEffect(()=>()=>{if(zoom.current){window.__matchZoom?.step?.(1/1.12);zoom.current=false}window.__acShootStarted=0},[]);
+ useEffect(()=>{const iv=setInterval(()=>{if(window.__touchInput?.shoot&&o.powerShotZoom&&ballMine()&&!zoom.current){const t0=window.__acShootStarted;if(t0&&performance.now()-t0>=300){window.__matchZoom?.step?.(1.12);zoom.current=true;powerBuzz()}}},40);return()=>clearInterval(iv)},[o.powerShotZoom]);
+ function shootDown(e){hold("shoot",true).onPointerDown(e);window.__acShootStarted=performance.now()} function shootUp(e){hold("shoot",true).onPointerUp(e);window.__acShootStarted=0} function shootCancel(e){hold("shoot",true).onPointerCancel(e);window.__acShootStarted=0}
+ function tap(n){return{onPointerDown:e=>{e.preventDefault();cap(e);e.currentTarget.classList.add("is-down");pulse(n);buzz(8);if(phase)setPhase(null)},onPointerUp:e=>e.currentTarget.classList.remove("is-down"),onPointerCancel:e=>e.currentTarget.classList.remove("is-down")}}
+ function oneButton(attackMode){return{onPointerDown:e=>{e.preventDefault();cap(e);e.currentTarget.classList.add("is-down");oneHeld.current=false;clearTimeout(oneTimer.current);oneTimer.current=setTimeout(()=>{oneHeld.current=true;if(attackMode){pulse("pass")}else{setA("sprint",true)}},180)},onPointerUp:e=>{e.preventDefault();e.currentTarget.classList.remove("is-down");clearTimeout(oneTimer.current);if(oneHeld.current){if(!attackMode)rel("sprint")}else pulse(attackMode?"shoot":"tackle");oneHeld.current=false},onPointerCancel:e=>{e.currentTarget.classList.remove("is-down");clearTimeout(oneTimer.current);rel(attackMode?"shoot":"sprint");oneHeld.current=false}}}
+ const two=o.scheme==="twoButton",one=o.scheme==="oneButton";
+ return <div className="tc" aria-label={t("match.mobileControls")}>
+  <div className="tc-stick" ref={base} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}><span className="tc-thumb" ref={thumb}/><span className="tc-stick-label">MOVE</span></div>
+  {one||two?<div className={`fc-scheme fc-scheme--${o.scheme}`}>{two?<><button type="button" className="fc-scheme-btn fc-scheme-btn--primary" {...(attack?hold("shoot",true):tap("tackle"))}>{attack?t("match.scheme.action1Attack"):t("match.scheme.action1Defend")}</button><button type="button" className="fc-scheme-btn" {...(attack?hold("pass"):hold("sprint"))}>{attack?t("match.scheme.action2Attack"):t("match.scheme.action2Defend")}</button></>:<button type="button" className="fc-scheme-btn fc-scheme-btn--primary" {...oneButton(attack)}>{attack?t("match.scheme.oneAttack"):t("match.scheme.oneDefend")}<small>{t("match.scheme.holdAlt")}</small></button>}</div>:
+  <div className="fc-cluster">
+   <button type="button" className="fc-btn fc-btn--big fc-slot-big fc-ring-sprint" ref={sp} onPointerDown={sprintDown} onPointerMove={sprintMove} onPointerUp={sprintUp} onPointerCancel={sprintUp} onPointerLeave={sprintUp}><span>{t("match.sprint")}</span><small>{t("match.skillLabel")}</small>{flash?<em className="fc-skill-flash">{flash}</em>:null}<i className="fc-stamina-ring" style={{"--stamina-angle":`${stam*360}deg`}}/></button>
+   <div className={`fc-group ${attack?"":"is-off"}`} aria-hidden={!attack}><button type="button" className="fc-btn fc-btn--main fc-slot-top fc-ring-shoot" onPointerDown={shootDown} onPointerUp={shootUp} onPointerCancel={shootCancel} onPointerLeave={shootCancel}>{t("match.shoot")}<svg className="fc-power" viewBox="0 0 100 100" aria-hidden><circle cx="50" cy="50" r="46" pathLength="100"/></svg></button><button type="button" className="fc-btn fc-btn--main fc-slot-mid fc-ring-through" {...tap("throughPass")}>{t("match.through")}</button><button type="button" className="fc-btn fc-btn--main fc-slot-left fc-ring-pass" {...tap("pass")}>{t("match.pass")}</button><button type="button" className="fc-btn fc-btn--sat fc-arc-a fc-ring-finesse" {...hold("finesse")}>{t("match.finesse")}</button><button type="button" className="fc-btn fc-btn--lob fc-arc-b fc-ring-lob" {...tap("lob")}>{t("match.lob")}</button><button type="button" className="fc-btn fc-btn--sat fc-arc-c fc-ring-chip" {...tap("chip")}>{t("match.chip")}</button><button type="button" className="fc-btn fc-btn--sat fc-arc-d fc-ring-power" {...hold("powerShot")}>{t("match.power")}</button></div>
+   <div className={`fc-group ${attack?"is-off":""}`} aria-hidden={attack}><button type="button" className="fc-btn fc-btn--main fc-slot-top fc-ring-tackle" {...tap("tackle")}>{t("match.tackle")}</button><button type="button" className="fc-btn fc-btn--main fc-slot-mid fc-ring-clear" {...tap("lob")}>{t("match.clear")}</button><button type="button" className="fc-btn fc-btn--main fc-slot-left fc-ring-switch" {...tap("switchPlayer")}>{t("match.switch")}</button><button type="button" className="fc-btn fc-btn--sat fc-arc-b fc-ring-second" {...hold("secondDefender")}>{t("match.secondDefender")}</button><button type="button" className="fc-btn fc-btn--sat fc-arc-c fc-ring-jockey" {...hold("jockey")}>{t("match.jockey")}</button></div>
+  </div>}
+  {phase?<div className={`fc-setpiece fc-setpiece--${phase}`}><button type="button" {...tap(phase==="penalty"?"shoot":"lob")}>{phase==="penalty"?t("match.setPiece.placement"):t("match.setPiece.cross")}</button><button type="button" {...tap(phase==="penalty"?"chip":"pass")}>{phase==="penalty"?t("match.setPiece.chip"):t("match.setPiece.short")}</button><button type="button" {...tap(phase==="penalty"?"powerShot":"throughPass")}>{phase==="penalty"?t("match.setPiece.power"):t("match.setPiece.low")}</button></div>:null}
+ </div>
 }
