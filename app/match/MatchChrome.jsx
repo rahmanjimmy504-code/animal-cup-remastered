@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { useLocale } from "../i18n/LocaleProvider";
 import { portraitSrc, runtimeHeadSrc } from "../data/teams";
 import MatchEvents from "./MatchEvents";
-import TouchControls from "./TouchControls";\nimport RefereeSystem from "./RefereeSystem";
+import TouchControls from "./TouchControls";
+import RefereeSystem from "./RefereeSystem";
 import PlayerInfo from "./PlayerInfo";
 import { useUserAssist } from "../game/userAssist";
 import LangSwitcher from "../i18n/LangSwitcher";
@@ -384,7 +385,8 @@ export default function MatchChrome() {
 
 
       {play && !touch && !result ? <ControlsLegend t={t} /> : null}
-      {play && touch && !loading && !result ? <TouchControls /> : null}\n      {play && !result ? <RefereeSystem /> : null}
+      {play && touch && !loading && !result ? <TouchControls /> : null}
+      {play && !result ? <RefereeSystem /> : null}
       {/* FC-style controlled-player info (role + weak-foot/skill stars + the
           two key stats for that role) — polls users.list[0].player */}
       {play && !result && teams ? <PlayerInfo teamId={teams.red} enabled={!loading} /> : null}
