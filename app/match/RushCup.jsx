@@ -4,9 +4,10 @@ import { useLocale } from "../i18n/LocaleProvider";
 import { readProfile } from "../game/cup";
 
 export default function RushCup(){
- const {t}=useLocale(),[active,setActive]=useState(false),[seconds,setSeconds]=useState(90),[chance,setChance]=useState(""),[momentum,setMomentum]=useState(50),start=useRef(0),ended=useRef(false);
+ const {t}=useLocale(),[active,setActive]=useState(false),[seconds,setSeconds]=useState(90),[chance,setChance]=useState(""),[momentum,setMomentum]=useState(50),[division,setDivision]=useState("ROOKIE"),start=useRef(0),ended=useRef(false);
  useEffect(()=>{
   const mode=new URLSearchParams(window.location.search).get("mode");
+  try{setDivision(readProfile().rush.division||"ROOKIE")}catch{}
   if(mode!=="rush")return;
   const begin=()=>{start.current=performance.now();ended.current=false;setSeconds(90);setMomentum(50);setActive(true)};
   const goal=()=>{setMomentum(x=>Math.min(100,x+14));setChance(t("rush.greatChance"));setTimeout(()=>setChance(""),1100)};
@@ -15,7 +16,7 @@ export default function RushCup(){
    const p=window.__matchGame?.pitch,score=[Number(p?.redTeam?.score||0),Number(p?.blueTeam?.score||0)],q=new URLSearchParams(window.location.search),red=q.get("red")||"england",blue=q.get("blue")||"france";
    window.__acPaused=true;try{if(p)p.paused=true}catch{}
    window.dispatchEvent(new CustomEvent("ab-match-ended",{detail:{red,blue,score,rush:true}}));
-   setTimeout(()=>{try{window.dispatchEvent(new CustomEvent("ac-rush-result",{detail:readProfile().rush}))}catch{}},60);
+   setTimeout(()=>{try{const r=readProfile().rush;setDivision(r.division||"ROOKIE");window.dispatchEvent(new CustomEvent("ac-rush-result",{detail:r}))}catch{}},60);
   };
   const onGoal=goal,onStart=begin;window.addEventListener("ab-match-started",onStart);window.addEventListener("ab-goal",onGoal);
   const iv=setInterval(()=>{
@@ -29,5 +30,5 @@ export default function RushCup(){
   return()=>{clearInterval(iv);window.removeEventListener("ab-match-started",onStart);window.removeEventListener("ab-goal",onGoal)};
  },[t]);
  if(!active&&!chance)return null;
- return <><div className="rush-hud"><div className="rush-hud__row"><span className="rush-hud__title">{t("rush.title")}</span><b className="rush-hud__time">{Math.ceil(seconds)}s</b></div><div className="rush-hud__fans">{t("rush.division",{division:readProfile().rush.division})}</div><div className="rush-hud__meter"><i style={{width:`${momentum}%`}}/></div></div>{chance?<div className="rush-chance">{chance}</div>:null}</>;
+ return <><div className="rush-hud"><div className="rush-hud__row"><span className="rush-hud__title">{t("rush.title")}</span><b className="rush-hud__time">{Math.ceil(seconds)}s</b></div><div className="rush-hud__fans">{t("rush.division",{division})}</div><div className="rush-hud__meter"><i style={{width:`${momentum}%`}}/></div></div>{chance?<div className="rush-chance">{chance}</div>:null}</>;
 }
