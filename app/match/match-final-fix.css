@@ -1,0 +1,58 @@
+/* Final mobile match viewport fix.
+ * The extracted runtime paints its legacy HUD into the game layer. Keep the
+ * React match chrome above that layer so the controls shown on touch devices
+ * are the only actionable UI and remain inside the safe viewport.
+ */
+
+/* The runtime canvas must stay below every React overlay, including when it
+   writes inline dimensions during its resize pass. */
+canvas {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 1 !important;
+}
+
+.match-score,
+.match-controls,
+.ctrl-legend,
+.player-info,
+.phase-chip,
+.event-card,
+.match-result,
+.rotate-hint,
+.tc,
+.rush-cup,
+.referee-system {
+  z-index: 1000 !important;
+}
+
+/* Touch controls are a full-screen interaction layer. Do not let the legacy
+   runtime canvas steal pointer events in the thumb/action areas. */
+.tc {
+  pointer-events: none !important;
+}
+.tc > *,
+.tc button {
+  pointer-events: auto;
+}
+
+/* Keep the fixed joystick and action cluster clear of browser gesture areas. */
+@media (pointer: coarse) {
+  .tc-stick {
+    left: max(22px, env(safe-area-inset-left)) !important;
+    bottom: max(22px, env(safe-area-inset-bottom)) !important;
+  }
+
+  .fc-cluster {
+    right: max(14px, env(safe-area-inset-right)) !important;
+    bottom: max(14px, env(safe-area-inset-bottom)) !important;
+  }
+}
+
+/* The old runtime HUD is rendered underneath this layer; avoid its DOM GUI
+   intercepting taps if a runtime build exposes one outside the canvas. */
+#gui {
+  pointer-events: none !important;
+}
