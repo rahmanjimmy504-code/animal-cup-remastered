@@ -11,7 +11,6 @@ function ballMine(){try{const u=window.require?.("users")?.list?.[0],b=window.__
 function opts(){try{const o=window.__acMatchOptions||JSON.parse(localStorage.getItem(KEY)||"{}");return{...o,scheme:o.scheme||"classic",switchMode:o.switchMode||"auto",switchDelay:Number(o.switchDelay||0),powerShotZoom:o.powerShotZoom!==false,skillMoves:{...SK,...(o.skillMoves||{})}}}catch{return{scheme:"classic",switchMode:"auto",switchDelay:0,powerShotZoom:true,skillMoves:SK}}}
 function phaseOf(p){if(!p)return null;const r=String(p.restartType||p.restart||p.phase||"").toLowerCase();if(p.penalty||r.includes("penalty"))return"penalty";if(p.corner||r.includes("corner"))return"corner";if(p.freeKick||r.includes("free"))return"free";return null}
 function nearest(){try{const u=window.require?.("users")?.list?.[0],t=u?.team,b=window.__matchGame?.pitch?.ball,a=[...(t?.players||[]),...(t?.members||[]),...(t?.children||[])];let best=null,bd=Infinity;for(const p of a){if(!p||p===u.player||!b)continue;const d=(p.x-b.x)**2+(p.y-b.y)**2;if(d<bd){bd=d;best=p}}return best}catch{return null}}
-const ST={england:.95,france:1,germany:.98,spain:1.02,portugal:.97,brazil:.85,argentina:.93,usa:.9};
 export default function TouchControls(){
  const {t}=useLocale(),base=useRef(null),thumb=useRef(null),stick=useRef(null),sp=useRef(null),sw=useRef(null),oneTimer=useRef(null),oneHeld=useRef(false),zoom=useRef(false);
  const [attack,setAttack]=useState(false),[o,setO]=useState({scheme:"classic",switchMode:"auto",switchDelay:0,powerShotZoom:true,skillMoves:SK}),[phase,setPhase]=useState(null);
@@ -38,4 +37,5 @@ export default function TouchControls(){
    <div className={`fc-group ${attack?"is-off":""}`} aria-hidden={attack}><button type="button" className="fc-btn fc-btn--main fc-slot-top fc-ring-tackle" {...tap("tackle")}>{t("match.tackle")}</button><button type="button" className="fc-btn fc-btn--main fc-slot-mid fc-ring-clear" {...tap("lob")}>{t("match.clear")}</button><button type="button" className="fc-btn fc-btn--main fc-slot-left fc-ring-switch" {...tap("switchPlayer")}>{t("match.switch")}</button><button type="button" className="fc-btn fc-btn--sat fc-arc-b fc-ring-second" {...hold("secondDefender")}>{t("match.secondDefender")}</button><button type="button" className="fc-btn fc-btn--sat fc-arc-c fc-ring-jockey" {...hold("jockey")}>{t("match.jockey")}</button></div>
   </div>}
   {phase?<div className={`fc-setpiece fc-setpiece--${phase}`}><button type="button" {...tap(phase==="penalty"?"shoot":"lob")}>{phase==="penalty"?t("match.setPiece.placement"):t("match.setPiece.cross")}</button><button type="button" {...tap(phase==="penalty"?"chip":"pass")}>{phase==="penalty"?t("match.setPiece.chip"):t("match.setPiece.short")}</button><button type="button" {...tap(phase==="penalty"?"powerShot":"throughPass")}>{phase==="penalty"?t("match.setPiece.power"):t("match.setPiece.low")}</button></div>:null}
- </div>
+ </div>;
+}
