@@ -6,6 +6,7 @@ import MatchPauseMenu from "./MatchPauseMenu";
 import MatchTimeline from "./MatchTimeline";
 import MatchAccessibility from "./MatchAccessibility";
 import MatchExtras from "./MatchExtras";
+import "./match-final-fix.css";
 import "../ui/kit.css";
 import "./match.css";
 import "./match-extras.css";
