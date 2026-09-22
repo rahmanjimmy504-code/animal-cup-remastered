@@ -1,0 +1,9 @@
+/* Keep the sprint control anchored to the lower-right corner like FC Mobile.
+   The component supplies legacy inline offsets, so !important is intentional. */
+.fc-slot-big.fc-ring-sprint {
+  right: 0 !important;
+  bottom: 0 !important;
+  width: calc(96px * var(--fc-u)) !important;
+  height: calc(96px * var(--fc-u)) !important;
+  font-size: calc(14px * var(--fc-u)) !important;
+}
