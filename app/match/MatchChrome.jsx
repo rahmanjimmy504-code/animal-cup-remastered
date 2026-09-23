@@ -16,6 +16,7 @@ import { captureMatch } from "./captureMatch";
 import { recordMatch, recordCupResult, claimDaily } from "../game/cup";
 import { sfx } from "../audio/SoundBank";
 import { IconCamera, IconCheck, IconSoundOn, IconSoundOff, IconZoomIn, IconZoomOut, IconReplay, IconHome } from "../ui/Icons";
+import AiMatchController from "./AiMatchController";
 
 function navigateHome() {
   window.location.href = "/";
@@ -234,6 +235,7 @@ export default function MatchChrome() {
   // keyboard legend; touch devices get on-screen joystick + buttons instead.
   const [play, setPlay] = useState(false);
   const [touch, setTouch] = useState(false);
+  const [aiLab, setAiLab] = useState(null);
   const recordedRef = useRef(false);
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -241,6 +243,7 @@ export default function MatchChrome() {
     const q = params.get("light");
     setLight(modes.includes(q) ? q : modes[Math.floor(Math.random() * modes.length)]);
     setPlay(params.get("play") === "1");
+    if (params.get("ailab") === "1") setAiLab({ redProvider: params.get("redProvider") || "openrouter", blueProvider: params.get("blueProvider") || "openrouter", redModel: decodeURIComponent(params.get("redAI") || "openrouter/free"), blueModel: decodeURIComponent(params.get("blueAI") || "openrouter/free") });
     setTouch(
       params.get("touch") === "1" ||
       (typeof window !== "undefined" &&
@@ -300,7 +303,8 @@ export default function MatchChrome() {
       // AI-vs-AI is watch/simulation mode, so it never grants career rewards.
       const params = new URLSearchParams(window.location.search);
       const humanControlled = params.get("play") === "1";
-      if (!humanControlled) return;
+      const isAiLab = params.get("ailab") === "1";
+      if (!humanControlled || isAiLab) return;
       // The runtime owns the match simulation; this seam owns career persistence.
       // Guard against duplicate end events so one match can never award stats twice.
       if (!recordedRef.current) {
@@ -408,7 +412,8 @@ export default function MatchChrome() {
       {play && !touch && !result ? <ControlsLegend t={t} /> : null}
       {play && !result ? <RushCup /> : null}
       {play && touch && !loading && !result ? <TouchControls /> : null}
-      {play && !result ? <RefereeSystem /> : null}
+      {play && !result && !aiLab ? <RefereeSystem /> : null}
+      {aiLab && !result ? <AiMatchController {...aiLab} /> : null}
       {/* FC-style controlled-player info (role + weak-foot/skill stars + the
           two key stats for that role) — polls users.list[0].player */}
 

@@ -295,6 +295,7 @@ export default function Landing() {
               module class and render as an unstyled link (2026-09 fix); the
               old line also carried a stray literal \n that rendered as text */}
           <a className={css["settings-link"]} href="/settings">⚙️ {t("settings.title")}</a>
+          <button type="button" className={css.cup} onClick={() => router.push("/ai-lab")}>🤖 {t("home.aiLab")}</button>
           <button type="button" className={css.lan} onClick={goLan}>
             <LanIcon /> {t("home.lan")}
           </button>
