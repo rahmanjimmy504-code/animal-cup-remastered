@@ -40,3 +40,14 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
+
+      - name: Install OpenRouter API key as Worker secret
+        shell: bash
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          if [ -z "$OPENROUTER_API_KEY" ]; then
+            echo "OPENROUTER_API_KEY GitHub secret is not configured; skipping Worker secret installation."
+            exit 0
+          fi
+          printf '%s' "$OPENROUTER_API_KEY" | pnpm exec wrangler secret put OPENROUTER_API_KEY
