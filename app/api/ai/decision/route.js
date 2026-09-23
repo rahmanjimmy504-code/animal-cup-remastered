@@ -46,9 +46,20 @@ const KEYS = {
   zai: "ZAI_API_KEY"
 };
 
+function configured(provider) {
+  if (provider === "openrouter") return !!process.env.OPENROUTER_API_KEY;
+  if (provider === "groq") return !!process.env.GROQ_API_KEY;
+  if (provider === "cloudflare") return !!process.env.CLOUDFLARE_AI_API_TOKEN && !!process.env.CLOUDFLARE_ACCOUNT_ID;
+  if (provider === "mistral") return !!process.env.MISTRAL_API_KEY;
+  if (provider === "cohere") return !!process.env.COHERE_API_KEY;
+  if (provider === "huggingface") return !!process.env.HF_TOKEN;
+  if (provider === "zai") return !!process.env.ZAI_API_KEY;
+  return false;
+}
+
 export async function GET() {
   return Response.json({ providers: Object.fromEntries(Object.entries(MODELS).map(([id, models]) => [id, {
-    configured: !!process.env[KEYS[id]],
+    configured: configured(id),
     keyEnv: KEYS[id],
     models
   }]))});
