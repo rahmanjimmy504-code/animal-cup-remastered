@@ -191,5 +191,20 @@
   "lan.copied": "Copied!",
   "lan.extraTime": "Extra time",
   "lan.penalties": "Penalties",
-  "home.rush": "Rush Cup"
+  "home.rush": "Rush Cup",
+  "aiLab.title": "AI Match Lab",
+  "aiLab.subtitle": "Set up a pure AI vs AI exhibition and spectate the whole match.",
+  "aiLab.redTeam": "Red AI",
+  "aiLab.blueTeam": "Blue AI",
+  "aiLab.model": "AI model",
+  "aiLab.model.easy": "Rookie",
+  "aiLab.model.standard": "Standard",
+  "aiLab.model.advanced": "Advanced",
+  "aiLab.model.elite": "Elite",
+  "aiLab.exact": "Exact engine matchup",
+  "aiLab.compatibility": "Engine limitation",
+  "aiLab.compatibilityDetail": "The closed match engine exposes one AI level for the whole match, so this run uses AI {level} for both sides.",
+  "aiLab.matchLength": "Match length",
+  "aiLab.watch": "Start Spectating",
+  "aiLab.noRewards": "Spectator matches never grant coins, achievements, Cup/Season progress, or Rush fans."
 }
