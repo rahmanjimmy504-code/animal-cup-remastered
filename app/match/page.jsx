@@ -10,6 +10,7 @@ import "./match-final-fix.css";
 import "../ui/kit.css";
 import "./match.css";
 import "./match-extras.css";
+import "./ai-lab.css";
 
 export const metadata = { title: "Animal Cup" };
 
