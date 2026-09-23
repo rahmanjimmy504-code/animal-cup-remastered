@@ -193,10 +193,10 @@
   "lan.penalties": "Penalties",
   "home.rush": "Rush Cup",
   "aiLab.title": "AI Match Lab",
-  "aiLab.subtitle": "Set up a pure AI vs AI exhibition and spectate the whole match.",
-  "aiLab.redTeam": "Red AI",
-  "aiLab.blueTeam": "Blue AI",
-  "aiLab.model": "AI model",
+  "aiLab.subtitle": "Put real LLMs in control of both sides and spectate the match.",
+  "aiLab.redTeam": "Red team",
+  "aiLab.blueTeam": "Blue team",
+  "aiLab.model": "LLM provider & model",
   "aiLab.model.easy": "Rookie",
   "aiLab.model.standard": "Standard",
   "aiLab.model.advanced": "Advanced",
@@ -205,6 +205,9 @@
   "aiLab.compatibility": "Engine limitation",
   "aiLab.compatibilityDetail": "The closed match engine exposes one AI level for the whole match, so this run uses AI {level} for both sides.",
   "aiLab.matchLength": "Match length",
-  "aiLab.watch": "Start Spectating",
-  "aiLab.noRewards": "Spectator matches never grant coins, achievements, Cup/Season progress, or Rush fans."
+  "aiLab.watch": "Start LLM Match",
+  "aiLab.noRewards": "AI Lab matches grant no coins, XP, achievements, Cup/Season progress, fans, or other rewards.",
+  "aiLab.real": "Real model control",
+  "aiLab.setup": "Each selected model receives live match state and returns the next football action. The runtime applies those decisions through its existing two-player controller seam.",
+  "aiLab.noKeys": "No API keys are bundled in the game. Configure provider secrets on the server/Worker."
 }
