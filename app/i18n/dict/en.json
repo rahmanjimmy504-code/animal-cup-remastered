@@ -209,5 +209,6 @@
   "aiLab.noRewards": "AI Lab matches grant no coins, XP, achievements, Cup/Season progress, fans, or other rewards.",
   "aiLab.real": "Real model control",
   "aiLab.setup": "Each selected model receives live match state and returns the next football action. The runtime applies those decisions through its existing two-player controller seam.",
-  "aiLab.noKeys": "No API keys are bundled in the game. Configure provider secrets on the server/Worker."
+  "aiLab.noKeys": "No API keys are bundled in the game. Configure provider secrets on the server/Worker.",
+  "home.aiLab": "AI Match Lab"
 }
