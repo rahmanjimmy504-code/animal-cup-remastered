@@ -73,7 +73,7 @@ async function openAiCompat(base, key, model, body, extra = {}) {
 }
 
 async function callProvider(provider, model, messages) {
-  const key = process.env[KEYS[provider] || ""];
+  const key = provider === "openrouter" ? process.env.OPENROUTER_API_KEY : provider === "groq" ? process.env.GROQ_API_KEY : provider === "mistral" ? process.env.MISTRAL_API_KEY : provider === "cohere" ? process.env.COHERE_API_KEY : provider === "huggingface" ? process.env.HF_TOKEN : provider === "zai" ? process.env.ZAI_API_KEY : provider === "cloudflare" ? process.env.CLOUDFLARE_AI_API_TOKEN : "";
   if (!key) throw new Error(`${provider} is not configured on the server`);
   if (provider === "openrouter") return openAiCompat("https://openrouter.ai/api/v1/chat/completions", key, model, {messages}, {"HTTP-Referer":"https://animal-cup-remastered.rahmanjimmy504.workers.dev","X-Title":"Animal Cup Remastered"});
   if (provider === "groq") return openAiCompat("https://api.groq.com/openai/v1/chat/completions", key, model, {messages});
