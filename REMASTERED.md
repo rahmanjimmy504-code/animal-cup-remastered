@@ -29,8 +29,7 @@ The original Animal Cup experience and its creators/platform are acknowledged. T
 
 ## Development
 
-The project uses Next.js, React, Pixi.js, OpenNext and Cloudflare Workers. AI-assisted development tools, including Claude Code, have also been used during development.
-
+The project uses Next.js, React, Pixi.js, OpenNext and Cloudflare Workers. 
 ## License
 
 The repository is released under the Apache License 2.0.
