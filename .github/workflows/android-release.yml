@@ -1,0 +1,129 @@
+name: Build signed Android APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      game_url:
+        description: "HTTPS URL of the deployed Animal Cup Remastered game"
+        required: true
+        type: string
+      release_tag:
+        description: "GitHub Release tag (leave blank for an automatic v<run-number> tag)"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: animal-cup-android-release
+  cancel-in-progress: false
+
+jobs:
+  build-apk:
+    name: Review and build signed APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Validate game URL
+        env:
+          GAME_URL: ${{ inputs.game_url }}
+        run: |
+          python3 - <<'PY'
+          import os, sys, urllib.parse
+          url = os.environ["GAME_URL"].strip()
+          p = urllib.parse.urlparse(url)
+          if p.scheme != "https" or not p.netloc:
+              print("game_url must be a complete HTTPS URL.", file=sys.stderr)
+              sys.exit(1)
+          print(f"Packaging Animal Cup Web app from: {p.scheme}://{p.netloc}")
+          PY
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.11.1"
+
+      - name: Review repository build
+        run: |
+          test -f package.json
+          test -f pnpm-lock.yaml
+          test -f android/settings.gradle
+          test -f android/app/build.gradle
+          grep -q 'Animal Cup Remastered' README.md
+
+      - name: Generate release signing key
+        env:
+          KEYSTORE_B64: ${{ secrets.ANIMAL_CUP_ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANIMAL_CUP_ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANIMAL_CUP_ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANIMAL_CUP_ANDROID_KEY_PASSWORD }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/signing"
+          if [ -n "$KEYSTORE_B64" ]; then
+            echo "$KEYSTORE_B64" | base64 --decode > "$RUNNER_TEMP/signing/animal-cup-release.jks"
+            test -s "$RUNNER_TEMP/signing/animal-cup-release.jks"
+            echo "Using the repository's persistent Android signing key."
+          else
+            KEYSTORE_PASSWORD="$(openssl rand -hex 24)"
+            KEY_PASSWORD="$KEYSTORE_PASSWORD"
+            KEY_ALIAS="animalcup"
+            keytool -genkeypair -v               -keystore "$RUNNER_TEMP/signing/animal-cup-release.jks"               -storepass "$KEYSTORE_PASSWORD"               -keypass "$KEY_PASSWORD"               -alias "$KEY_ALIAS"               -keyalg RSA               -keysize 4096               -validity 10000               -dname "CN=Animal Cup Remastered, OU=Release, O=Jimmy Rahman, L=UK, C=GB"
+            echo "Generated a one-off signing key because no persistent key secret is configured."
+          fi
+          {
+            echo "ANDROID_KEYSTORE_FILE=$RUNNER_TEMP/signing/animal-cup-release.jks"
+            echo "ANDROID_KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD"
+            echo "ANDROID_KEY_ALIAS=$KEY_ALIAS"
+            echo "ANDROID_KEY_PASSWORD=$KEY_PASSWORD"
+          } >> "$GITHUB_ENV"
+
+      - name: Build release APK
+        working-directory: android
+        env:
+          GAME_URL: ${{ inputs.game_url }}
+        run: |
+          gradle --no-daemon --stacktrace             -PgameUrl="$GAME_URL"             :app:assembleRelease
+
+      - name: Verify APK is signed
+        run: |
+          APK="android/app/build/outputs/apk/release/app-release.apk"
+          test -s "$APK"
+          APKSIGNER="$(find "$ANDROID_HOME/build-tools" -name apksigner -type f | sort -V | tail -1)"
+          test -x "$APKSIGNER"
+          "$APKSIGNER" verify --verbose "$APK" | tee "$RUNNER_TEMP/apksigner.txt"
+
+      - name: Rename APK
+        run: |
+          cp android/app/build/outputs/apk/release/app-release.apk             "Animal-Cup-Remastered-${GITHUB_SHA::7}.apk"
+          sha256sum "Animal-Cup-Remastered-${GITHUB_SHA::7}.apk"             > "Animal-Cup-Remastered-${GITHUB_SHA::7}.apk.sha256"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.release_tag != '' && inputs.release_tag || format('v{0}', github.run_number) }}
+          name: Animal Cup Remastered Android ${{ inputs.release_tag != '' && inputs.release_tag || format('v{0}', github.run_number) }}
+          generate_release_notes: true
+          files: |
+            Animal-Cup-Remastered-${GITHUB_SHA::7}.apk
+            Animal-Cup-Remastered-${GITHUB_SHA::7}.apk.sha256
+          body: |
+            ## Animal Cup Remastered Android
+
+            Signed Android APK built by GitHub Actions from commit \`${GITHUB_SHA}\`.
+
+            The APK is a WebView shell around the HTTPS deployment URL supplied to this workflow.
+            The SHA-256 file is provided so the downloaded APK can be integrity-checked.
+
+            **Signing:** If Android signing secrets are configured, the repository's persistent release key is used. Otherwise, this build uses a newly generated one-off key and future APKs will not share the same signing identity.
