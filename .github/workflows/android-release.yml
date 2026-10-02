@@ -41,7 +41,7 @@ jobs:
           if p.scheme != "https" or not p.netloc:
               print("game_url must be a complete HTTPS URL.", file=sys.stderr)
               sys.exit(1)
-          print(f"Packaging Animal Cup Web app from: {p.scheme}://{p.netloc}")
+          print(f"Packaging Animal Cup from: {p.netloc}")
           PY
 
       - name: Setup Java
@@ -61,7 +61,7 @@ jobs:
           test -f pnpm-lock.yaml
           test -f android/settings.gradle
           test -f android/app/build.gradle
-          grep -q 'Animal Cup Remastered' README.md
+          grep -q "Animal Cup Remastered" README.md
 
       - name: Generate release signing key
         env:
@@ -74,12 +74,18 @@ jobs:
           if [ -n "$KEYSTORE_B64" ]; then
             echo "$KEYSTORE_B64" | base64 --decode > "$RUNNER_TEMP/signing/animal-cup-release.jks"
             test -s "$RUNNER_TEMP/signing/animal-cup-release.jks"
-            echo "Using the repository's persistent Android signing key."
+            echo "Using the repository persistent signing key."
           else
             KEYSTORE_PASSWORD="$(openssl rand -hex 24)"
             KEY_PASSWORD="$KEYSTORE_PASSWORD"
             KEY_ALIAS="animalcup"
-            keytool -genkeypair -v               -keystore "$RUNNER_TEMP/signing/animal-cup-release.jks"               -storepass "$KEYSTORE_PASSWORD"               -keypass "$KEY_PASSWORD"               -alias "$KEY_ALIAS"               -keyalg RSA               -keysize 4096               -validity 10000               -dname "CN=Animal Cup Remastered, OU=Release, O=Jimmy Rahman, L=UK, C=GB"
+            keytool -genkeypair -v \\
+              -keystore "$RUNNER_TEMP/signing/animal-cup-release.jks" \\
+              -storepass "$KEYSTORE_PASSWORD" \\
+              -keypass "$KEY_PASSWORD" \\
+              -alias "$KEY_ALIAS" \\
+              -keyalg RSA -keysize 4096 -validity 10000 \\
+              -dname "CN=Animal Cup Remastered, OU=Release, O=Jimmy Rahman, L=UK, C=GB"
             echo "Generated a one-off signing key because no persistent key secret is configured."
           fi
           {
@@ -94,7 +100,11 @@ jobs:
         env:
           GAME_URL: ${{ inputs.game_url }}
         run: |
-          gradle --no-daemon --stacktrace             -PgameUrl="$GAME_URL"             :app:assembleRelease
+          gradle --no-daemon --stacktrace \\
+            -PgameUrl="$GAME_URL" \\
+            -PversionCode="$GITHUB_RUN_NUMBER" \\
+            -PversionName="1.0.$GITHUB_RUN_NUMBER" \\
+            :app:assembleRelease
 
       - name: Verify APK is signed
         run: |
@@ -106,8 +116,8 @@ jobs:
 
       - name: Rename APK
         run: |
-          cp android/app/build/outputs/apk/release/app-release.apk             "Animal-Cup-Remastered-${GITHUB_SHA::7}.apk"
-          sha256sum "Animal-Cup-Remastered-${GITHUB_SHA::7}.apk"             > "Animal-Cup-Remastered-${GITHUB_SHA::7}.apk.sha256"
+          cp android/app/build/outputs/apk/release/app-release.apk "Animal-Cup-Remastered-${GITHUB_SHA::7}.apk"
+          sha256sum "Animal-Cup-Remastered-${GITHUB_SHA::7}.apk" > "Animal-Cup-Remastered-${GITHUB_SHA::7}.apk.sha256"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -121,9 +131,10 @@ jobs:
           body: |
             ## Animal Cup Remastered Android
 
-            Signed Android APK built by GitHub Actions from commit \`${GITHUB_SHA}\`.
+            Signed APK built by GitHub Actions from commit `${GITHUB_SHA}`.
 
             The APK is a WebView shell around the HTTPS deployment URL supplied to this workflow.
-            The SHA-256 file is provided so the downloaded APK can be integrity-checked.
+            A SHA-256 checksum is included with the APK.
 
-            **Signing:** If Android signing secrets are configured, the repository's persistent release key is used. Otherwise, this build uses a newly generated one-off key and future APKs will not share the same signing identity.
+            For repeatable updates, configure the four ANIMAL_CUP_ANDROID_* signing secrets.
+            Without them, Actions creates a new one-off signing key for that release.
