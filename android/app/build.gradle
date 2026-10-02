@@ -14,14 +14,7 @@ android {
         targetSdk 35
         versionCode 1
         versionName "1.0.0"
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            shrinkResources false
-            signingConfig signingConfigs.findByName("release")
-        }
+        buildConfigField "String", "GAME_URL", '"' + gameUrl.replace("\\", "\\\\").replace('"', '\\\"') + '"'
     }
 
     signingConfigs {
@@ -36,12 +29,16 @@ android {
         }
     }
 
-    buildFeatures {
-        buildConfig true
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.release
+        }
     }
 
-    defaultConfig {
-        buildConfigField "String", "GAME_URL", '"' + gameUrl.replace("\\", "\\\\").replace('"', '\\\"') + '"'
+    buildFeatures {
+        buildConfig true
     }
 }
 
