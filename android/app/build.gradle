@@ -1,0 +1,52 @@
+plugins {
+    id "com.android.application"
+}
+
+def gameUrl = providers.gradleProperty("gameUrl").orElse("https://example.invalid").get()
+
+android {
+    namespace "com.jimmyrahman.animalcup"
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "com.jimmyrahman.animalcup"
+        minSdk 23
+        targetSdk 35
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.findByName("release")
+        }
+    }
+
+    signingConfigs {
+        release {
+            def storeFilePath = System.getenv("ANDROID_KEYSTORE_FILE")
+            if (storeFilePath != null && !storeFilePath.isBlank()) {
+                storeFile file(storeFilePath)
+                storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
+                keyAlias System.getenv("ANDROID_KEY_ALIAS")
+                keyPassword System.getenv("ANDROID_KEY_PASSWORD")
+            }
+        }
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    defaultConfig {
+        buildConfigField "String", "GAME_URL", '"' + gameUrl.replace("\\", "\\\\").replace('"', '\\\"') + '"'
+    }
+}
+
+dependencies {
+    implementation "androidx.appcompat:appcompat:1.7.0"
+    implementation "androidx.activity:activity:1.10.1"
+    implementation "androidx.webkit:webkit:1.13.0"
+}
