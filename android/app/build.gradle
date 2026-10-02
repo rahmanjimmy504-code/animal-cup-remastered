@@ -2,7 +2,9 @@ plugins {
     id "com.android.application"
 }
 
-def gameUrl = providers.gradleProperty("gameUrl").orElse("https://example.invalid").get()\ndef versionCodeValue = providers.gradleProperty("versionCode").orElse("1").get().toInteger()\ndef versionNameValue = providers.gradleProperty("versionName").orElse("1.0.0").get()
+def gameUrl = providers.gradleProperty("gameUrl").orElse("https://example.invalid").get()
+def versionCodeValue = providers.gradleProperty("versionCode").orElse("1").get().toInteger()
+def versionNameValue = providers.gradleProperty("versionName").orElse("1.0.0").get()
 
 android {
     namespace "com.jimmyrahman.animalcup"
@@ -12,8 +14,8 @@ android {
         applicationId "com.jimmyrahman.animalcup"
         minSdk 23
         targetSdk 35
-        versionCode 1
-        versionName "1.0.0"
+        versionCode versionCodeValue
+        versionName versionNameValue
         buildConfigField "String", "GAME_URL", '"' + gameUrl.replace("\\", "\\\\").replace('"', '\\\"') + '"'
     }
 
