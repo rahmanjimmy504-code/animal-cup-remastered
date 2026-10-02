@@ -2,7 +2,7 @@ plugins {
     id "com.android.application"
 }
 
-def gameUrl = providers.gradleProperty("gameUrl").orElse("https://example.invalid").get()
+def gameUrl = providers.gradleProperty("gameUrl").orElse("https://example.invalid").get()\ndef versionCodeValue = providers.gradleProperty("versionCode").orElse("1").get().toInteger()\ndef versionNameValue = providers.gradleProperty("versionName").orElse("1.0.0").get()
 
 android {
     namespace "com.jimmyrahman.animalcup"
