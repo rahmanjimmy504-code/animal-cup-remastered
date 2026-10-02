@@ -79,12 +79,12 @@ jobs:
             KEYSTORE_PASSWORD="$(openssl rand -hex 24)"
             KEY_PASSWORD="$KEYSTORE_PASSWORD"
             KEY_ALIAS="animalcup"
-            keytool -genkeypair -v \\
-              -keystore "$RUNNER_TEMP/signing/animal-cup-release.jks" \\
-              -storepass "$KEYSTORE_PASSWORD" \\
-              -keypass "$KEY_PASSWORD" \\
-              -alias "$KEY_ALIAS" \\
-              -keyalg RSA -keysize 4096 -validity 10000 \\
+            keytool -genkeypair -v \
+              -keystore "$RUNNER_TEMP/signing/animal-cup-release.jks" \
+              -storepass "$KEYSTORE_PASSWORD" \
+              -keypass "$KEY_PASSWORD" \
+              -alias "$KEY_ALIAS" \
+              -keyalg RSA -keysize 4096 -validity 10000 \
               -dname "CN=Animal Cup Remastered, OU=Release, O=Jimmy Rahman, L=UK, C=GB"
             echo "Generated a one-off signing key because no persistent key secret is configured."
           fi
@@ -100,10 +100,10 @@ jobs:
         env:
           GAME_URL: ${{ inputs.game_url }}
         run: |
-          gradle --no-daemon --stacktrace \\
-            -PgameUrl="$GAME_URL" \\
-            -PversionCode="$GITHUB_RUN_NUMBER" \\
-            -PversionName="1.0.$GITHUB_RUN_NUMBER" \\
+          gradle --no-daemon --stacktrace \
+            -PgameUrl="$GAME_URL" \
+            -PversionCode="$GITHUB_RUN_NUMBER" \
+            -PversionName="1.0.$GITHUB_RUN_NUMBER" \
             :app:assembleRelease
 
       - name: Verify APK is signed
