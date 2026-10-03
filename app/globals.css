@@ -166,3 +166,38 @@ body.ac-dark .lang-switcher__menu button.is-active, html[data-theme="dark"] .lan
 .ac-dark .game-settings .settings-list label,.ac-dark .game-settings .ctrl-col,.ac-dark .game-settings .rule-card{background:#222b23;color:#edf4e9;}
 .ac-dark .game-settings .settings-card h2,.ac-dark .game-settings .settings-h2{color:#9fd172;}
 @media(max-width:700px){.season-page,.profile-page,.game-settings,.cup-page{padding:14px;}.season-head,.profile-head{flex-wrap:wrap;}.game-settings .settings-card{padding:18px;}}
+
+
+/* Device-safe viewport foundation: use dynamic viewport units when supported so
+   browser URL bars, Android navigation bars and notches do not steal layout
+   space from game screens. */
+html {
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+  overflow-x: hidden;
+  background: #05070a;
+}
+
+body {
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+  margin: 0;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+}
+
+@supports (height: 100dvh) {
+  body {
+    min-height: 100dvh;
+  }
+}
+
+/* Avoid accidental browser zoom/scroll gestures on interactive game surfaces.
+   The match canvas already owns its pointer gestures. */
+button,
+a,
+[role="button"] {
+  touch-action: manipulation;
+}
