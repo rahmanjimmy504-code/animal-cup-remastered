@@ -92,6 +92,38 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+    private void showLoadError() {
+        android.widget.LinearLayout layout = new android.widget.LinearLayout(this);
+        layout.setOrientation(android.widget.LinearLayout.VERTICAL);
+        layout.setGravity(android.view.Gravity.CENTER);
+        layout.setPadding(48, 32, 48, 32);
+        layout.setBackgroundColor(android.graphics.Color.rgb(93, 144, 56));
+
+        android.widget.TextView title = new android.widget.TextView(this);
+        title.setText("Animal Cup Remastered");
+        title.setTextColor(android.graphics.Color.WHITE);
+        title.setTextSize(30);
+        title.setGravity(android.view.Gravity.CENTER);
+        title.setTypeface(null, android.graphics.Typeface.BOLD);
+
+        android.widget.TextView message = new android.widget.TextView(this);
+        message.setText("The game could not be loaded. Check your internet connection and tap Retry.");
+        message.setTextColor(android.graphics.Color.WHITE);
+        message.setTextSize(18);
+        message.setGravity(android.view.Gravity.CENTER);
+        message.setPadding(0, 18, 0, 24);
+
+        android.widget.Button retry = new android.widget.Button(this);
+        retry.setText("Retry");
+        retry.setOnClickListener(v -> webView.loadUrl(BuildConfig.GAME_URL));
+
+        layout.addView(title);
+        layout.addView(message);
+        layout.addView(retry);
+        setContentView(layout);
+    }
+
     @Override
     protected void onDestroy() {
         if (webView != null) {
