@@ -1,6 +1,8 @@
 name: Build signed Android APK
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       game_url:
@@ -22,6 +24,7 @@ concurrency:
 
 jobs:
   build-apk:
+    if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build-android-release]') }}
     name: Review and build signed APK
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -32,7 +35,7 @@ jobs:
 
       - name: Validate game URL
         env:
-          GAME_URL: ${{ inputs.game_url }}
+          GAME_URL: ${{ inputs.game_url || 'https://animal-cup.rahmanjimmy504.workers.dev/' }}
         run: |
           python3 - <<'PY'
           import os, sys, urllib.parse
