@@ -4,6 +4,8 @@
 
     <application
         android:allowBackup="false"
+        android:icon="@drawable/ic_launcher"
+        android:roundIcon="@drawable/ic_launcher"
         android:label="Animal Cup Remastered"
         android:theme="@style/Theme.AnimalCup"
         android:usesCleartextTraffic="false">
