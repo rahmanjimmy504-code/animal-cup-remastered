@@ -10,7 +10,10 @@
     "prebuild": "node script/clean.mjs .next",
     "build": "node script/stamp-sw-version.mjs && node script/safe-build.mjs",
     "build:worker": "node script/clean.mjs .next .open-next && node script/stamp-sw-version.mjs && opennextjs-cloudflare build",
-    "start": "next start -p 13000"
+    "start": "next start -p 13000",
+    "ios:sync": "npx cap sync ios",
+    "ios:add": "npx cap add ios",
+    "ios:assets": "npx @capacitor/assets generate --ios --iconBackgroundColor '#5d9038' --iconBackgroundColorDark '#5d9038' --splashBackgroundColor '#5d9038' --splashBackgroundColorDark '#5d9038'"
   },
   "dependencies": {
     "next": "15.5.19",
@@ -29,7 +32,7 @@
     "ws": "^8.18.0",
     "@capacitor/cli": "8.5.2",
     "@capacitor/ios": "8.5.2",
-    "@capacitor/assets": "latest"
+    "@capacitor/assets": "3.0.5"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
