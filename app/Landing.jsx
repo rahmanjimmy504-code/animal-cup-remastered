@@ -188,7 +188,7 @@ export default function Landing() {
     const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(onFit) : null;
     if (ro) ro.observe(w);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(onFit).catch(() => {});
-    return () => { window.removeEventListener("resize", onFit); if (ro) ro.disconnect(); };
+    return () => {\n      window.removeEventListener("resize", onFit);\n      window.visualViewport?.removeEventListener("resize", onFit);\n      window.visualViewport?.removeEventListener("scroll", onFit);\n      if (ro) ro.disconnect();\n    };
   }, []);
 
   // The AI-assist setting (settings page) nudges the chosen difficulty:
