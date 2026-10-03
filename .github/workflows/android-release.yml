@@ -65,6 +65,7 @@ jobs:
           test -f pnpm-lock.yaml
           test -f android/settings.gradle
           test -f android/app/build.gradle
+          test -f android/app/src/main/res/drawable/ic_launcher.xml
           grep -q "Animal Cup Remastered" README.md
 
       - name: Generate release signing key
@@ -102,7 +103,7 @@ jobs:
       - name: Build release APK
         working-directory: android
         env:
-          GAME_URL: ${{ inputs.game_url }}
+          GAME_URL: ${{ inputs.game_url || 'https://animal-cup.rahmanjimmy504.workers.dev/' }}
         run: |
           gradle --no-daemon --stacktrace \
             -PgameUrl="$GAME_URL" \
