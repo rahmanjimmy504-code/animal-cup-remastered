@@ -30,11 +30,35 @@ public class MainActivity extends AppCompatActivity {
         );
 
         webView = new WebView(this);
-        webView.setWebViewClient(new WebViewClient());
+        webView.setBackgroundColor(android.graphics.Color.BLACK);
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onReceivedError(WebView view, android.webkit.WebResourceRequest request,
+                                        android.webkit.WebResourceError error) {
+                if (request.isForMainFrame()) {
+                    showLoadError();
+                }
+            }
+
+            @Override
+            public void onReceivedHttpError(WebView view, android.webkit.WebResourceRequest request,
+                                            android.webkit.WebResourceResponse errorResponse) {
+                if (request.isForMainFrame() && errorResponse.getStatusCode() >= 400) {
+                    showLoadError();
+                }
+            }
+        });
         webView.setWebChromeClient(new WebChromeClient());
 
         android.webkit.WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
+        settings.setJavaScriptCanOpenWindowsAutomatically(true);
+        settings.setLoadsImagesAutomatically(true);
+        settings.setMixedContentMode(android.webkit.WebSettings.MIXED_CONTENT_NEVER_ALLOW);
+        settings.setUserAgentString(
+            "Mozilla/5.0 (Linux; Android 13; Mobile) AppleWebKit/537.36 " +
+            "(KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36"
+        );
         settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
         settings.setMediaPlaybackRequiresUserGesture(false);
@@ -49,7 +73,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         setContentView(webView);
-        webView.loadUrl(BuildConfig.GAME_URL);
+        String gameUrl = BuildConfig.GAME_URL;
+        if (gameUrl == null || gameUrl.trim().isEmpty() || !gameUrl.startsWith("https://")) {
+            showLoadError();
+        } else {
+            webView.loadUrl(gameUrl);
+        }
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
