@@ -31,7 +31,7 @@ env:
 
 jobs:
   build-ipa:
-    if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build-ios-release]') $}}
+    if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build-ios-release]') }}
     name: Build Animal Cup iOS IPA
     runs-on: macos-15
     timeout-minutes: 45
@@ -47,9 +47,9 @@ jobs:
         run: |
           npm install --no-audit --no-fund
           npm install --no-save --no-audit --no-fund \
-            "@capacitor/core${CAPACITOR_VERSION}" \
-            "@capacitor/cli${CAPACITOR_VERSION}" \
-            "@capacitor/ios${CAPACITOR_VERSION}"
+            "@capacitor/core@${CAPACITOR_VERSION}" \
+            "@capacitor/cli@${CAPACITOR_VERSION}" \
+            "@capacitor/ios@${CAPACITOR_VERSION}"
       - name: Validate iOS project inputs
         run: |
           test -f package.json
@@ -80,18 +80,18 @@ jobs:
           /usr/libexec/PlistBuddy -c "Add :UISupportedInterfaceOrientations:3 string UIInterfaceOrientationPortraitUpsideDown" "$PLIST"
       - name: Set version
         env:
-          RUN_NO: ${{ github.run_number $}}
+          RUN_NO: ${{ github.run_number }}
         run: |
           /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 1.0.$RUN_NO" ios/App/App/Info.plist
           /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $RUN_NO" ios/App/App/Info.plist
       - name: Detect signing mode
         id: signing
         env:
-          IOS_CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATE_BASE64 $}}
-          IOS_PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 $}}
-          IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD $}}
-          IOS_DEVELOPMENT_TEAM: ${{ secrets.IOS_DEVELOPMENT_TEAM $}}
-          IOS_PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.IOS_PROVISIONING_PROFILE_SPECIFIER $}}
+          IOS_CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
+          IOS_PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
+          IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+          IOS_DEVELOPMENT_TEAM: ${{ secrets.IOS_DEVELOPMENT_TEAM }}
+          IOS_PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.IOS_PROVISIONING_PROFILE_SPECIFIER }}
         run: |
           if [ -n "$IOS_CERTIFICATE_BASE64" ] && [ -n "$IOS_PROVISIONING_PROFILE_BASE64" ] && [ -n "$IOS_CERTIFICATE_PASSWORD" ] && [ -n "$IOS_DEVELOPMENT_TEAM" ] && [ -n "$IOS_PROVISIONING_PROFILE_SPECIFIER" ]; then
             echo "signed=true" >> "$GITHUB_OUTPUT"
@@ -101,12 +101,12 @@ jobs:
       - name: Import Apple signing certificate
         if: steps.signing.outputs.signed == 'true'
         env:
-          IOS_CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATE_BASE64 $}}
-          IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD $}}
-          IOS_KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWORD $}}
+          IOS_CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
+          IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+          IOS_KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWORD }}
         run: |
           KEYCHAIN="$RUNNER_TEMP/animal-cup-signing.keychain-db"
-          KEYPASS="\${IOS_KEYCHAIN_PASSWORD:-temporary-keychain-password}"
+          KEYPASS="${IOS_KEYCHAIN_PASSWORD:-temporary-keychain-password}"
           security create-keychain -p "$KEYPASS" "$KEYCHAIN"
           security set-keychain-settings -lut 21600 "$KEYCHAIN"
           security unlock-keychain -p "$KEYPASS" "$KEYCHAIN"
@@ -117,7 +117,7 @@ jobs:
       - name: Install Apple provisioning profile
         if: steps.signing.outputs.signed == 'true'
         env:
-          IOS_PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 $}}
+          IOS_PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
         run: |
           mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
           echo "$IOS_PROVISIONING_PROFILE_BASE64" | base64 --decode > "$RUNNER_TEMP/animal-cup.mobileprovision"
@@ -126,8 +126,8 @@ jobs:
       - name: Build signed archive
         if: steps.signing.outputs.signed == 'true'
         env:
-          IOS_DEVELOPMENT_TEAM: ${{ secrets.IOS_DEVELOPMENT_TEAM $}}
-          IOS_PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.IOS_PROVISIONING_PROFILE_SPECIFIER $}}
+          IOS_DEVELOPMENT_TEAM: ${{ secrets.IOS_DEVELOPMENT_TEAM }}
+          IOS_PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.IOS_PROVISIONING_PROFILE_SPECIFIER }}
         run: |
           xcodebuild archive \
             -workspace ios/App/App.xcworkspace \
@@ -144,9 +144,9 @@ jobs:
       - name: Export signed IPA
         if: steps.signing.outputs.signed == 'true'
         env:
-          IOS_DEVELOPMENT_TEAM: ${{ secrets.IOS_DEVELOPMENT_TEAM $}}
-          EXPORT_METHOD: ${{ inputs.export_method || 'ad-hoc' $}}
-          IOS_PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.IOS_PROVISIONING_PROFILE_SPECIFIER $}}
+          IOS_DEVELOPMENT_TEAM: ${{ secrets.IOS_DEVELOPMENT_TEAM }}
+          EXPORT_METHOD: ${{ inputs.export_method || 'ad-hoc' }}
+          IOS_PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.IOS_PROVISIONING_PROFILE_SPECIFIER }}
         run: |
           cat > "$RUNNER_TEMP/ExportOptions.plist" <<PLIST
           <?xml version="1.0" encoding="UTF-8"?>
@@ -194,14 +194,14 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ inputs.release_tag != '' && inputs.release_tag || format('v{0}-ios', github.run_number) $}}
-          name: Animal Cup Remastered iOS ${{ inputs.release_tag != '' && inputs.release_tag || format('v{0}-ios', github.run_number) $}}
+          tag_name: ${{ inputs.release_tag != '' && inputs.release_tag || format('v{0}-ios', github.run_number) }}
+          name: Animal Cup Remastered iOS ${{ inputs.release_tag != '' && inputs.release_tag || format('v{0}-ios', github.run_number) }}
           generate_release_notes: true
           files: |
-            Animal-Cup-Remastered-${{ github.sha $}}.ipa
-            Animal-Cup-Remastered-${{ github.sha $}}.ipa.sha256
-            Animal-Cup-Remastered-${{ github.sha $}}-unsigned.ipa
-            Animal-Cup-Remastered-${{ github.sha $}}-unsigned.ipa.sha256
+            Animal-Cup-Remastered-${{ github.sha }}.ipa
+            Animal-Cup-Remastered-${{ github.sha }}.ipa.sha256
+            Animal-Cup-Remastered-${{ github.sha }}-unsigned.ipa
+            Animal-Cup-Remastered-${{ github.sha }}-unsigned.ipa.sha256
           body: |
             ## Animal Cup Remastered iOS
 
