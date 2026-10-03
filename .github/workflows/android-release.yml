@@ -1,4 +1,5 @@
 name: Build signed Android APK
+# Release assets use GitHub expression-safe filenames so the APK is attached to the Release.
 
 on:
   push:
