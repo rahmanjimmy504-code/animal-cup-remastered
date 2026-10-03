@@ -56,3 +56,298 @@ canvas {
 #gui {
   pointer-events: none !important;
 }
+
+
+/* -------------------------------------------------------------------------
+ * Responsive device pass
+ * -------------------------------------------------------------------------
+ * Keep the Pixi pitch at the full viewport, but make every React HUD layer
+ * scale/reflow around the usable visual viewport. The match is playable on
+ * narrow phones, short landscape phones, tablets, laptops and ultrawide
+ * displays without relying on a particular pixel resolution.
+ */
+
+html,
+body {
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  overscroll-behavior: none;
+}
+
+.match-score {
+  top: max(8px, env(safe-area-inset-top));
+  width: min(340px, calc(100vw - 16px - env(safe-area-inset-left) - env(safe-area-inset-right)));
+  max-width: calc(100vw - 16px);
+}
+
+.match-controls {
+  right: max(8px, env(safe-area-inset-right));
+  bottom: max(8px, env(safe-area-inset-bottom));
+}
+
+.ctrl-legend {
+  max-width: min(300px, calc(100vw - 24px));
+  max-height: min(70dvh, 560px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.event-card {
+  top: clamp(64px, 10vh, 84px);
+  padding-inline: max(8px, env(safe-area-inset-left)) max(8px, env(safe-area-inset-right));
+}
+
+.event-card__frame {
+  max-width: min(92vw, 520px);
+  min-width: min(220px, 88vw);
+  padding: clamp(8px, 2vw, 16px) clamp(12px, 5vw, 40px);
+}
+
+.match-result {
+  min-height: 100dvh;
+  padding:
+    max(10px, env(safe-area-inset-top))
+    max(10px, env(safe-area-inset-right))
+    max(10px, env(safe-area-inset-bottom))
+    max(10px, env(safe-area-inset-left));
+}
+
+.match-result__card {
+  width: min(440px, 100%);
+  max-height: calc(100dvh - 20px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.rotate-hint {
+  max-width: min(92vw, 420px);
+  padding: 12px 18px;
+}
+
+/* Phones: preserve a clear top scoreboard and keep the two thumb zones apart. */
+@media (max-width: 600px) {
+  .match-score {
+    top: max(6px, env(safe-area-inset-top));
+    padding: 6px 10px 7px;
+    border-width: 3px;
+    border-radius: 14px;
+    gap: 4px;
+  }
+
+  .match-score .ms-row {
+    gap: 7px;
+  }
+
+  .match-score .ms-head {
+    width: 34px;
+    height: 34px;
+  }
+
+  .match-score .ms-flag {
+    width: 24px;
+    height: 17px;
+  }
+
+  .match-score .ms-num {
+    font-size: clamp(22px, 6vw, 28px);
+    min-width: 24px;
+  }
+
+  .match-score .ms-clock {
+    font-size: 11px;
+    min-width: 40px;
+    padding: 2px 7px;
+  }
+
+  .match-score .ms-possession-bar {
+    width: min(150px, 34vw);
+  }
+
+  .match-controls {
+    gap: 6px;
+  }
+
+  .glass-btn,
+  .match-controls .lang-switcher__toggle {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+  }
+
+  .tc-stick {
+    width: clamp(92px, 25vw, 132px) !important;
+    height: clamp(92px, 25vw, 132px) !important;
+    left: max(12px, env(safe-area-inset-left)) !important;
+    bottom: max(12px, env(safe-area-inset-bottom)) !important;
+  }
+
+  .fc-cluster {
+    right: max(10px, env(safe-area-inset-right)) !important;
+    bottom: max(10px, env(safe-area-inset-bottom)) !important;
+    transform-origin: bottom right;
+    transform: scale(clamp(0.72, 25vw / 120px, 1)) !important;
+  }
+}
+
+/* Very narrow portrait phones: use the screen edges instead of fixed gutters. */
+@media (max-width: 380px) {
+  .match-score {
+    width: calc(100vw - 10px);
+    padding-inline: 6px;
+  }
+
+  .match-score .ms-row {
+    gap: 4px;
+  }
+
+  .match-score .ms-head {
+    width: 30px;
+    height: 30px;
+  }
+
+  .match-score .ms-flag {
+    width: 21px;
+    height: 15px;
+  }
+
+  .match-score .ms-num {
+    font-size: 21px;
+    min-width: 22px;
+  }
+
+  .match-score .ms-skill {
+    display: none;
+  }
+
+  .match-score .ms-possession {
+    gap: 5px;
+  }
+
+  .match-score .ms-possession-bar {
+    width: 28vw;
+  }
+
+  .event-card__frame strong {
+    font-size: clamp(22px, 7vw, 32px);
+  }
+
+  .event-card__frame p {
+    font-size: clamp(13px, 4vw, 20px);
+  }
+}
+
+/* Short landscape phones and small tablets: reduce vertical chrome so the
+   actual pitch and controls retain most of the viewport. */
+@media (max-height: 520px) and (orientation: landscape) {
+  .match-score {
+    top: max(4px, env(safe-area-inset-top));
+    padding: 4px 10px 5px;
+    gap: 2px;
+  }
+
+  .match-score .ms-head {
+    width: 28px;
+    height: 28px;
+  }
+
+  .match-score .ms-flag {
+    width: 22px;
+    height: 15px;
+  }
+
+  .match-score .ms-num {
+    font-size: 22px;
+  }
+
+  .match-score .ms-possession {
+    display: none;
+  }
+
+  .match-controls {
+    gap: 4px;
+    bottom: max(5px, env(safe-area-inset-bottom));
+  }
+
+  .glass-btn,
+  .match-controls .lang-switcher__toggle {
+    width: 38px;
+    height: 38px;
+  }
+
+  .tc-stick {
+    width: 86px !important;
+    height: 86px !important;
+    bottom: max(8px, env(safe-area-inset-bottom)) !important;
+  }
+
+  .fc-cluster {
+    bottom: max(7px, env(safe-area-inset-bottom)) !important;
+  }
+
+  .ctrl-legend {
+    max-height: 45dvh;
+    transform: scale(0.82);
+    transform-origin: bottom left;
+  }
+
+  .rotate-hint {
+    padding: 7px 12px;
+  }
+}
+
+/* Touch devices: put the utility controls away from the two thumb zones. */
+@media (pointer: coarse) {
+  .match-controls {
+    top: max(8px, env(safe-area-inset-top));
+    right: max(8px, env(safe-area-inset-right));
+    bottom: auto;
+  }
+
+  .match-score {
+    top: max(8px, env(safe-area-inset-top));
+    max-width: calc(100vw - 110px);
+  }
+
+  .tc {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100dvh;
+    height: 100vh;
+    overflow: hidden;
+  }
+}
+
+/* Large screens: prevent tiny UI on high-resolution/ultrawide displays while
+   keeping the pitch itself at the native viewport size. */
+@media (min-width: 1600px) and (min-height: 900px) {
+  .match-score {
+    transform: translateX(-50%) scale(1.08);
+    transform-origin: top center;
+  }
+
+  .match-controls {
+    transform: scale(1.08);
+    transform-origin: bottom right;
+  }
+}
+
+/* Respect reduced-motion preferences without changing gameplay. */
+@media (prefers-reduced-motion: reduce) {
+  .match-score,
+  .match-result__card,
+  .event-card__frame,
+  .match-curtain__seal {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
